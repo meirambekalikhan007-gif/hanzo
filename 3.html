@@ -1200,11 +1200,11 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div style="height:1px;background:var(--border);margin:8px 0;"></div>
     <div class="ds-nav-item" onclick="showLevelChart()">
       <span class="ds-nav-icon">📊</span>
-      <span class="ds-nav-label">Level Chart</span>
+      <span class="ds-nav-label" data-i18n="pd_level_chart">Level Chart</span>
     </div>
     <div class="ds-nav-item" onclick="showProgressCard()">
       <span class="ds-nav-icon">🏅</span>
-      <span class="ds-nav-label">Share Progress</span>
+      <span class="ds-nav-label" data-i18n="pd_share_progress">Share Progress</span>
     </div>
   </div>
 
@@ -1312,8 +1312,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 <!-- NOTIFICATION PANEL -->
 <div id="notif-panel">
   <div class="notif-panel-head">
-    <div class="notif-panel-title">🔔 Notifications</div>
-    <button class="notif-mark-all" onclick="_markAllNotifsRead()">Mark all read</button>
+    <div class="notif-panel-title" data-i18n="notif_title">🔔 Notifications</div>
+    <button class="notif-mark-all" onclick="_markAllNotifsRead()" data-i18n="notif_mark_all">Mark all read</button>
   </div>
   <div class="notif-list" id="notif-list"></div>
 </div>
@@ -1322,10 +1322,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 <div id="pwa-install-banner">
   <div style="font-size:28px;flex-shrink:0;">📱</div>
   <div style="flex:1;">
-    <div style="font-size:13px;font-weight:800;margin-bottom:2px;">Install Hanzo for the best experience</div>
-    <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);">Works offline · Fast · No browser chrome</div>
+    <div style="font-size:13px;font-weight:800;margin-bottom:2px;" data-i18n="pwa_title">Install Hanzo for the best experience</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);" data-i18n="pwa_sub">Works offline · Fast · No browser chrome</div>
   </div>
-  <button id="pwa-install-btn" onclick="_pwaInstall()" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:12px;padding:9px 16px;border-radius:var(--r12);cursor:pointer;flex-shrink:0;white-space:nowrap;">Install</button>
+  <button id="pwa-install-btn" onclick="_pwaInstall()" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:12px;padding:9px 16px;border-radius:var(--r12);cursor:pointer;flex-shrink:0;white-space:nowrap;" data-i18n="pwa_install">Install</button>
   <button onclick="document.getElementById('pwa-install-banner').classList.remove('show');localStorage.setItem('hanzo_pwa_prompt_shown','1');" style="background:none;border:none;color:var(--muted2);font-size:18px;cursor:pointer;padding:4px;flex-shrink:0;">×</button>
 </div>
 
@@ -1333,12 +1333,12 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 <div id="hearts-modal">
   <div class="hearts-modal-card">
     <div style="font-size:52px;margin-bottom:12px;">💔</div>
-    <div style="font-size:20px;font-weight:900;margin-bottom:6px;">No hearts left!</div>
-    <div style="font-size:12px;color:var(--muted2);margin-bottom:20px;line-height:1.6;">Take a break or watch an ad to get a free heart.<br>Hearts refill 1 every 30 minutes.</div>
+    <div style="font-size:20px;font-weight:900;margin-bottom:6px;" data-i18n="hearts_empty">No hearts left!</div>
+    <div style="font-size:12px;color:var(--muted2);margin-bottom:20px;line-height:1.6;" data-i18n="hearts_desc">Take a break or watch an ad to get a free heart.<br>Hearts refill 1 every 30 minutes.</div>
     <div style="font-family:var(--mono);font-size:11px;color:var(--gold);margin-bottom:16px;" id="hearts-refill-timer">Next heart in: 30:00</div>
     <div style="display:flex;flex-direction:column;gap:8px;">
-      <button onclick="_watchAd()" style="background:var(--green);border:none;color:#000;font-weight:800;font-size:14px;padding:14px;border-radius:var(--r12);cursor:pointer;width:100%;">📺 Watch Ad (+1 heart)</button>
-      <button onclick="document.getElementById('hearts-modal').classList.remove('show');" style="background:var(--s2);border:1.5px solid var(--border);color:var(--muted3);font-weight:700;font-size:13px;padding:12px;border-radius:var(--r12);cursor:pointer;width:100%;">Close</button>
+      <button onclick="_watchAd()" style="background:var(--green);border:none;color:#000;font-weight:800;font-size:14px;padding:14px;border-radius:var(--r12);cursor:pointer;width:100%;" data-i18n="hearts_watch_ad">📺 Watch Ad (+1 heart)</button>
+      <button onclick="document.getElementById('hearts-modal').classList.remove('show');" style="background:var(--s2);border:1.5px solid var(--border);color:var(--muted3);font-weight:700;font-size:13px;padding:12px;border-radius:var(--r12);cursor:pointer;width:100%;" data-i18n="hearts_close">Close</button>
     </div>
   </div>
 </div>
@@ -1541,7 +1541,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <div class="wod-card" onclick="_wodTap()" id="wod-card">
     <div class="wod-top">
       <span class="wod-label" data-i18n="wod_label">✨ Word of the Day</span>
-      <span class="wod-tap" id="wod-source">tap to reveal</span>
+      <span class="wod-tap" id="wod-source" data-i18n="g_tap_reveal">tap to reveal</span>
     </div>
     <div class="wod-main">
       <div class="wod-hanzi" id="wod-char">学</div>
@@ -1781,7 +1781,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div class="game-prog"><span class="game-prog-txt" id="fc-prog">—</span><span class="game-score-txt" id="fc-score-top"></span></div>
     <div class="flashcard" id="flashcard" onclick="flipCard()">
       <div id="fc-front" class="fc-char">—</div>
-      <div class="fc-hint" id="fc-hint">tap to reveal</div>
+      <div class="fc-hint" id="fc-hint" data-i18n="g_tap_reveal">tap to reveal</div>
       <div class="fc-back" id="fc-back">
         <div id="fc-tone-badge" class="fc-tone-badge"></div>
         <div class="fc-pinyin" id="fc-pinyin"></div>
@@ -1898,7 +1898,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div class="game-prog"><span class="game-prog-txt" id="pf-prog">—</span><span class="game-score-txt" id="pf-score-top"></span></div>
     <div class="flashcard" id="pf-card" onclick="flipPhraseCard()" style="min-height:180px;">
       <div style="font-family:var(--cn);font-size:24px;font-weight:700;line-height:1.5;color:var(--red);text-align:center;" id="pf-front">—</div>
-      <div class="fc-hint" id="pf-hint">tap to reveal</div>
+      <div class="fc-hint" id="pf-hint" data-i18n="g_tap_reveal">tap to reveal</div>
       <div class="fc-back" id="pf-back">
         <div style="font-family:var(--mono);font-size:13px;color:var(--gold);margin-bottom:8px;text-align:center;" id="pf-py"></div>
         <div style="font-size:16px;font-weight:700;text-align:center;margin-bottom:6px;" id="pf-tr"></div>
@@ -3437,7 +3437,7 @@ function renderHome(){
       qsCard.style.background = 'linear-gradient(135deg,#065f46,#047857)';
       qsCard.style.boxShadow = '0 6px 20px rgba(16,185,129,.25)';
       var qsTitleEl = el('qs-title');
-      if (qsTitleEl) qsTitleEl.textContent = 'Goal Complete! 🎯';
+      if (qsTitleEl) qsTitleEl.textContent = t('h_goal_complete');
     } else {
       qsCard.style.background = 'linear-gradient(135deg,var(--red),#c2410c)';
       qsCard.style.boxShadow = '0 6px 20px rgba(239,68,68,.25)';
@@ -3775,7 +3775,7 @@ function _wodTap() {
     if (meaningEl) { meaningEl.style.opacity = '0'; setTimeout(function(){ if(meaningEl) { meaningEl.style.opacity='1'; meaningEl.style.transition='opacity .3s'; } }, 50); }
     if (pinyinEl) { pinyinEl.style.opacity = '0'; setTimeout(function(){ if(pinyinEl) { pinyinEl.style.opacity='1'; pinyinEl.style.transition='opacity .3s'; } }, 50); }
     var tapEl = el('wod-source');
-    if (tapEl) tapEl.textContent = 'tap for new word';
+    if (tapEl) tapEl.textContent = t('wod_tap_new');
   } else {
     // Second tap: new word
     _wodFlipped = false;
@@ -4024,18 +4024,18 @@ function startFlashcard(){
 }
 function showFlashcard(){
   if(quizIdx>=quizCards.length){
-    if(el('fc-front'))el('fc-front').textContent='🎉 Done!';
-    if(el('fc-hint'))el('fc-hint').textContent=quizTotal?quizCorrect+'/'+quizTotal+' correct':'';
+    if(el('fc-front'))el('fc-front').textContent='🎉 '+t('g_done');
+    if(el('fc-hint'))el('fc-hint').textContent=quizTotal?quizCorrect+'/'+quizTotal+' '+t('g_correct'):'';
     if(el('fc-back'))el('fc-back').classList.remove('show');
     if(el('fc-btns'))el('fc-btns').style.display='none';
-    if(el('fc-score'))el('fc-score').textContent=quizTotal?'Score: '+Math.round(quizCorrect/quizTotal*100)+'%':'';
-    if(el('fc-prog'))el('fc-prog').textContent='Complete!';
+    if(el('fc-score'))el('fc-score').textContent=quizTotal?t('g_final')+': '+Math.round(quizCorrect/quizTotal*100)+'%':'';
+    if(el('fc-prog'))el('fc-prog').textContent=t('g_complete');
     if(quizCorrect>0)launchConfetti();
     return;
   }
   var ch=quizCards[quizIdx];quizFlipped=false;
   if(el('fc-front'))el('fc-front').textContent=ch.char;
-  if(el('fc-hint'))el('fc-hint').textContent='tap to reveal';
+  if(el('fc-hint'))el('fc-hint').textContent=t('g_tap_reveal');
   var back=el('fc-back');if(back)back.classList.remove('show');
   if(el('fc-btns'))el('fc-btns').style.display='none';
   var _pb=el('fc-pron-btn');if(_pb)_pb.style.display='none'; // hide mic until flipped
@@ -4326,11 +4326,11 @@ function startMC(){
 }
 function showMCCard(){
   if(mcIdx>=mcCards.length){
-    if(el('mc-char'))el('mc-char').textContent='🎉';if(el('mc-pinyin'))el('mc-pinyin').textContent='Done!';
+    if(el('mc-char'))el('mc-char').textContent='🎉';if(el('mc-pinyin'))el('mc-pinyin').textContent=t('g_done');
     if(el('mc-choices'))el('mc-choices').innerHTML='';if(el('mc-result'))el('mc-result').textContent='';
     var next=el('mc-next');if(next)next.classList.remove('show');
-    if(el('mc-score'))el('mc-score').textContent='Final: '+mcCorrect+'/'+mcTotal+' — '+Math.round(mcCorrect/mcTotal*100)+'%';
-    if(el('mc-prog'))el('mc-prog').textContent='Complete!';
+    if(el('mc-score'))el('mc-score').textContent=t('g_final')+': '+mcCorrect+'/'+mcTotal+' — '+Math.round(mcCorrect/mcTotal*100)+'%';
+    if(el('mc-prog'))el('mc-prog').textContent=t('g_complete');
     if(mcCorrect>=mcTotal*.8)launchConfetti();
     return;
   }
@@ -4368,7 +4368,7 @@ function startMatch(){
   matchSelected=null;matchCorrect=0;renderMatch();
   if(el('match-next-btn'))el('match-next-btn').style.display='none';
   if(el('match-score'))el('match-score').textContent='';
-  if(el('match-prog'))el('match-prog').textContent='Match '+matchPairs.length+' pairs';
+  if(el('match-prog'))el('match-prog').textContent=t('g_match_pairs').replace('{n}',matchPairs.length);
   if(el('match-score-top'))el('match-score-top').textContent='';
 }
 function renderMatch(){
@@ -4394,7 +4394,7 @@ function handleMatch(elem,type){
   if(matchSelected.el.dataset.id===elem.dataset.id){
     matchSelected.el.classList.remove('selected');matchSelected.el.classList.add('matched');elem.classList.add('matched');matchSelected=null;matchCorrect++;awardXP(5,'Match ✓');onCorrectAnswer();
     if(el('match-score-top'))el('match-score-top').textContent=matchCorrect+'/'+matchPairs.length+' ✓';
-    if(matchCorrect===matchPairs.length){if(el('match-score'))el('match-score').textContent='🎉 All matched!';if(el('match-next-btn'))el('match-next-btn').style.display='block';launchConfetti();awardXP(20,'All pairs! 🔗');}
+    if(matchCorrect===matchPairs.length){if(el('match-score'))el('match-score').textContent='🎉 '+t('g_all_matched');if(el('match-next-btn'))el('match-next-btn').style.display='block';launchConfetti();awardXP(20,'All pairs! 🔗');}
   }else{
     var sel=matchSelected;sel.el.classList.add('wrong-flash');elem.classList.add('wrong-flash');
     onWrongAnswer();
@@ -4412,10 +4412,10 @@ function startPinyinHunt(){
 }
 function showPhCard(){
   if(phIdx>=phCards.length){
-    if(el('ph-char'))el('ph-char').textContent='🎉';if(el('ph-meaning'))el('ph-meaning').textContent='Done!';
+    if(el('ph-char'))el('ph-char').textContent='🎉';if(el('ph-meaning'))el('ph-meaning').textContent=t('g_done');
     if(el('ph-result'))el('ph-result').textContent=phCorrect+'/'+phTotal+' — '+( phTotal?Math.round(phCorrect/phTotal*100):0)+'%';
     if(el('ph-result'))el('ph-result').style.color='var(--green)';
-    if(el('ph-next'))el('ph-next').style.display='none';if(el('ph-prog'))el('ph-prog').textContent='Complete!';
+    if(el('ph-next'))el('ph-next').style.display='none';if(el('ph-prog'))el('ph-prog').textContent=t('g_complete');
     if(phCorrect>=phTotal*.8)launchConfetti();return;
   }
   var ch=phCards[phIdx];
@@ -4475,10 +4475,10 @@ function startCharHunt(){
 }
 function showChCard(){
   if(lpIdx>=lpCards.length){
-    if(el('lp-pinyin'))el('lp-pinyin').textContent='🎉';if(el('lp-meaning'))el('lp-meaning').textContent='Done!';
+    if(el('lp-pinyin'))el('lp-pinyin').textContent='🎉';if(el('lp-meaning'))el('lp-meaning').textContent=t('g_done');
     if(el('lp-choices'))el('lp-choices').innerHTML='';
     if(el('lp-result'))el('lp-result').textContent=lpCorrect+'/'+lpTotal+' — '+(lpTotal?Math.round(lpCorrect/lpTotal*100):0)+'%';
-    var next=el('lp-next');if(next)next.style.display='none';if(el('lp-prog'))el('lp-prog').textContent='Complete!';
+    var next=el('lp-next');if(next)next.style.display='none';if(el('lp-prog'))el('lp-prog').textContent=t('g_complete');
     if(lpCorrect>=lpTotal*.8)launchConfetti();return;
   }
   var allList=S.chars_list||[];var correct=lpCards[lpIdx];lpAnswered=false;
@@ -5443,12 +5443,12 @@ var I18N={
     // NAV
     nav_home:'Home',nav_lessons:'Lessons',nav_phrases:'Phrases',nav_friends:'Friends',w_my_phrases:'My Phrases',ph_subtitle:'Your saved phrases — tap status to update',ph_search:'Search phrases…',ph_no_phrases:'No phrases yet. Go to Bank → Phrases → Browse to add phrases.',nav_games:'Games',nav_words:'Words',nav_bank:'Bank',
     // PROFILE DROPDOWN
-    toggle_theme:'Toggle theme',sign_out:'Sign out',ui_language:'Interface language',
+    toggle_theme:'Toggle theme',sign_out:'Sign out',ui_language:'Interface language',notif_title:'🔔 Notifications',notif_mark_all:'Mark all read',hearts_empty:'No hearts left!',hearts_desc:'Take a break or watch an ad to get a free heart. Hearts refill 1 every 30 minutes.',hearts_watch_ad:'📺 Watch Ad (+1 heart)',hearts_close:'Close',pwa_title:'Install Hanzo for the best experience',pwa_sub:'Works offline · Fast · No browser chrome',pwa_install:'Install',
     // CATEGORIES
     greetings:'Greetings',daily:'Daily Life',shopping:'Shopping',business:'Business',food:'Food',transport:'Transport',
     // HOME
     h_words:'Words',h_mastered:'Mastered',h_streak:'Streak',
-    wod_label:'Word of the Day',wod_tap:'tap for new',wod_source_mine:'from your words',wod_source_bank:'from word bank',
+    wod_label:'Word of the Day',wod_tap:'tap for new',wod_tap_new:'tap for new word',wod_source_mine:'from your words',wod_source_bank:'from word bank',
     h_today:'Words practiced',h_mastered_pct:'Words mastered',h_streak_lbl:'Current streak',
     h_queue:'Study Queue',h_new:'New',h_learning:'Learning',h_srs_mastered:'Mastered',
     h_streak_title:'Study Streak',h_streak_auto:'Auto-tracked',
@@ -5533,12 +5533,12 @@ var I18N={
     sd_cta:'Study Now 🔥',
     // PROFILE DROPDOWN
     pd_edit_profile:'Edit Profile',
-    pd_share_progress:'Share Progress',
+    pd_share_progress:'Share Progress',pd_level_chart:'Level Chart',
     ls_total_xp:'Total XP',ls_units_done:'Units done',ls_units_done_label:'units',ls_choose_unit:'Choose a unit',ls_questions:'questions',ls_best:'Best',
     ls_not_started:'Not started',ls_back:'← Back',
     ls_build:'Build this sentence in Chinese',ls_your_ans:'Your answer',
     ls_correct:'Correct!',ls_wrong:'Wrong. Answer:',ls_continue:'Continue →',
-    ls_back_lessons:'Back to Lessons',ls_try_again:'Try Again ↺',ls_perfect:'100% Perfect! 🏆',ls_unit_mastered:'Unit mastered!',ls_aim_80:'Aim for 80% to master.',
+    ls_back_lessons:'Back to Lessons',ls_try_again:'Try Again ↺',ls_perfect:'100% Perfect! 🏆',ls_unit_mastered:'Unit mastered!',ls_aim_80:'Aim for 80% to master.',g_score_lbl:'Score',ls_combo_streak:'answer streak!',dr_of:'of',dr_nice_work:'Nice work! 🔥',dr_title:'Daily Review ⚡',dr_subtitle:'Words from today',wo_mastery:'Word order mastery',wo_bonus_xp:'bonus XP earned! 🎉',wo_continue:'Continue Learning →',wo_question:'Question',wo_arrange:'Arrange the pinyin in the correct order:',
     // GAMES
     g_study_mode:'Study Mode',g_new:'New',g_new_desc:'Not studied yet',
     g_practice:'Practice',g_practice_desc:'Still learning',g_all:'All',g_all_desc:'Full library',ph_new_desc:'Not practiced yet',ph_prac_desc:'Still learning',ph_all_desc:'All saved phrases',
@@ -5549,9 +5549,9 @@ var I18N={
     g_fill_blank_correct:'Fill blank correct!',g_true_false_correct:'True / False correct!',
     g_what_mean:'What does this mean?',g_see_pinyin:'See the pinyin — find the character',
     g_type_pinyin:'Type the pinyin — tone marks optional',g_check:'Check',g_restart:'Restart',
-    g_match_pairs:'Match each character',g_next_round:'Next Round',
+    g_match_pairs:'Match {n} pairs',g_next_round:'Next Round',
     g_no_words:'Add words first',g_need_words:'You need at least 4 words in this mode',
-    g_complete:'Complete!',g_final:'Final score',
+    g_complete:'Complete!',g_final:'Final score',g_done:'Done!',g_correct:'correct',g_all_matched:'All matched!',h_goal_complete:'Goal Complete! 🎯',lu_was:'Was',lu_level:'Level',ob_continue_n:'Continue → ({n} selected)',ob_select_one:'Select at least one →',g_see_results:'See Results 🏆',hearts_refilled:'Heart refilled!',hearts_next_in:'Next heart in',g_correct_answer:'Correct',g_correct_xp:'Correct! +15 XP 🎉',g_not_quite:'Not quite — see the correct order above',prof_name_empty:'Name cannot be empty',prof_updated:'Profile updated! ✓',w_added_xp:'Word added! +2 XP ✓',
     // SENTENCES (Phrases)
     sb_subtitle:'Pick a category — tap to select sentences for the Order game',
     sb_play_btn:'selected — Play Order Game',sb_none_selected:'Select sentences first',
@@ -5628,10 +5628,10 @@ var I18N={
   },
   ru:{
     nav_home:'Главная',nav_lessons:'Уроки',nav_phrases:'Фразы',nav_friends:'Друзья',w_my_phrases:'Мои фразы',ph_subtitle:'Ваши сохранённые фразы — нажмите статус для изменения',ph_search:'Поиск фраз…',ph_no_phrases:'Фраз пока нет. Добавьте из Уроки → Фразы.',nav_games:'Игры',nav_words:'Слова',nav_bank:'Банк',
-    toggle_theme:'Сменить тему',sign_out:'Выйти',ui_language:'Язык интерфейса',
+    toggle_theme:'Сменить тему',sign_out:'Выйти',ui_language:'Язык интерфейса',notif_title:'🔔 Уведомления',notif_mark_all:'Прочитать все',hearts_empty:'Сердечки закончились!',hearts_desc:'Отдохни или посмотри рекламу чтобы получить сердце. Сердечки пополняются 1 раз в 30 минут.',hearts_watch_ad:'📺 Реклама (+1 сердце)',hearts_close:'Закрыть',pwa_title:'Установи Hanzo для лучшего опыта',pwa_sub:'Работает офлайн · Быстро · Без браузера',pwa_install:'Установить',
     greetings:'Приветствия',daily:'Повседневная жизнь',shopping:'Покупки',business:'Бизнес',food:'Еда',transport:'Транспорт',
     h_words:'Слова',h_mastered:'Изучено',h_streak:'Серия',
-    wod_label:'Слово дня',wod_tap:'нажмите для нового',wod_source_mine:'из ваших слов',wod_source_bank:'из банка слов',
+    wod_label:'Слово дня',wod_tap:'нажмите для нового',wod_tap_new:'нажмите для нового слова',wod_source_mine:'из ваших слов',wod_source_bank:'из банка слов',
     h_today:'Слов отработано',h_mastered_pct:'Слов изучено',h_streak_lbl:'Текущая серия',
     h_queue:'Очередь обучения',h_new:'Новые',h_learning:'Изучаю',h_srs_mastered:'Изучено',
     h_streak_title:'Серия занятий',h_streak_auto:'Отслеживается автоматически',
@@ -5702,7 +5702,7 @@ var I18N={
     sd_subtitle:'Учись сейчас, чтобы сохранить её',
     sd_cta:'Учиться 🔥',
     pd_edit_profile:'Редактировать профиль',
-    pd_share_progress:'Поделиться прогрессом',
+    pd_share_progress:'Поделиться прогрессом',pd_level_chart:'График уровней',
     g_correct:'✓ Правильно!',g_wrong:'✗ Неверно',g_was:'Было:',g_answer:'Ответ:',g_not_quite:'✗ Не совсем',
     g_your_answer:'Ваш ответ:',g_correct_answer:'Правильный ответ:',
     rt_everyday:'Каждый день',rt_travel:'Путешествия',rt_food:'Еда и кафе',
@@ -5715,7 +5715,7 @@ var I18N={
     ls_not_started:'Не начато',ls_back:'← Назад',
     ls_build:'Составьте это предложение по-китайски',ls_your_ans:'Ваш ответ',
     ls_correct:'Правильно!',ls_wrong:'Неверно. Ответ:',ls_continue:'Далее →',
-    ls_back_lessons:'К урокам',ls_try_again:'Попробовать снова ↺',ls_perfect:'100% Идеально! 🏆',ls_unit_mastered:'Блок пройден!',ls_aim_80:'Наберите 80% для прохождения.',
+    ls_back_lessons:'К урокам',ls_try_again:'Попробовать снова ↺',ls_perfect:'100% Идеально! 🏆',ls_unit_mastered:'Блок пройден!',ls_aim_80:'Наберите 80% для прохождения.',g_score_lbl:'Счёт',ls_combo_streak:'правильных подряд!',dr_of:'из',dr_nice_work:'Отлично! 🔥',dr_title:'Ежедневный повтор ⚡',dr_subtitle:'Слова из сегодня',wo_mastery:'Порядок слов',wo_bonus_xp:'бонусных XP заработано! 🎉',wo_continue:'Продолжить обучение →',wo_question:'Вопрос',wo_arrange:'Расположите пиньинь в правильном порядке:',
     g_study_mode:'Режим обучения',g_new:'Новые',g_new_desc:'Ещё не учили',
     g_practice:'Практика',g_practice_desc:'В процессе',g_all:'Все',g_all_desc:'Все слова',ph_new_desc:'Ещё не практиковали',ph_prac_desc:'В процессе',ph_all_desc:'Все сохранённые фразы',
     g_flashcard:'Карточки',g_choice:'Выбор',g_match:'Пары',g_pinyin:'Пиньинь',g_char:'Иероглиф',g_order:'Порядок',
@@ -5724,9 +5724,9 @@ var I18N={
     g_no_words_mode:'Нет слов в этом режиме',g_add_words_first:'Сначала добавьте слова',g_empty_state_desc:'Перейдите в Банк и добавьте слова для игры',g_browse_bank:'🏦 Открыть Банк слов',
     g_what_mean:'Что это значит?',g_see_pinyin:'Видишь пиньинь — найди иероглиф',
     g_type_pinyin:'Введите пиньинь — знаки тонов не обязательны',g_check:'Проверить',g_restart:'Заново',
-    g_match_pairs:'Соедини каждый иероглиф',g_next_round:'Следующий раунд',
+    g_match_pairs:'Соедини {n} пары',g_next_round:'Следующий раунд',
     g_no_words:'Сначала добавьте слова',g_need_words:'Нужно минимум 4 слова в этом режиме',
-    g_complete:'Готово!',g_final:'Итоговый счёт',
+    g_complete:'Готово!',g_final:'Итоговый счёт',g_done:'Готово!',g_correct:'правильно',g_all_matched:'Всё соединено!',h_goal_complete:'Цель выполнена! 🎯',lu_was:'Был',lu_level:'Уровень',ob_continue_n:'Продолжить → ({n} выбрано)',ob_select_one:'Выберите хотя бы один →',g_see_results:'Результаты 🏆',hearts_refilled:'Сердечко восстановлено!',hearts_next_in:'Следующее сердце через',g_correct_answer:'Правильно',g_correct_xp:'Правильно! +15 XP 🎉',g_not_quite:'Не совсем — смотрите правильный порядок выше',prof_name_empty:'Имя не может быть пустым',prof_updated:'Профиль обновлён! ✓',w_added_xp:'Слово добавлено! +2 XP ✓',
     sb_subtitle:'Выберите категорию — нажмите на фразы для игры "Порядок"',
     sb_play_btn:'выбрано — Играть',sb_none_selected:'Сначала выберите фразы',
     so_change:'Изменить фразы',so_build:'Составьте это предложение по-китайски',so_your_ans:'Ваш ответ',
@@ -5799,10 +5799,10 @@ var I18N={
   },
   kz:{
     nav_home:'Басты бет',nav_lessons:'Сабақтар',nav_phrases:'Фразалар',nav_friends:'Достар',w_my_phrases:'Менің фразаларым',ph_subtitle:'Сақталған фразаларыңыз — мәртебені жаңарту үшін басыңыз',ph_search:'Фразаларды іздеу…',ph_no_phrases:'Фразалар жоқ. Сабақтар → Фразалардан қосыңыз.',nav_games:'Ойындар',nav_words:'Сөздік',nav_bank:'Банк',
-    toggle_theme:'Тақырыпты өзгерту',sign_out:'Шығу',ui_language:'Интерфейс тілі',
+    toggle_theme:'Тақырыпты өзгерту',sign_out:'Шығу',ui_language:'Интерфейс тілі',notif_title:'🔔 Хабарламалар',notif_mark_all:'Барлығын оқылды деп белгілеу',hearts_empty:'Жүрекшелер бітті!',hearts_desc:'Демалыңыз немесе жарнама көріп бір жүрекше алыңыз. Жүрекшелер 30 минут сайын қосылады.',hearts_watch_ad:'📺 Жарнама (+1 жүрекше)',hearts_close:'Жабу',pwa_title:'Hanzo-ны орнату — ең жақсы тәжірибе',pwa_sub:'Офлайн жұмыс істейді · Жылдам · Браузерсіз',pwa_install:'Орнату',
     greetings:'Амандасу',daily:'Күнделікті өмір',shopping:'Сауда',business:'Бизнес',food:'Тамақ',transport:'Көлік',
     h_words:'Сөздер',h_mastered:'Меңгерілді',h_streak:'Серия',
-    wod_label:'Күннің сөзі',wod_tap:'жаңа алу',wod_source_mine:'сіздің сөздеріңізден',wod_source_bank:'сөздер банкінен',
+    wod_label:'Күннің сөзі',wod_tap:'жаңа алу',wod_tap_new:'жаңа сөз алу',wod_source_mine:'сіздің сөздеріңізден',wod_source_bank:'сөздер банкінен',
     h_today:'Сөз жаттықтырылды',h_mastered_pct:'Сөз меңгерілді',h_streak_lbl:'Ағымдағы серия',
     h_queue:'Оқу кезегі',h_new:'Жаңа',h_learning:'Оқып жатыр',h_srs_mastered:'Меңгерілді',
     h_streak_title:'Оқу сериясы',h_streak_auto:'Автоматты бақылау',
@@ -5873,7 +5873,7 @@ var I18N={
     sd_subtitle:'Сақтау үшін қазір оқыңыз',
     sd_cta:'Оқу 🔥',
     pd_edit_profile:'Профильді өңдеу',
-    pd_share_progress:'Прогреспен бөлісу',
+    pd_share_progress:'Прогреспен бөлісу',pd_level_chart:'Деңгей кестесі',
     g_correct:'✓ Дұрыс!',g_wrong:'✗ Қате',g_was:'Болды:',g_answer:'Жауап:',g_not_quite:'✗ Дәл емес',
     g_your_answer:'Сіздің жауабыңыз:',g_correct_answer:'Дұрыс жауап:',
     rt_everyday:'Күнделікті',rt_travel:'Саяхат',rt_food:'Тамақ және кафе',
@@ -5886,7 +5886,7 @@ var I18N={
     ls_not_started:'Басталмаған',ls_back:'← Артқа',
     ls_build:'Бұл сөйлемді қытайша жасаңыз',ls_your_ans:'Сіздің жауабыңыз',
     ls_correct:'Дұрыс!',ls_wrong:'Қате. Жауап:',ls_continue:'Жалғастыру →',
-    ls_back_lessons:'Сабақтарға оралу',ls_try_again:'Қайта көріңіз ↺',ls_perfect:'100% Мінсіз! 🏆',ls_unit_mastered:'Блок аяқталды!',ls_aim_80:'Меңгеру үшін 80% алыңыз.',
+    ls_back_lessons:'Сабақтарға оралу',ls_try_again:'Қайта көріңіз ↺',ls_perfect:'100% Мінсіз! 🏆',ls_unit_mastered:'Блок аяқталды!',ls_aim_80:'Меңгеру үшін 80% алыңыз.',g_score_lbl:'Нәтиже',ls_combo_streak:'дұрыс қатарынан!',dr_of:'ішінен',dr_nice_work:'Керемет! 🔥',dr_title:'Күнделікті қайталау ⚡',dr_subtitle:'Бүгінгі сөздер',wo_mastery:'Сөз тәртібі',wo_bonus_xp:'бонус XP тапсырылды! 🎉',wo_continue:'Оқуды жалғастыру →',wo_question:'Сұрақ',wo_arrange:'Пиньинді дұрыс тәртіпте орналастырыңыз:',
     g_study_mode:'Оқу режимі',g_new:'Жаңа',g_new_desc:'Әлі оқылмаған',
     g_practice:'Жаттығу',g_practice_desc:'Оқу үстінде',g_all:'Барлығы',g_all_desc:'Толық кітапхана',
     g_flashcard:'Карточкалар',g_choice:'Таңдау',g_match:'Жұптар',g_pinyin:'Пиньинь',g_char:'Иероглиф',g_order:'Тәртіп',
@@ -5895,9 +5895,9 @@ var I18N={
     g_no_words_mode:'Бұл режимде сөз жоқ',g_add_words_first:'Алдымен сөз қосыңыз',g_empty_state_desc:'Банкке өтіп, ойын үшін сөз қосыңыз',g_browse_bank:'🏦 Сөз банкіне өту',
     g_what_mean:'Бұл не дегенді білдіреді?',g_see_pinyin:'Пиньинді қара — иероглифті тап',
     g_type_pinyin:'Пиньинді енгізіңіз — тон белгілері міндетті емес',g_check:'Тексеру',g_restart:'Қайта бастау',
-    g_match_pairs:'Әр иероглифке жұп тап',g_next_round:'Келесі раунд',
+    g_match_pairs:'{n} жұпты дәйектестір',g_next_round:'Келесі раунд',
     g_no_words:'Алдымен сөз қосыңыз',g_need_words:'Бұл режимде кемінде 4 сөз қажет',
-    g_complete:'Аяқталды!',g_final:'Қорытынды нәтиже',
+    g_complete:'Аяқталды!',g_final:'Қорытынды нәтиже',g_done:'Аяқталды!',g_correct:'дұрыс',g_all_matched:'Барлығы сәйкестенді!',h_goal_complete:'Мақсат орындалды! 🎯',lu_was:'Бұрын болды',lu_level:'Деңгей',ob_continue_n:'Жалғастыру → ({n} таңдалды)',ob_select_one:'Кемінде біреуін таңдаңыз →',g_see_results:'Нәтижелер 🏆',hearts_refilled:'Жүрекше толды!',hearts_next_in:'Келесі жүрекше арқылы',g_correct_answer:'Дұрыс жауап',g_correct_xp:'Дұрыс! +15 XP 🎉',g_not_quite:'Дәл емес — жоғарыдағы дұрыс тәртіпті қараңыз',prof_name_empty:'Атау бос болмауы керек',prof_updated:'Профиль жаңартылды! ✓',w_added_xp:'Сөз қосылды! +2 XP ✓',
     sb_subtitle:'Санатты таңдаңыз — Тәртіп ойынына қосу үшін сөйлемге басыңыз',
     sb_play_btn:'таңдалды — Ойнау',sb_none_selected:'Алдымен сөйлем таңдаңыз',
     so_change:'Сөйлемдерді өзгерту',so_build:'Бұл сөйлемді қытайша жасаңыз',so_your_ans:'Сіздің жауабыңыз',
@@ -6147,8 +6147,8 @@ function startSentenceOrder(){
   if(!list.length){
     var fb=document.getElementById('so-feedback');
     if(fb){fb.style.display='block';fb.style.cssText='display:block;border-radius:var(--r12);padding:14px;background:var(--goldbg);border:1px solid var(--goldbrd);color:var(--gold);font-size:13px;font-weight:600;margin-bottom:12px;';
-      fb.textContent='No phrases added yet. Go to Bank → Phrases and tap + Add.';}
-    var prog=document.getElementById('so-prog');if(prog)prog.textContent='0 phrases';
+      fb.textContent=LANG==='ru'?'Фраз пока нет. Перейдите в Банк → Фразы и нажмите + Добавить.':LANG==='kz'?'Фразалар жоқ. Банк → Фразалар бөліміне өтіп + Қосу басыңыз.':'No phrases added yet. Go to Bank → Phrases and tap + Add.';}
+    var prog=document.getElementById('so-prog');if(prog)prog.textContent=LANG==='ru'?'0 фраз':LANG==='kz'?'0 фраза':'0 phrases';
     var tr2=document.getElementById('so-translation');if(tr2)tr2.textContent='—';
     var tiles=document.getElementById('so-tiles');if(tiles)tiles.innerHTML='';
     var zone=document.getElementById('so-answer-zone');if(zone)zone.innerHTML='';
@@ -6956,13 +6956,13 @@ function lsShowQ(){
 
     // Combo badge
     var comboHTML='';
-    if(lsCombo>=3)comboHTML='<div style="background:linear-gradient(135deg,#ea580c,#d97706);color:#fff;font-family:var(--mono);font-size:11px;font-weight:900;padding:6px 16px;border-radius:20px;display:inline-block;margin-bottom:12px;box-shadow:0 4px 14px rgba(234,88,12,.4);">🔥 '+lsCombo+'-answer streak!</div>';
+    if(lsCombo>=3)comboHTML='<div style="background:linear-gradient(135deg,#ea580c,#d97706);color:#fff;font-family:var(--mono);font-size:11px;font-weight:900;padding:6px 16px;border-radius:20px;display:inline-block;margin-bottom:12px;box-shadow:0 4px 14px rgba(234,88,12,.4);">🔥 '+lsCombo+' '+t('ls_combo_streak')+'</div>';
 
     // Stats row
     var statsHTML='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0;">'
       +'<div style="background:var(--s2);border-radius:var(--r12);padding:12px 8px;">'
         +'<div style="font-size:18px;font-weight:900;color:'+col+';">'+score+'%</div>'
-        +'<div style="font-size:9px;font-family:var(--mono);color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.4px;">Score</div>'
+        +'<div style="font-size:9px;font-family:var(--mono);color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.4px;">'+t('g_score_lbl')+'</div>'
       +'</div>'
       +'<div style="background:var(--s2);border-radius:var(--r12);padding:12px 8px;">'
         +'<div style="font-size:18px;font-weight:900;color:var(--gold);">+'+xp+'</div>'
@@ -6970,7 +6970,7 @@ function lsShowQ(){
       +'</div>'
       +'<div style="background:var(--s2);border-radius:var(--r12);padding:12px 8px;">'
         +'<div style="font-size:18px;font-weight:900;color:var(--text);">'+lsCorrect+'/'+totalQ+'</div>'
-        +'<div style="font-size:9px;font-family:var(--mono);color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.4px;">Correct</div>'
+        +'<div style="font-size:9px;font-family:var(--mono);color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.4px;">'+t('g_correct')+'</div>'
       +'</div>'
       +'</div>';
 
@@ -8512,7 +8512,7 @@ function showLevelUp(newLevel,prevLevel){
   if(el('lu-num'))el('lu-num').textContent=newLevel.lvl;
   if(el('lu-title'))el('lu-title').textContent=newLevel.title.split(' ').slice(1).join(' ');
   if(el('lu-sub'))el('lu-sub').textContent=getLevelUpMessage(newLevel);
-  if(el('lu-prev'))el('lu-prev').textContent='Was: '+prevLevel.title+' (Lv.'+prevLevel.lvl+')';
+  if(el('lu-prev'))el('lu-prev').textContent=t('lu_was')+': '+prevLevel.title+' (Lv.'+prevLevel.lvl+')';
   if(el('lu-total-xp'))el('lu-total-xp').textContent=xp.toLocaleString();
   if(el('lu-words-count'))el('lu-words-count').textContent=(S.chars_list||[]).length;
   // Show overlay
@@ -8564,8 +8564,8 @@ function toggleObGoal(goal,elem){
   // Update step 2 button
   var btn=document.getElementById('ob-step2-btn');
   if(btn){
-    if(obChoices.goals.length>0){btn.removeAttribute('disabled');btn.style.opacity='1';btn.textContent='Continue \u2192 ('+obChoices.goals.length+' selected)';}
-    else{btn.disabled=true;btn.style.opacity='.5';btn.textContent='Select at least one \u2192';}
+    if(obChoices.goals.length>0){btn.removeAttribute('disabled');btn.style.opacity='1';btn.textContent=t('ob_continue_n').replace('{n}',obChoices.goals.length);}
+    else{btn.disabled=true;btn.style.opacity='.5';btn.textContent=t('ob_select_one');}
   }
 }
 
@@ -8822,7 +8822,7 @@ function showProgressCard(){
   var words=(S.chars_list||[]).length;
   var phrases=(S.phrases_list||[]).length;
   if(el('pc-emoji'))el('pc-emoji').textContent=ld.title.split(' ')[0];
-  if(el('pc-level'))el('pc-level').textContent='Level '+ld.lvl;
+  if(el('pc-level'))el('pc-level').textContent=t('lu_level')+' '+ld.lvl;
   if(el('pc-title'))el('pc-title').textContent=ld.title;
   if(el('pc-hsk-badge'))el('pc-hsk-badge').textContent=getHSKForLevel(ld.lvl);
   if(el('pc-words'))el('pc-words').textContent=words;
@@ -9067,9 +9067,9 @@ function startRecall(){
 
 function showRCCard(){
   if(rcIdx>=rcCards.length){
-    var m=el('rc-meaning');if(m)m.textContent='🎉 Done!';
-    var hp=el('rc-hint-pinyin');if(hp)hp.textContent=rcCorrect+'/'+rcTotal+' correct';
-    var sc=el('rc-score');if(sc&&rcTotal)sc.textContent='Score: '+Math.round(rcCorrect/rcTotal*100)+'%';
+    var m=el('rc-meaning');if(m)m.textContent='🎉 '+t('g_done');
+    var hp=el('rc-hint-pinyin');if(hp)hp.textContent=rcCorrect+'/'+rcTotal+' '+t('g_correct');
+    var sc=el('rc-score');if(sc&&rcTotal)sc.textContent=t('g_final')+': '+Math.round(rcCorrect/rcTotal*100)+'%';
     if(el('rc-next'))el('rc-next').style.display='none';
     if(rcCorrect>=rcTotal*.8)launchConfetti();
     return;
@@ -9146,8 +9146,8 @@ function showDailyReview(){
     body.innerHTML='<div style="text-align:center;padding:20px 0;">'
       +'<div style="font-size:52px;margin-bottom:12px;">'+(pct>=80?'🎉':pct>=60?'💪':'📚')+'</div>'
       +'<div style="font-size:28px;font-weight:900;color:'+(pct>=80?'var(--green)':'var(--gold)')+'">'+pct+'%</div>'
-      +'<div style="font-size:14px;color:var(--muted2);margin-top:6px;margin-bottom:20px;">'+drCorrect+' of '+drTotal+' correct</div>'
-      +'<button class="btn" onclick="closeDailyReview()">Nice work! 🔥</button>'
+      +'<div style="font-size:14px;color:var(--muted2);margin-top:6px;margin-bottom:20px;">'+drCorrect+' '+t('dr_of')+' '+drTotal+' '+t('g_correct')+'</div>'
+      +'<button class="btn" onclick="closeDailyReview()">'+t('dr_nice_work')+'</button>'
       +'</div>';
     if(pct>=80){awardXP(30,'Daily Review aced! 🎯');launchConfetti();}
     return;
@@ -9156,11 +9156,11 @@ function showDailyReview(){
   var all=S.chars_list||[];
   var others=all.filter(function(c){return c.id!==w.id;}).sort(function(){return Math.random()-.5;}).slice(0,3);
   var choices=[w].concat(others).sort(function(){return Math.random()-.5;});
-  if(el('dr-prog'))el('dr-prog').textContent=(drIdx+1)+' of '+dailyReviewCards.length;
+  if(el('dr-prog'))el('dr-prog').textContent=(drIdx+1)+' '+t('dr_of')+' '+dailyReviewCards.length;
   body.innerHTML='';
   var cn=document.createElement('div');cn.style.cssText='font-family:var(--cn);font-size:52px;font-weight:900;text-align:center;color:var(--red);margin-bottom:8px;';cn.textContent=w.char;body.appendChild(cn);
   var py=document.createElement('div');py.style.cssText='font-family:var(--mono);font-size:13px;color:var(--gold);text-align:center;margin-bottom:4px;';py.textContent=w.pinyin||'';body.appendChild(py);
-  var q=document.createElement('div');q.style.cssText='font-size:12px;color:var(--muted2);text-align:center;margin-bottom:18px;';q.textContent='What does this mean?';body.appendChild(q);
+  var q=document.createElement('div');q.style.cssText='font-size:12px;color:var(--muted2);text-align:center;margin-bottom:18px;';q.textContent=t('g_what_mean');body.appendChild(q);
   var grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px;';
   var allBtns=[];
   choices.forEach(function(ch){
@@ -9222,7 +9222,7 @@ function drAnswer(chosenId,correctId,chosenBtn,allBtns){
   var nextBtn=document.createElement('button');
   nextBtn.style.cssText='width:100%;margin-top:10px;padding:13px;background:var(--red);border:none;'+
     'color:#fff;font-family:var(--font);font-size:14px;font-weight:700;border-radius:var(--r12);cursor:pointer;';
-  nextBtn.textContent=drIdx+1>=dailyReviewCards.length?'See Results 🏆':'Next →';
+  nextBtn.textContent=drIdx+1>=dailyReviewCards.length?t('g_see_results'):'Next →';
   nextBtn.onclick=function(){drIdx++;drAnswered=false;showDailyReview();};
   body.appendChild(nextBtn);
 }
@@ -10317,7 +10317,7 @@ function clearAvatar(){
 function saveProfile(){
   var inp = el('ep-name-input');
   var newName = inp ? inp.value.trim() : '';
-  if(!newName){ friendsNotify('Name cannot be empty'); return; }
+  if(!newName){ friendsNotify(t('prof_name_empty')); return; }
 
   // Update currentUser object
   if(currentUser){
@@ -10349,7 +10349,7 @@ function saveProfile(){
 
   // Close overlay FIRST, then show message
   closeEditProfile();
-  setTimeout(function(){ friendsNotify('Profile updated! ✓'); }, 300);
+  setTimeout(function(){ friendsNotify(t('prof_updated')); }, 300);
 }
 
 function updateAllAvatars(){
@@ -10781,9 +10781,9 @@ function renderWO(){
     body.innerHTML='<div style="text-align:center;padding:32px 0;">'
       +'<div style="font-size:56px;margin-bottom:12px;">'+(pct>=75?'🏆':pct>=50?'⭐':'💪')+'</div>'
       +'<div style="font-size:28px;font-weight:900;color:'+(pct>=75?'#10b981':'#f59e0b')+';">'+pct+'%</div>'
-      +'<div style="font-size:14px;color:var(--muted2);margin:8px 0 20px;">Word order mastery</div>'
-      +'<div style="background:var(--goldbg);border:1px solid var(--goldbrd);border-radius:var(--r12);padding:12px;margin-bottom:20px;font-size:13px;color:var(--muted3);">+'+(woScore*15)+' bonus XP earned! 🎉</div>'
-      +'<button onclick="closeWordOrder()" class="btn" style="width:100%;font-size:15px;font-weight:800;">Continue Learning →</button>'
+      +'<div style="font-size:14px;color:var(--muted2);margin:8px 0 20px;">'+t('wo_mastery')+'</div>'
+      +'<div style="background:var(--goldbg);border:1px solid var(--goldbrd);border-radius:var(--r12);padding:12px;margin-bottom:20px;font-size:13px;color:var(--muted3);">+'+(woScore*15)+' '+t('wo_bonus_xp')+'</div>'
+      +'<button onclick="closeWordOrder()" class="btn" style="width:100%;font-size:15px;font-weight:800;">'+t('wo_continue')+'</button>'
       +'</div>';
     awardXP(woScore*15,'Word order bonus');
     if(pct>=75)launchConfetti();
@@ -10796,8 +10796,8 @@ function renderWO(){
   // Header
   var hdr=document.createElement('div');
   hdr.style.cssText='margin-bottom:16px;';
-  hdr.innerHTML='<div style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;margin-bottom:6px;">Question '+(woIdx+1)+' of '+woItems.length+'</div>'
-    +'<div style="font-size:13px;font-weight:700;color:var(--muted2);">Arrange the pinyin in the correct order:</div>';
+  hdr.innerHTML='<div style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;margin-bottom:6px;">'+t('wo_question')+' '+(woIdx+1)+' '+t('dr_of')+' '+woItems.length+'</div>'
+    +'<div style="font-size:13px;font-weight:700;color:var(--muted2);">'+t('wo_arrange')+'</div>';
   body.appendChild(hdr);
 
   // Translation hint
@@ -10885,14 +10885,14 @@ function woCheckAnswer(correctSyllables,slotsDiv,tilesDiv,checkBtn){
   slotsDiv.style.background=isCorrect?'#d1fae5':'#fee2e2';
   if(isCorrect){
     woScore++;
-    friendsNotify('Correct! +15 XP 🎉');
+    friendsNotify(t('g_correct_xp'));
   } else {
     // Show correct answer
     var correctDiv=document.createElement('div');
     correctDiv.style.cssText='margin-top:10px;background:#d1fae5;border:2px solid #10b981;border-radius:var(--r12);padding:12px;font-family:var(--mono);font-size:14px;color:#065f46;text-align:center;font-weight:700;';
-    correctDiv.innerHTML='Correct: <span style="color:#065f46;">'+correctSyllables.join(' ')+'</span>';
+    correctDiv.innerHTML=t('g_correct_answer')+': <span style="color:#065f46;">'+correctSyllables.join(' ')+'</span>';
     slotsDiv.parentNode.insertBefore(correctDiv,slotsDiv.nextSibling);
-    friendsNotify('Not quite — see the correct order above');
+    friendsNotify(t('g_not_quite'));
   }
   // Disable all tiles
   tilesDiv.querySelectorAll('.wo-tile').forEach(function(t){t.disabled=true;});
@@ -10901,7 +10901,7 @@ function woCheckAnswer(correctSyllables,slotsDiv,tilesDiv,checkBtn){
   var nextBtn=document.createElement('button');
   nextBtn.className='btn';
   nextBtn.style.cssText='width:100%;font-size:15px;font-weight:800;margin-top:12px;';
-  nextBtn.textContent=woIdx+1>=woItems.length?'See Results 🏆':'Next →';
+  nextBtn.textContent=woIdx+1>=woItems.length?t('g_see_results'):'Next →';
   nextBtn.onclick=function(){woIdx++;renderWO();};
   checkBtn.parentNode.appendChild(nextBtn);
 }
@@ -12062,8 +12062,8 @@ if(S.lang){setLang(S.lang);}else{setLang('en');}
   <div style="background:var(--s1);border:1.5px solid var(--gold);border-radius:24px;padding:24px;width:100%;max-width:400px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
       <div>
-        <div style="font-family:var(--mono);font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:.6px;">Daily Review ⚡</div>
-        <div style="font-size:16px;font-weight:800;margin-top:2px;">Words from today</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:.6px;" data-i18n="dr_title">Daily Review ⚡</div>
+        <div style="font-size:16px;font-weight:800;margin-top:2px;" data-i18n="dr_subtitle">Words from today</div>
       </div>
       <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);" id="dr-prog">1 of 5</div>
     </div>
@@ -12549,7 +12549,7 @@ function addCharV() {
   awardXP(2, 'Added word');
   el('ch-char-v').value = ''; el('ch-pinyin-v').value = ''; el('ch-meaning-v').value = '';
   renderCharsV();
-  friendsNotify('Word added! +2 XP ✓');
+  friendsNotify(t('w_added_xp'));
 }
 
 // Patch goPage to handle learn/vocab nav highlights correctly
@@ -14229,10 +14229,10 @@ function _startHeartsRefillTimer() {
   if (!refillTime) { label.textContent = 'Full hearts restored!'; return; }
   var interval = setInterval(function() {
     var left = refillTime - Date.now();
-    if (left <= 0) { clearInterval(interval); _checkHeartRefill(); _renderHeartsDisplay(); label.textContent = 'Heart refilled!'; return; }
+    if (left <= 0) { clearInterval(interval); _checkHeartRefill(); _renderHeartsDisplay(); label.textContent = t('hearts_refilled'); return; }
     var m = Math.floor(left / 60000);
     var s = Math.floor((left % 60000) / 1000);
-    label.textContent = 'Next heart in: ' + m + ':' + String(s).padStart(2, '0');
+    label.textContent = t('hearts_next_in') + ': ' + m + ':' + String(s).padStart(2, '0');
   }, 1000);
 }
 
