@@ -2011,12 +2011,12 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 
   <!-- INVITE FRIENDS CARD -->
   <div style="background:linear-gradient(135deg,rgba(232,96,122,.12),rgba(154,107,196,.08));border:1.5px solid rgba(232,96,122,.3);border-radius:var(--r16);padding:18px 16px;margin-bottom:14px;">
-    <div style="font-size:15px;font-weight:800;margin-bottom:4px;">📨 Invite Friends</div>
-    <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);margin-bottom:14px;">Share your code — you both get a free 🛡️ Streak Shield when they join!</div>
+    <div style="font-size:15px;font-weight:800;margin-bottom:4px;" data-i18n="fr_invite_title">📨 Invite Friends</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);margin-bottom:14px;" data-i18n="fr_invite_sub">Share your code — you both get a free 🛡️ Streak Shield when they join!</div>
     <div style="font-family:var(--mono);font-size:22px;font-weight:900;letter-spacing:4px;color:var(--red);text-align:center;background:rgba(0,0,0,.25);border:1.5px dashed rgba(232,96,122,.4);border-radius:var(--r12);padding:14px;margin-bottom:14px;" id="my-invite-code">HANZO-XXXXX</div>
     <div style="display:flex;gap:8px;">
-      <button onclick="copyInviteCode()" style="flex:1;background:var(--red);border:none;color:#fff;font-size:13px;font-weight:800;padding:12px;border-radius:var(--r12);cursor:pointer;">📋 Copy Code</button>
-      <button onclick="_shareInvite()" style="flex:1;background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-size:13px;font-weight:700;padding:12px;border-radius:var(--r12);cursor:pointer;">🔗 Share Link</button>
+      <button onclick="copyInviteCode()" style="flex:1;background:var(--red);border:none;color:#fff;font-size:13px;font-weight:800;padding:12px;border-radius:var(--r12);cursor:pointer;" data-i18n="fr_copy_code">📋 Copy Code</button>
+      <button onclick="_shareInvite()" style="flex:1;background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-size:13px;font-weight:700;padding:12px;border-radius:var(--r12);cursor:pointer;" data-i18n="fr_share_link">🔗 Share Link</button>
     </div>
   </div>
 
@@ -3732,7 +3732,7 @@ function importData(){
   try{S=JSON.parse(el('import-ta').value.trim());save();el('import-ta').value='';el('import-area').style.display='none';showMsg('Imported!','var(--green)');renderHome();}
   catch(e){showMsg('Invalid JSON','var(--red)');}
 }
-function confirmClear(){if(confirm('Clear all data? Cannot be undone.')){S={};save();renderHome();showMsg('Cleared','var(--muted2)');}}
+function confirmClear(){if(confirm(t('confirm_clear'))){S={};save();renderHome();showMsg(t('confirm_cleared'),'var(--muted2)');}}
 
 // ==================== WORD OF DAY ====================
 var wodIdx=-1;
@@ -5465,7 +5465,7 @@ var I18N={
     h_see_month:'See full month →',
     h_back_month:'← Back to streak',
     h_this_week:'This Week',
-    h_see_all:'See all →',h_go_arrow:'Go →',h_review_btn:'Review →',srs_keep_fresh:'Review these words to keep them fresh',fr_unfollowed:'Unfollowed {n}',fr_following:'Now following {n} 🎉',prof_img_too_large:'Image too large (max 5MB)',prof_img_error:'Could not load image. Try a different photo.',prof_photo_updated:'Photo updated! ✓',prof_username_taken:'That username is taken',w_enter_char_meaning:'Enter character and meaning',copy_copied:'Copied!',copy_long_press:'Long-press to copy',copy_long_press_above:'Long-press the text above to copy',
+    h_see_all:'See all →',h_go_arrow:'Go →',h_review_btn:'Review →',srs_keep_fresh:'Review these words to keep them fresh',fr_unfollowed:'Unfollowed {n}',fr_following:'Now following {n} 🎉',prof_img_too_large:'Image too large (max 5MB)',prof_img_error:'Could not load image. Try a different photo.',prof_photo_updated:'Photo updated! ✓',prof_username_taken:'That username is taken',w_enter_char_meaning:'Enter character and meaning',copy_copied:'Copied!',copy_long_press:'Long-press to copy',copy_long_press_above:'Long-press the text above to copy',confirm_clear:'Clear all data? Cannot be undone.',confirm_cleared:'Cleared',fr_remove_confirm:'Remove {n} from friends?',feed_delete_confirm:'Delete this post?',share_title:'Share',share_copy_btn:'📋 Copy to Share',share_hint:'Tap Copy · Then paste into WhatsApp, Telegram, or anywhere',fr_invite_title:'📨 Invite Friends',fr_invite_sub:'Share your code — you both get a free 🛡️ Streak Shield when they join!',fr_copy_code:'📋 Copy Code',fr_share_link:'🔗 Share Link',
     h_you_are:'You are #{rank} this week',
     h_study_queue:'Study Queue',
     h_month_consistency:'{pct}% consistency — {done} of {total} days studied',
@@ -5647,7 +5647,7 @@ var I18N={
     h_see_month:'Посмотреть месяц →',
     h_back_month:'← Назад к серии',
     h_this_week:'Эта неделя',
-    h_see_all:'Смотреть все →',h_go_arrow:'Перейти →',h_review_btn:'Повторить →',srs_keep_fresh:'Повторите эти слова, чтобы не забыть',fr_unfollowed:'Отписались от {n}',fr_following:'Теперь вы следите за {n} 🎉',prof_img_too_large:'Изображение слишком большое (макс. 5 МБ)',prof_img_error:'Не удалось загрузить фото. Попробуйте другое.',prof_photo_updated:'Фото обновлено! ✓',prof_username_taken:'Это имя пользователя занято',w_enter_char_meaning:'Введите иероглиф и значение',copy_copied:'Скопировано!',copy_long_press:'Нажмите долго для копирования',copy_long_press_above:'Нажмите долго на текст выше для копирования',
+    h_see_all:'Смотреть все →',h_go_arrow:'Перейти →',h_review_btn:'Повторить →',srs_keep_fresh:'Повторите эти слова, чтобы не забыть',fr_unfollowed:'Отписались от {n}',fr_following:'Теперь вы следите за {n} 🎉',prof_img_too_large:'Изображение слишком большое (макс. 5 МБ)',prof_img_error:'Не удалось загрузить фото. Попробуйте другое.',prof_photo_updated:'Фото обновлено! ✓',prof_username_taken:'Это имя пользователя занято',w_enter_char_meaning:'Введите иероглиф и значение',copy_copied:'Скопировано!',copy_long_press:'Нажмите долго для копирования',copy_long_press_above:'Нажмите долго на текст выше для копирования',confirm_clear:'Очистить все данные? Нельзя отменить.',confirm_cleared:'Очищено',fr_remove_confirm:'Убрать {n} из друзей?',feed_delete_confirm:'Удалить этот пост?',share_title:'Поделиться',share_copy_btn:'📋 Скопировать',share_hint:'Скопируй · Вставь в WhatsApp, Telegram или другое',fr_invite_title:'📨 Пригласить друзей',fr_invite_sub:'Поделись кодом — вы оба получите 🛡️ Щит при регистрации!',fr_copy_code:'📋 Скопировать код',fr_share_link:'🔗 Поделиться ссылкой',
     h_you_are:'Ты #{rank} на этой неделе',
     h_study_queue:'Очередь обучения',
     h_month_consistency:'{pct}% успеваемость — {done} из {total} дней',
@@ -5818,7 +5818,7 @@ var I18N={
     h_see_month:'Толық айды көру →',
     h_back_month:'← Сериясына оралу',
     h_this_week:'Осы апта',
-    h_see_all:'Барлығын көру →',h_go_arrow:'Өту →',h_review_btn:'Қайталау →',srs_keep_fresh:'Ұмытпау үшін осы сөздерді қайталаңыз',fr_unfollowed:'{n} жазылымнан шықтыңыз',fr_following:'{n} жазылдыңыз 🎉',prof_img_too_large:'Сурет тым үлкен (макс. 5 МБ)',prof_img_error:'Суретті жүктеу мүмкін болмады. Басқасын таңдаңыз.',prof_photo_updated:'Фото жаңартылды! ✓',prof_username_taken:'Бұл пайдаланушы аты алынған',w_enter_char_meaning:'Иероглиф пен мағынасын енгізіңіз',copy_copied:'Көшірілді!',copy_long_press:'Ұзақ басу арқылы көшіріңіз',copy_long_press_above:'Жоғарыдағы мәтінді ұзақ басыңыз',
+    h_see_all:'Барлығын көру →',h_go_arrow:'Өту →',h_review_btn:'Қайталау →',srs_keep_fresh:'Ұмытпау үшін осы сөздерді қайталаңыз',fr_unfollowed:'{n} жазылымнан шықтыңыз',fr_following:'{n} жазылдыңыз 🎉',prof_img_too_large:'Сурет тым үлкен (макс. 5 МБ)',prof_img_error:'Суретті жүктеу мүмкін болмады. Басқасын таңдаңыз.',prof_photo_updated:'Фото жаңартылды! ✓',prof_username_taken:'Бұл пайдаланушы аты алынған',w_enter_char_meaning:'Иероглиф пен мағынасын енгізіңіз',copy_copied:'Көшірілді!',copy_long_press:'Ұзақ басу арқылы көшіріңіз',copy_long_press_above:'Жоғарыдағы мәтінді ұзақ басыңыз',confirm_clear:'Барлық деректерді өшіру? Бұл қайтарылмайды.',confirm_cleared:'Тазаланды',fr_remove_confirm:'{n} достар тізімінен шығару?',feed_delete_confirm:'Бұл постты жою?',share_title:'Бөлісу',share_copy_btn:'📋 Көшіру',share_hint:'Көшір · WhatsApp, Telegram немесе кез келген жерге жаздыр',fr_invite_title:'📨 Достарды шақыру',fr_invite_sub:'Кодпен бөліс — екеуіңіз де 🛡️ Қалқан аласыздар!',fr_copy_code:'📋 Кодты көшіру',fr_share_link:'🔗 Сілтемемен бөлісу',
     h_you_are:'Сіз #{rank} осы аптада',
     h_study_queue:'Оқу кезегі',
     h_month_consistency:'{pct}% үздіксіздік — {total} күннің {done} күні оқыдым',
@@ -12082,7 +12082,7 @@ if(S.lang){setLang(S.lang);}else{setLang('en');}
       <div style="display:flex;align-items:center;gap:10px;">
         <span style="font-family:var(--cn);font-size:22px;font-weight:900;color:#e8607a;">漢</span>
         <div>
-          <div style="font-size:13px;font-weight:800;color:#fff;" id="share-modal-title">Share</div>
+          <div style="font-size:13px;font-weight:800;color:#fff;" id="share-modal-title" data-i18n="share_title">Share</div>
           <div style="font-family:var(--mono);font-size:8px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;">HANZO</div>
         </div>
       </div>
@@ -12094,8 +12094,8 @@ if(S.lang){setLang(S.lang);}else{setLang('en');}
         <div id="share-modal-text-display" style="font-family:var(--mono);font-size:12px;line-height:1.8;color:rgba(255,255,255,.8);white-space:pre-wrap;word-break:break-word;max-height:160px;overflow-y:auto;"></div>
       </div>
       <textarea id="share-modal-text" style="position:absolute;opacity:0;width:1px;height:1px;top:0;left:0;pointer-events:none;" readonly></textarea>
-      <button id="share-copy-btn" onclick="execCopyShare()" style="width:100%;background:linear-gradient(135deg,#e8607a,#d4a832);border:none;color:#fff;font-family:var(--font);font-size:14px;font-weight:800;padding:14px;border-radius:12px;cursor:pointer;letter-spacing:.3px;transition:all .2s;margin-bottom:8px;">📋 Copy to Share</button>
-      <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.25);text-align:center;">Tap Copy · Then paste into WhatsApp, Telegram, or anywhere</div>
+      <button id="share-copy-btn" onclick="execCopyShare()" style="width:100%;background:linear-gradient(135deg,#e8607a,#d4a832);border:none;color:#fff;font-family:var(--font);font-size:14px;font-weight:800;padding:14px;border-radius:12px;cursor:pointer;letter-spacing:.3px;transition:all .2s;margin-bottom:8px;" data-i18n="share_copy_btn">📋 Copy to Share</button>
+      <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.25);text-align:center;" data-i18n="share_hint">Tap Copy · Then paste into WhatsApp, Telegram, or anywhere</div>
     </div>
   </div>
 </div>
@@ -12984,7 +12984,7 @@ function _renderMyFriends() {
     btn.style.cssText = 'flex-shrink:0;padding:7px 12px;border-radius:20px;font-family:var(--mono);font-size:10px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:var(--s3);color:var(--muted2);transition:all .2s;';
     btn.textContent = 'Remove';
     btn.onclick = function() {
-      if (!confirm('Remove ' + f.name + ' from friends?')) return;
+      if (!confirm(t('fr_remove_confirm').replace('{n}',f.name))) return;
       removeFriend(f.code);
     };
     card.appendChild(btn);
@@ -13558,7 +13558,7 @@ async function _toggleLike(post, btn) {
 }
 
 async function _deletePost(postId, cardEl) {
-  if (!confirm('Delete this post?')) return;
+  if (!confirm(t('feed_delete_confirm'))) return;
   if (cardEl) { cardEl.style.opacity='0'; cardEl.style.transform='scale(.96)'; cardEl.style.transition='all .2s'; setTimeout(function(){cardEl.remove();},200); }
   await _db.from('posts').delete().eq('id', postId).eq('user_id', currentUser.id);
 }
