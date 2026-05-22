@@ -1597,8 +1597,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div style="display:flex;align-items:center;gap:12px;">
       <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(139,92,246,.2));display:flex;align-items:center;justify-content:center;font-size:20px;">🌐</div>
       <div>
-        <div style="font-size:13px;font-weight:800;">Community</div>
-        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:1px;" id="community-card-sub">See what learners are doing</div>
+        <div style="font-size:13px;font-weight:800;" data-i18n="nav_community">Community</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:1px;" id="community-card-sub" data-i18n="h_community_sub">See what learners are doing</div>
       </div>
     </div>
     <div style="font-family:var(--mono);font-size:11px;color:rgba(99,102,241,.8);font-weight:700;">View →</div>
@@ -2369,8 +2369,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 <div id="page-profile">
   <!-- Back button row -->
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-    <button onclick="goPage('home',document.querySelector('.bni[data-page=\'home\']'))" style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r12);padding:8px 14px;font-family:var(--mono);font-size:11px;color:var(--muted2);cursor:pointer;">← Back</button>
-    <div style="font-size:16px;font-weight:800;">My Profile</div>
+    <button onclick="goPage('home',document.querySelector('.bni[data-page=\'home\']'))" style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r12);padding:8px 14px;font-family:var(--mono);font-size:11px;color:var(--muted2);cursor:pointer;" data-i18n="prof_back">← Back</button>
+    <div style="font-size:16px;font-weight:800;" data-i18n="prof_my_profile">My Profile</div>
   </div>
 
   <!-- HEADER CARD -->
@@ -2379,65 +2379,65 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div class="profile-username" id="profile-display-name">—</div>
     <div class="profile-handle" id="profile-handle">@—</div>
     <div id="profile-league-badge" style="margin-top:8px;font-size:13px;font-weight:700;"></div>
-    <button onclick="showEditProfile()" style="margin-top:12px;background:var(--s2);border:1.5px solid var(--border2);color:var(--muted3);font-family:var(--mono);font-size:9px;font-weight:700;padding:7px 18px;border-radius:20px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;">✏️ Edit Profile</button>
+    <button onclick="showEditProfile()" style="margin-top:12px;background:var(--s2);border:1.5px solid var(--border2);color:var(--muted3);font-family:var(--mono);font-size:9px;font-weight:700;padding:7px 18px;border-radius:20px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;" data-i18n="prof_edit_profile">✏️ Edit Profile</button>
   </div>
 
   <!-- STATS ROW -->
   <div class="profile-stats-row" id="profile-stats-row">
-    <div class="profile-stat"><div class="profile-stat-n" id="prof-xp" style="color:var(--gold);">0</div><div class="profile-stat-l">Total XP</div></div>
-    <div class="profile-stat"><div class="profile-stat-n" id="prof-words" style="color:var(--blue);">0</div><div class="profile-stat-l">Words</div></div>
-    <div class="profile-stat"><div class="profile-stat-n" id="prof-streak" style="color:var(--red);">0</div><div class="profile-stat-l">🔥 Streak</div></div>
-    <div class="profile-stat"><div class="profile-stat-n" id="prof-friends" style="color:var(--green);">0</div><div class="profile-stat-l">Friends</div></div>
+    <div class="profile-stat"><div class="profile-stat-n" id="prof-xp" style="color:var(--gold);">0</div><div class="profile-stat-l" data-i18n="prof_total_xp">Total XP</div></div>
+    <div class="profile-stat"><div class="profile-stat-n" id="prof-words" style="color:var(--blue);">0</div><div class="profile-stat-l" data-i18n="prof_words">Words</div></div>
+    <div class="profile-stat"><div class="profile-stat-n" id="prof-streak" style="color:var(--red);">0</div><div class="profile-stat-l" data-i18n="prof_streak">🔥 Streak</div></div>
+    <div class="profile-stat"><div class="profile-stat-n" id="prof-friends" style="color:var(--green);">0</div><div class="profile-stat-l" data-i18n="prof_friends">Friends</div></div>
   </div>
 
   <!-- INVITE CODE CARD -->
   <div style="background:linear-gradient(135deg,rgba(232,96,122,.1),rgba(154,107,196,.08));border:1.5px solid rgba(232,96,122,.25);border-radius:var(--r16);padding:14px 16px;margin-bottom:14px;">
-    <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">📨 Your Invite Code</div>
+    <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;" data-i18n="prof_invite_code">📨 Your Invite Code</div>
     <div style="font-family:var(--mono);font-size:20px;font-weight:900;letter-spacing:4px;color:var(--red);text-align:center;background:rgba(0,0,0,.2);border:1.5px dashed rgba(232,96,122,.35);border-radius:var(--r12);padding:10px;margin-bottom:10px;" id="prof-invite-code">HANZO-XXXXX</div>
     <div style="display:flex;gap:8px;">
-      <button onclick="copyInviteCode()" style="flex:1;background:var(--red);border:none;color:#fff;font-size:12px;font-weight:800;padding:10px;border-radius:var(--r10);cursor:pointer;">📋 Copy</button>
-      <button onclick="_shareInvite()" style="flex:1;background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-size:12px;font-weight:700;padding:10px;border-radius:var(--r10);cursor:pointer;">🔗 Share</button>
-      <button onclick="goPage('feed',null)" style="flex:1;background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-size:12px;font-weight:700;padding:10px;border-radius:var(--r10);cursor:pointer;">🌐 Feed</button>
+      <button onclick="copyInviteCode()" style="flex:1;background:var(--red);border:none;color:#fff;font-size:12px;font-weight:800;padding:10px;border-radius:var(--r10);cursor:pointer;" data-i18n="prof_copy_btn">📋 Copy</button>
+      <button onclick="_shareInvite()" style="flex:1;background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-size:12px;font-weight:700;padding:10px;border-radius:var(--r10);cursor:pointer;" data-i18n="prof_share_btn">🔗 Share</button>
+      <button onclick="goPage('feed',null)" style="flex:1;background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-size:12px;font-weight:700;padding:10px;border-radius:var(--r10);cursor:pointer;" data-i18n="prof_community_btn">🌐 Community</button>
     </div>
   </div>
 
   <!-- ACHIEVEMENTS -->
-  <div class="sh"><span class="sh-title">🏆 Achievements</span></div>
+  <div class="sh"><span class="sh-title" data-i18n="prof_achievements">🏆 Achievements</span></div>
   <div class="profile-achievements" id="profile-achievements"></div>
 
   <!-- GETTING STARTED (shown for new users, hidden once all done) -->
   <div id="profile-getting-started" style="margin-bottom:14px;">
-    <div class="sh"><span class="sh-title">🚀 Getting Started</span></div>
+    <div class="sh"><span class="sh-title" data-i18n="prof_getting_started">🚀 Getting Started</span></div>
     <div style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r16);padding:16px;display:flex;flex-direction:column;gap:10px;">
       <div class="gs-item" id="gs-words" style="display:flex;align-items:center;gap:12px;opacity:.5;">
         <div style="width:32px;height:32px;border-radius:50%;background:var(--s3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;" id="gs-words-check">📚</div>
         <div style="flex:1;">
-          <div style="font-size:13px;font-weight:700;">Add your first word</div>
-          <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);">Go to Vocab → Bank and save a word</div>
+          <div style="font-size:13px;font-weight:700;" data-i18n="prof_gs_word_title">Add your first word</div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);" data-i18n="prof_gs_word_desc">Go to Vocab → Bank and save a word</div>
         </div>
         <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);" id="gs-words-status">0/1</div>
       </div>
       <div class="gs-item" id="gs-practice" style="display:flex;align-items:center;gap:12px;opacity:.5;">
         <div style="width:32px;height:32px;border-radius:50%;background:var(--s3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;" id="gs-practice-check">🎮</div>
         <div style="flex:1;">
-          <div style="font-size:13px;font-weight:700;">Complete a practice session</div>
-          <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);">Go to Learn and play any game</div>
+          <div style="font-size:13px;font-weight:700;" data-i18n="prof_gs_practice_title">Complete a practice session</div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);" data-i18n="prof_gs_practice_desc">Go to Learn and play any game</div>
         </div>
         <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);" id="gs-practice-status">0/1</div>
       </div>
       <div class="gs-item" id="gs-streak" style="display:flex;align-items:center;gap:12px;opacity:.5;">
         <div style="width:32px;height:32px;border-radius:50%;background:var(--s3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;" id="gs-streak-check">🔥</div>
         <div style="flex:1;">
-          <div style="font-size:13px;font-weight:700;">Build a 3-day streak</div>
-          <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);">Study 3 days in a row</div>
+          <div style="font-size:13px;font-weight:700;" data-i18n="prof_gs_streak_title">Build a 3-day streak</div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);" data-i18n="prof_gs_streak_desc">Study 3 days in a row</div>
         </div>
         <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);" id="gs-streak-status">0/3</div>
       </div>
       <div class="gs-item" id="gs-friend" style="display:flex;align-items:center;gap:12px;opacity:.5;">
         <div style="width:32px;height:32px;border-radius:50%;background:var(--s3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;" id="gs-friend-check">🤝</div>
         <div style="flex:1;">
-          <div style="font-size:13px;font-weight:700;">Add your first friend</div>
-          <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);">Find friends on the Friends page</div>
+          <div style="font-size:13px;font-weight:700;" data-i18n="prof_gs_friend_title">Add a friend</div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);" data-i18n="prof_gs_friend_desc">Go to Friends and connect with a learner</div>
         </div>
         <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);" id="gs-friend-status">0/1</div>
       </div>
@@ -2445,14 +2445,14 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   </div>
 
   <!-- 7-DAY XP CHART -->
-  <div class="sh"><span class="sh-title">Last 7 Days</span></div>
+  <div class="sh"><span class="sh-title" data-i18n="prof_xp_chart">📊 7-Day XP Activity</span></div>
   <div class="card" style="margin-bottom:14px;">
     <div class="xp-chart" id="profile-xp-chart"></div>
     <div style="display:flex;gap:4px;" id="profile-xp-labels"></div>
   </div>
 
   <!-- SETTINGS -->
-  <div class="sh"><span class="sh-title">⚙️ Settings</span></div>
+  <div class="sh"><span class="sh-title" data-i18n="prof_settings">⚙️ Settings</span></div>
   <div class="card" style="margin-bottom:14px;">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
       <div>
@@ -3560,7 +3560,7 @@ function renderWeekRings(){
     var ring=document.createElement('div');ring.className='week-ring';
     var circle=document.createElement('div');
     circle.className='week-ring-circle '+(status==='future'?'':status);
-    circle.textContent=isFuture?DAYS[i][0]:status==='done'?'✓':status==='partial'?count:status==='today'?'●':'○';
+    circle.textContent=DAYS[i][0];
     circle.title=ds+(count>0?' — '+count+' words':'');
     var lbl=document.createElement('div');lbl.className='week-ring-label';lbl.textContent=DAYS[i];
     ring.appendChild(circle);ring.appendChild(lbl);rings.appendChild(ring);
@@ -5558,6 +5558,21 @@ var I18N={
   g_fill_missing:'Fill in the missing word',
   g_is_correct:'Is the translation correct?',
   auth_signin_lnk:'Sign in',
+  // PROFILE PAGE
+  prof_back:'← Back',prof_my_profile:'My Profile',prof_edit_profile:'✏️ Edit Profile',
+  prof_total_xp:'Total XP',prof_words:'Words',prof_streak:'🔥 Streak',prof_friends:'Friends',
+  prof_invite_code:'📨 Your Invite Code',prof_community_btn:'🌐 Community',
+  prof_copy_btn:'📋 Copy',prof_share_btn:'🔗 Share',
+  prof_achievements:'🏆 Achievements',prof_unlocked:' unlocked',
+  prof_getting_started:'🚀 Getting Started',
+  prof_gs_word_title:'Add your first word',prof_gs_word_desc:'Go to Vocab → Bank and save a word',
+  prof_gs_practice_title:'Complete a practice session',prof_gs_practice_desc:'Go to Learn and play any game',
+  prof_gs_streak_title:'Build a 3-day streak',prof_gs_streak_desc:'Study 3 days in a row',
+  prof_gs_friend_title:'Add a friend',prof_gs_friend_desc:'Go to Friends and connect with a learner',
+  prof_settings:'⚙️ Settings',prof_sound_lbl:'Sound',prof_theme_lbl:'Theme',prof_lang_lbl:'🌐 Language',
+  prof_goal_lbl:'Daily Goal',prof_shields_lbl:'Shields',
+  prof_xp_chart:'📊 7-Day XP Activity',prof_no_activity:'📊 Start learning to see your progress chart!',
+  nav_community:'Community',h_community_sub:'See what learners are doing',
   },
   ru:{
     nav_home:'Главная',nav_lessons:'Уроки',nav_phrases:'Фразы',nav_friends:'Друзья',w_my_phrases:'Мои фразы',ph_subtitle:'Ваши сохранённые фразы — нажмите статус для изменения',ph_search:'Поиск фраз…',ph_no_phrases:'Фраз пока нет. Добавьте из Уроки → Фразы.',nav_games:'Игры',nav_words:'Слова',nav_bank:'Банк',
@@ -5714,6 +5729,21 @@ var I18N={
   g_fill_missing:'Заполни пропущенное слово',
   g_is_correct:'Правильный ли перевод?',
   auth_signin_lnk:'Войти',
+  // PROFILE PAGE
+  prof_back:'← Назад',prof_my_profile:'Мой профиль',prof_edit_profile:'✏️ Редактировать',
+  prof_total_xp:'Всего XP',prof_words:'Слова',prof_streak:'🔥 Серия',prof_friends:'Друзья',
+  prof_invite_code:'📨 Ваш код приглашения',prof_community_btn:'🌐 Сообщество',
+  prof_copy_btn:'📋 Копировать',prof_share_btn:'🔗 Поделиться',
+  prof_achievements:'🏆 Достижения',prof_unlocked:' разблокировано',
+  prof_getting_started:'🚀 Начало работы',
+  prof_gs_word_title:'Добавьте первое слово',prof_gs_word_desc:'Перейдите в Словарь → Банк и сохраните слово',
+  prof_gs_practice_title:'Завершите занятие',prof_gs_practice_desc:'Перейдите в Учёбу и сыграйте любую игру',
+  prof_gs_streak_title:'Держите серию 3 дня',prof_gs_streak_desc:'Занимайтесь 3 дня подряд',
+  prof_gs_friend_title:'Добавьте друга',prof_gs_friend_desc:'Перейдите в Друзья и свяжитесь с учеником',
+  prof_settings:'⚙️ Настройки',prof_sound_lbl:'Звук',prof_theme_lbl:'Тема',prof_lang_lbl:'🌐 Язык',
+  prof_goal_lbl:'Дневная цель',prof_shields_lbl:'Щиты',
+  prof_xp_chart:'📊 XP за 7 дней',prof_no_activity:'📊 Начните учиться, чтобы увидеть график!',
+  nav_community:'Сообщество',h_community_sub:'Смотрите, что делают другие ученики',
   },
   kz:{
     nav_home:'Басты бет',nav_lessons:'Сабақтар',nav_phrases:'Фразалар',nav_friends:'Достар',w_my_phrases:'Менің фразаларым',ph_subtitle:'Сақталған фразаларыңыз — мәртебені жаңарту үшін басыңыз',ph_search:'Фразаларды іздеу…',ph_no_phrases:'Фразалар жоқ. Сабақтар → Фразалардан қосыңыз.',nav_games:'Ойындар',nav_words:'Сөздік',nav_bank:'Банк',
@@ -5870,6 +5900,21 @@ var I18N={
   g_fill_missing:'Жетіспейтін сөзді толтыр',
   g_is_correct:'Аударма дұрыс па?',
   auth_signin_lnk:'Кіру',
+  // PROFILE PAGE
+  prof_back:'← Артқа',prof_my_profile:'Менің профилім',prof_edit_profile:'✏️ Өңдеу',
+  prof_total_xp:'Барлық XP',prof_words:'Сөздер',prof_streak:'🔥 Серия',prof_friends:'Достар',
+  prof_invite_code:'📨 Шақыру кодыңыз',prof_community_btn:'🌐 Қоғамдастық',
+  prof_copy_btn:'📋 Көшіру',prof_share_btn:'🔗 Бөлісу',
+  prof_achievements:'🏆 Жетістіктер',prof_unlocked:' бұғаты ашылды',
+  prof_getting_started:'🚀 Бастауыш нұсқаулық',
+  prof_gs_word_title:'Бірінші сөзді қосыңыз',prof_gs_word_desc:'Сөздік → Банкке өтіп сөз сақтаңыз',
+  prof_gs_practice_title:'Жаттығуды аяқтаңыз',prof_gs_practice_desc:'Оқуға өтіп кез келген ойынды ойнаңыз',
+  prof_gs_streak_title:'3 күндік серия жасаңыз',prof_gs_streak_desc:'3 күн қатарынан оқыңыз',
+  prof_gs_friend_title:'Дос қосыңыз',prof_gs_friend_desc:'Достарға өтіп білім алушымен байланысыңыз',
+  prof_settings:'⚙️ Баптаулар',prof_sound_lbl:'Дыбыс',prof_theme_lbl:'Тақырып',prof_lang_lbl:'🌐 Тіл',
+  prof_goal_lbl:'Күнделікті мақсат',prof_shields_lbl:'Қалқандар',
+  prof_xp_chart:'📊 7 күндік XP белсенділігі',prof_no_activity:'📊 Прогресс кестесін көру үшін оқи бастаңыз!',
+  nav_community:'Қоғамдастық',h_community_sub:'Басқа оқушылардың жетістіктерін қараңыз',
   },
 };
 
@@ -5964,6 +6009,7 @@ function applyLangToPageContent(){
     renderChars();updateCnStats();renderWeekProg();renderSentences();renderMyPhrases();
     renderCnFilter();
   }
+  else if(currentPage==='profile'){if(typeof _renderProfilePage==='function')_renderProfilePage();}
   else if(currentPage==='friends'){renderFriendsPage();renderSuggestedFriends();}
   else if(currentPage==='bank'){renderWordBank();if(currentBankTab==='phrases')renderBankPhrases();}
   else if(currentPage==='games'){
@@ -14202,9 +14248,9 @@ function _renderProfilePage() {
   if (el('prof-xp')) el('prof-xp').textContent = xp.toLocaleString();
   if (el('prof-words')) el('prof-words').textContent = words;
   if (el('prof-streak')) el('prof-streak').textContent = streak;
-  if (el('prof-daily-goal-txt')) el('prof-daily-goal-txt').textContent = (S.daily_goal || 10) + ' words/day';
+  if (el('prof-daily-goal-txt')) el('prof-daily-goal-txt').textContent = (S.daily_goal || 10) + (LANG==='ru'?' слов/день':LANG==='kz'?' сөз/күн':' words/day');
   var shields = parseInt(localStorage.getItem('hanzo_shields') || '0');
-  if (el('prof-shields-txt')) el('prof-shields-txt').textContent = shields + ' shield' + (shields === 1 ? '' : 's');
+  if (el('prof-shields-txt')) el('prof-shields-txt').textContent = shields + ' ' + (LANG==='ru'?(shields===1?'щит':shields<5?'щита':'щитов'):LANG==='kz'?'қалқан':'shield'+(shields===1?'':'s'));
 
   // Friends count (rough estimate from friends data)
   var friendCount = 0;
@@ -14251,7 +14297,7 @@ function _renderProfilePage() {
     }
     var totalXPDays = days7.reduce(function(sum, d) { return sum + d.xp; }, 0);
     if (totalXPDays === 0) {
-      chartEl.innerHTML = '<div style="text-align:center;padding:24px;font-family:var(--mono);font-size:10px;color:var(--muted2);">📊 Start learning to see your progress chart!</div>';
+      chartEl.innerHTML = '<div style="text-align:center;padding:24px;font-family:var(--mono);font-size:10px;color:var(--muted2);">' + (typeof t==='function'?t('prof_no_activity'):'📊 Start learning to see your progress chart!') + '</div>';
       if (labelsEl) labelsEl.innerHTML = '';
     } else {
       var maxXP = Math.max.apply(null, days7.map(function(d) { return d.xp; })) || 1;
@@ -14273,8 +14319,8 @@ function _syncProfileThemeBtn() {
   var isDark = document.body.getAttribute('data-theme') !== 'light';
   var btn = el('prof-theme-btn');
   var txt = el('prof-theme-txt');
-  if (btn) btn.textContent = isDark ? '🌙 Dark' : '☀️ Light';
-  if (txt) txt.textContent = isDark ? 'Dark theme active' : 'Light theme active';
+  if (btn) btn.textContent = isDark ? (LANG==='ru'?'🌙 Тёмная':LANG==='kz'?'🌙 Қараңғы':'🌙 Dark') : (LANG==='ru'?'☀️ Светлая':LANG==='kz'?'☀️ Жарық':'☀️ Light');
+  if (txt) txt.textContent = isDark ? (LANG==='ru'?'Тёмная тема':LANG==='kz'?'Қараңғы тақырып':'Dark theme active') : (LANG==='ru'?'Светлая тема':LANG==='kz'?'Жарық тақырып':'Light theme active');
 }
 
 function _syncProfileLangBtns() {
@@ -14299,16 +14345,16 @@ function _renderAchievements() {
   try { friends = (JSON.parse(localStorage.getItem('hanzo_friends_cache') || '[]')).length; } catch(e) {}
 
   var achievements = [
-    { icon:'🔥', name:'First Flame', desc:'3-day streak', done: streak >= 3 },
-    { icon:'🌟', name:'XP Starter', desc:'Earn 100 XP', done: xp >= 100 },
-    { icon:'📚', name:'Word Collector', desc:'Save 10 words', done: words >= 10 },
-    { icon:'🏆', name:'Century Club', desc:'Earn 1,000 XP', done: xp >= 1000 },
-    { icon:'🔥', name:'Week Warrior', desc:'7-day streak', done: streak >= 7 },
-    { icon:'📖', name:'Vocab King', desc:'Save 50 words', done: words >= 50 },
-    { icon:'🤝', name:'Social Learner', desc:'Add 1 friend', done: friends >= 1 },
-    { icon:'💎', name:'Diamond Streak', desc:'30-day streak', done: streak >= 30 },
-    { icon:'⭐', name:'XP Master', desc:'Earn 5,000 XP', done: xp >= 5000 },
-    { icon:'👑', name:'Legend', desc:'Earn 10,000 XP', done: xp >= 10000 },
+    { icon:'🔥', name:LANG==='ru'?'Огонёк':LANG==='kz'?'Алғашқы от':'First Flame', desc:LANG==='ru'?'3 дня подряд':LANG==='kz'?'3 күн серия':'3-day streak', done: streak >= 3 },
+    { icon:'🌟', name:LANG==='ru'?'Старт XP':LANG==='kz'?'XP бастауы':'XP Starter', desc:LANG==='ru'?'Заработай 100 XP':LANG==='kz'?'100 XP жина':'Earn 100 XP', done: xp >= 100 },
+    { icon:'📚', name:LANG==='ru'?'Собиратель':LANG==='kz'?'Сөз жинаушы':'Word Collector', desc:LANG==='ru'?'Сохрани 10 слов':LANG==='kz'?'10 сөз сақта':'Save 10 words', done: words >= 10 },
+    { icon:'🏆', name:LANG==='ru'?'Клуб 1000':LANG==='kz'?'Мыңдық клуб':'Century Club', desc:LANG==='ru'?'Заработай 1,000 XP':LANG==='kz'?'1,000 XP жина':'Earn 1,000 XP', done: xp >= 1000 },
+    { icon:'🔥', name:LANG==='ru'?'Воин недели':LANG==='kz'?'Апта жауынгері':'Week Warrior', desc:LANG==='ru'?'7 дней подряд':LANG==='kz'?'7 күн серия':'7-day streak', done: streak >= 7 },
+    { icon:'📖', name:LANG==='ru'?'Мастер слов':LANG==='kz'?'Сөздік патшасы':'Vocab King', desc:LANG==='ru'?'Сохрани 50 слов':LANG==='kz'?'50 сөз сақта':'Save 50 words', done: words >= 50 },
+    { icon:'🤝', name:LANG==='ru'?'Социальный':LANG==='kz'?'Әлеуметтік':'Social Learner', desc:LANG==='ru'?'Добавь 1 друга':LANG==='kz'?'1 дос қос':'Add 1 friend', done: friends >= 1 },
+    { icon:'💎', name:LANG==='ru'?'Алмазная серия':LANG==='kz'?'Бриллиант серия':'Diamond Streak', desc:LANG==='ru'?'30 дней подряд':LANG==='kz'?'30 күн серия':'30-day streak', done: streak >= 30 },
+    { icon:'⭐', name:LANG==='ru'?'Мастер XP':LANG==='kz'?'XP шебері':'XP Master', desc:LANG==='ru'?'Заработай 5,000 XP':LANG==='kz'?'5,000 XP жина':'Earn 5,000 XP', done: xp >= 5000 },
+    { icon:'👑', name:LANG==='ru'?'Легенда':LANG==='kz'?'Аңыз':'Legend', desc:LANG==='ru'?'Заработай 10,000 XP':LANG==='kz'?'10,000 XP жина':'Earn 10,000 XP', done: xp >= 10000 },
   ];
 
   var earnedCount = achievements.filter(function(a){return a.done;}).length;
@@ -14320,12 +14366,12 @@ function _renderAchievements() {
     countDiv.style.cssText = 'font-family:var(--mono);font-size:9px;color:var(--muted2);margin-bottom:10px;';
     el2.parentNode.insertBefore(countDiv, el2);
   }
-  countDiv.textContent = earnedCount + ' / ' + achievements.length + ' unlocked';
+  countDiv.textContent = earnedCount + ' / ' + achievements.length + (typeof t === 'function' ? t('prof_unlocked') : ' unlocked');
 
   el2.innerHTML = achievements.map(function(a) {
     return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:default;" title="' + a.name + ': ' + a.desc + '">'
-      + '<div style="width:52px;height:52px;border-radius:14px;background:' + (a.done ? 'linear-gradient(135deg,rgba(255,195,0,.3),rgba(255,170,0,.15))' : 'var(--s3)') + ';border:2px solid ' + (a.done ? 'var(--goldbrd)' : 'var(--border)') + ';display:flex;align-items:center;justify-content:center;font-size:24px;' + (a.done ? 'box-shadow:0 4px 12px rgba(255,195,0,.2);' : 'filter:grayscale(0.6);opacity:0.55;') + 'transition:all .2s;">' + a.icon + '</div>'
-      + '<div style="font-family:var(--mono);font-size:7px;font-weight:700;text-align:center;line-height:1.25;color:' + (a.done ? 'var(--gold)' : 'var(--muted2)') + ';padding:0 2px;">' + a.name + '</div>'
+      + '<div style="width:52px;height:52px;border-radius:14px;background:' + (a.done ? 'linear-gradient(135deg,rgba(255,195,0,.35),rgba(255,170,0,.18))' : 'var(--s2)') + ';border:2px solid ' + (a.done ? 'var(--goldbrd)' : 'rgba(255,255,255,.1)') + ';display:flex;align-items:center;justify-content:center;font-size:24px;' + (a.done ? 'box-shadow:0 4px 14px rgba(255,195,0,.25);' : 'filter:grayscale(1);opacity:0.4;') + 'transition:all .2s;">' + a.icon + '</div>'
+      + '<div style="font-family:var(--mono);font-size:7px;font-weight:700;text-align:center;line-height:1.25;color:' + (a.done ? 'var(--gold)' : 'var(--muted)') + ';padding:0 2px;">' + a.name + '</div>'
       + '</div>';
   }).join('');
 
