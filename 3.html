@@ -3678,12 +3678,12 @@ function deleteWin(date){
   if(!S.wins)return;
   delete S.wins[date];
   save();renderWins();
-  showMsg('Win removed','var(--muted2)');
+  showMsg(t('win_removed'),'var(--muted2)');
 }
 function saveWin(){
   var v=el('win-ta').value.trim();if(!v)return;
   if(!S.wins)S.wins={}; var wKey=TODAY+'_'+Date.now(); S.wins[wKey]=v; save();
-  el('win-ta').value='';renderWins();showMsg('Win saved 🔥','var(--green)');
+  el('win-ta').value='';renderWins();showMsg(t('win_saved'),'var(--green)');
 }
 function showMsg(msg,color){
   var e=el('sync-msg');if(!e)return;
@@ -3725,12 +3725,12 @@ function exportData(){
   var blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
   var url=URL.createObjectURL(blob);var a=document.createElement('a');
   a.href=url;a.download='hanzi-v3-backup-'+TODAY+'.json';a.click();URL.revokeObjectURL(url);
-  showMsg('Exported!','var(--green)');
+  showMsg(t('exp_exported'),'var(--green)');
 }
 function toggleImport(){el('import-area').style.display=el('import-area').style.display==='none'?'block':'none';}
 function importData(){
-  try{S=JSON.parse(el('import-ta').value.trim());save();el('import-ta').value='';el('import-area').style.display='none';showMsg('Imported!','var(--green)');renderHome();}
-  catch(e){showMsg('Invalid JSON','var(--red)');}
+  try{S=JSON.parse(el('import-ta').value.trim());save();el('import-ta').value='';el('import-area').style.display='none';showMsg(t('exp_imported'),'var(--green)');renderHome();}
+  catch(e){showMsg(t('exp_invalid'),'var(--red)');}
 }
 function confirmClear(){if(confirm(t('confirm_clear'))){S={};save();renderHome();showMsg(t('confirm_cleared'),'var(--muted2)');}}
 
@@ -3801,7 +3801,7 @@ function deleteChar(id,btn){
   if(btn&&btn.getAttribute('data-confirm')!=='1'){
     btn.setAttribute('data-confirm','1');
     var orig=btn.textContent;
-    btn.textContent='Sure?';
+    btn.textContent=t('btn_sure');
     btn.style.color='var(--red)';
     btn.style.fontWeight='700';
     btn.style.fontSize='10px';
@@ -4025,7 +4025,7 @@ function startFlashcard(){
 function showFlashcard(){
   if(quizIdx>=quizCards.length){
     if(el('fc-front'))el('fc-front').textContent='🎉 '+t('g_done');
-    if(el('fc-hint'))el('fc-hint').textContent=quizTotal?quizCorrect+'/'+quizTotal+' '+t('g_correct'):'';
+    if(el('fc-hint'))el('fc-hint').textContent=quizTotal?quizCorrect+'/'+quizTotal+' '+t('g_correct_lbl'):'';
     if(el('fc-back'))el('fc-back').classList.remove('show');
     if(el('fc-btns'))el('fc-btns').style.display='none';
     if(el('fc-score'))el('fc-score').textContent=quizTotal?t('g_final')+': '+Math.round(quizCorrect/quizTotal*100)+'%':'';
@@ -4104,7 +4104,7 @@ var XP_RATES={
 // ==================== SPACED REPETITION ====================
 // ── Text-to-Speech: hear the Chinese word ─────────────────────
 function speakChinese(text, rate) {
-  if (!window.speechSynthesis) { showMsg('TTS not supported in this browser', 'var(--muted)'); return; }
+  if (!window.speechSynthesis) { showMsg(t('tts_no_support'), 'var(--muted)'); return; }
   window.speechSynthesis.cancel();
   var u = new SpeechSynthesisUtterance(text);
   u.lang = 'zh-CN'; u.rate = rate || 0.75; u.pitch = 1;
@@ -4143,7 +4143,7 @@ var _speechSupported=!!(window.SpeechRecognition||window.webkitSpeechRecognition
 
 function startPronunciation(char,pinyin,btnEl){
   if(!_speechSupported){
-    showMsg('Speech not supported in this browser','var(--muted)');return;
+    showMsg(t('tts_no_support'),'var(--muted)');return;
   }
   var SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition;
   var rec=new SpeechRec();
@@ -4312,7 +4312,7 @@ function fcVerifyAnswer(chosenId,correctId,verifyEl){
   if(!isCorrect){
     var word=quizCards[quizIdx-1]||quizCards[quizIdx];
     if(word){updateCharStatus(word.id,'learning');updateWordSRS(word.id,false);save();}
-    showMsg('Needs more practice — moved back 📚','var(--gold)');
+    showMsg(t('g_more_practice'),'var(--gold)');
   }
   var fcBtns=el('fc-btns');if(fcBtns)fcBtns.style.display='none';
   quizIdx++;quizFlipped=false;showFlashcard();
@@ -5551,7 +5551,7 @@ var I18N={
     g_type_pinyin:'Type the pinyin — tone marks optional',g_check:'Check',g_restart:'Restart',g_type_ph:'e.g. nǐ or ni',
     g_match_pairs:'Match {n} pairs',g_next_round:'Next Round',
     g_no_words:'Add words first',g_need_words:'You need at least 4 words in this mode',
-    g_complete:'Complete!',g_final:'Final score',g_done:'Done!',g_correct:'correct',g_all_matched:'All matched!',h_goal_complete:'Goal Complete! 🎯',lu_was:'Was',lu_level:'Level',ob_continue_n:'Continue → ({n} selected)',ob_select_one:'Select at least one →',g_see_results:'See Results 🏆',hearts_refilled:'Heart refilled!',hearts_next_in:'Next heart in',g_correct_answer:'Correct',g_correct_xp:'Correct! +15 XP 🎉',g_not_quite:'Not quite — see the correct order above',prof_name_empty:'Name cannot be empty',prof_updated:'Profile updated! ✓',w_added_xp:'Word added! +2 XP ✓',w_enter_char_meaning:'Enter character and meaning',
+    g_complete:'Complete!',g_final:'Final score',g_done:'Done!',g_correct_lbl:'correct',fr_added_friend:'Added {n}! 🎉',g_all_matched:'All matched!',h_goal_complete:'Goal Complete! 🎯',lu_was:'Was',lu_level:'Level',ob_continue_n:'Continue → ({n} selected)',ob_select_one:'Select at least one →',g_see_results:'See Results 🏆',hearts_refilled:'Heart refilled!',hearts_next_in:'Next heart in',hearts_full:'All hearts full!',hearts_refill_in:'Refill in',g_correct_answer:'Correct',g_correct_xp:'Correct! +15 XP 🎉',g_not_quite:'Not quite — see the correct order above',prof_name_empty:'Name cannot be empty',prof_updated:'Profile updated! ✓',prof_no_photo:'No photo set',prof_photo_set:'Photo uploaded ✓',prof_streak_goal:'Goal: {n} words/day',w_added_xp:'Word added! +2 XP ✓',w_enter_char_meaning:'Enter character and meaning',win_removed:'Win removed',win_saved:'Win saved 🔥',exp_exported:'Exported!',exp_imported:'Imported!',exp_invalid:'Invalid JSON',tts_no_support:'TTS not supported in this browser',g_more_practice:'Needs more practice — moved back 📚',storage_full:'Storage full! Old SRS history pruned.',h_daily_goal_hit:'Daily goal hit! +25 XP 🎯',dr_need_3_words:'Add at least 3 words today first!',fr_removed:'Removed {n}',gems_not_enough:'Not enough gems! You need 200 💎',pwa_add_home:'Open Chrome/Safari → tap Share → "Add to Home Screen"',fr_invite_copied:'Invite link copied! 📋',btn_sure:'Sure?',btn_remove:'Remove',btn_follow:'Follow',wo_check_answer:'Check Answer ✓',btn_clear:'Clear',wo_tap_arrange:'Tap words below to arrange…',post_btn:'Post ✨',post_btn_posting:'Posting…',post_posted:'Posted! 🎉',post_error:'Could not post. Check your connection.',post_login_first:'Please log in to post',auth_signing_in:'Signing in…',auth_login_btn:'Log In →',auth_creating:'Creating…',auth_create_btn:'Create Account →',link_copied:'Link copied! 🔗',post_login_to_share:'Log in to share posts',fr_invalid_code:'Invalid code — should look like HANZO-XXXXX',fr_own_code:'That\'s your own code!',fr_already_added:'Friend already added!',un_min_chars:'At least 3 characters',un_max_chars:'Max 20 characters',un_start_letter:'Must start with a letter',un_checking:'Checking…',un_taken:'@{n} is taken',un_available:'@{n} is available ✓',un_current:'Your current username ✓',
     // SENTENCES (Phrases)
     sb_subtitle:'Pick a category — tap to select sentences for the Order game',
     sb_play_btn:'selected — Play Order Game',sb_none_selected:'Select sentences first',
@@ -5726,7 +5726,7 @@ var I18N={
     g_type_pinyin:'Введите пиньинь — знаки тонов не обязательны',g_check:'Проверить',g_restart:'Заново',g_type_ph:'напр. nǐ или ni',
     g_match_pairs:'Соедини {n} пары',g_next_round:'Следующий раунд',
     g_no_words:'Сначала добавьте слова',g_need_words:'Нужно минимум 4 слова в этом режиме',
-    g_complete:'Готово!',g_final:'Итоговый счёт',g_done:'Готово!',g_correct:'правильно',g_all_matched:'Всё соединено!',h_goal_complete:'Цель выполнена! 🎯',lu_was:'Был',lu_level:'Уровень',ob_continue_n:'Продолжить → ({n} выбрано)',ob_select_one:'Выберите хотя бы один →',g_see_results:'Результаты 🏆',hearts_refilled:'Сердечко восстановлено!',hearts_next_in:'Следующее сердце через',g_correct_answer:'Правильно',g_correct_xp:'Правильно! +15 XP 🎉',g_not_quite:'Не совсем — смотрите правильный порядок выше',prof_name_empty:'Имя не может быть пустым',prof_updated:'Профиль обновлён! ✓',w_added_xp:'Слово добавлено! +2 XP ✓',w_enter_char_meaning:'Введите иероглиф и значение',
+    g_complete:'Готово!',g_final:'Итоговый счёт',g_done:'Готово!',g_correct_lbl:'правильно',fr_added_friend:'Добавлен {n}! 🎉',g_all_matched:'Всё соединено!',h_goal_complete:'Цель выполнена! 🎯',lu_was:'Был',lu_level:'Уровень',ob_continue_n:'Продолжить → ({n} выбрано)',ob_select_one:'Выберите хотя бы один →',g_see_results:'Результаты 🏆',hearts_refilled:'Сердечко восстановлено!',hearts_next_in:'Следующее сердце через',hearts_full:'Все сердечки полны!',hearts_refill_in:'Восстановление через',g_correct_answer:'Правильно',g_correct_xp:'Правильно! +15 XP 🎉',g_not_quite:'Не совсем — смотрите правильный порядок выше',prof_name_empty:'Имя не может быть пустым',prof_updated:'Профиль обновлён! ✓',prof_no_photo:'Фото не установлено',prof_photo_set:'Фото загружено ✓',prof_streak_goal:'Цель: {n} слов/день',w_added_xp:'Слово добавлено! +2 XP ✓',w_enter_char_meaning:'Введите иероглиф и значение',win_removed:'Победа удалена',win_saved:'Победа сохранена 🔥',exp_exported:'Экспортировано!',exp_imported:'Импортировано!',exp_invalid:'Неверный JSON',tts_no_support:'TTS не поддерживается в этом браузере',g_more_practice:'Нужна ещё практика — перенесено 📚',storage_full:'Память заполнена! Старая история удалена.',h_daily_goal_hit:'Цель дня достигнута! +25 XP 🎯',dr_need_3_words:'Сначала добавьте хотя бы 3 слова сегодня!',fr_removed:'Удалён {n}',gems_not_enough:'Недостаточно самоцветов! Нужно 200 💎',pwa_add_home:'Откройте Chrome/Safari → Поделиться → «На экран домой»',fr_invite_copied:'Ссылка-приглашение скопирована! 📋',btn_sure:'Уверены?',btn_remove:'Удалить',btn_follow:'Подписаться',wo_check_answer:'Проверить ответ ✓',btn_clear:'Очистить',wo_tap_arrange:'Нажмите на слова ниже для упорядочивания…',post_btn:'Опубликовать ✨',post_btn_posting:'Публикуем…',post_posted:'Опубликовано! 🎉',post_error:'Не удалось опубликовать. Проверьте соединение.',post_login_first:'Войдите, чтобы публиковать',auth_signing_in:'Входим…',auth_login_btn:'Войти →',auth_creating:'Создаём…',auth_create_btn:'Создать аккаунт →',link_copied:'Ссылка скопирована! 🔗',post_login_to_share:'Войдите, чтобы делиться постами',fr_invalid_code:'Неверный код — должен выглядеть как HANZO-XXXXX',fr_own_code:'Это ваш собственный код!',fr_already_added:'Друг уже добавлен!',un_min_chars:'Минимум 3 символа',un_max_chars:'Максимум 20 символов',un_start_letter:'Должен начинаться с буквы',un_checking:'Проверяем…',un_taken:'@{n} занят',un_available:'@{n} доступен ✓',un_current:'Это ваше текущее имя ✓',
     sb_subtitle:'Выберите категорию — нажмите на фразы для игры "Порядок"',
     sb_play_btn:'выбрано — Играть',sb_none_selected:'Сначала выберите фразы',
     so_change:'Изменить фразы',so_build:'Составьте это предложение по-китайски',so_your_ans:'Ваш ответ',
@@ -5897,7 +5897,7 @@ var I18N={
     g_type_pinyin:'Пиньинді енгізіңіз — тон белгілері міндетті емес',g_check:'Тексеру',g_restart:'Қайта бастау',g_type_ph:'мыс. nǐ немесе ni',
     g_match_pairs:'{n} жұпты дәйектестір',g_next_round:'Келесі раунд',
     g_no_words:'Алдымен сөз қосыңыз',g_need_words:'Бұл режимде кемінде 4 сөз қажет',
-    g_complete:'Аяқталды!',g_final:'Қорытынды нәтиже',g_done:'Аяқталды!',g_correct:'дұрыс',g_all_matched:'Барлығы сәйкестенді!',h_goal_complete:'Мақсат орындалды! 🎯',lu_was:'Бұрын болды',lu_level:'Деңгей',ob_continue_n:'Жалғастыру → ({n} таңдалды)',ob_select_one:'Кемінде біреуін таңдаңыз →',g_see_results:'Нәтижелер 🏆',hearts_refilled:'Жүрекше толды!',hearts_next_in:'Келесі жүрекше арқылы',g_correct_answer:'Дұрыс жауап',g_correct_xp:'Дұрыс! +15 XP 🎉',g_not_quite:'Дәл емес — жоғарыдағы дұрыс тәртіпті қараңыз',prof_name_empty:'Атау бос болмауы керек',prof_updated:'Профиль жаңартылды! ✓',w_added_xp:'Сөз қосылды! +2 XP ✓',w_enter_char_meaning:'Иероглиф пен мағынасын енгізіңіз',
+    g_complete:'Аяқталды!',g_final:'Қорытынды нәтиже',g_done:'Аяқталды!',g_correct_lbl:'дұрыс',fr_added_friend:'{n} қосылды! 🎉',g_all_matched:'Барлығы сәйкестенді!',h_goal_complete:'Мақсат орындалды! 🎯',lu_was:'Бұрын болды',lu_level:'Деңгей',ob_continue_n:'Жалғастыру → ({n} таңдалды)',ob_select_one:'Кемінде біреуін таңдаңыз →',g_see_results:'Нәтижелер 🏆',hearts_refilled:'Жүрекше толды!',hearts_next_in:'Келесі жүрекше арқылы',hearts_full:'Барлық жүрекшелер толы!',hearts_refill_in:'Толу уақыты',g_correct_answer:'Дұрыс жауап',g_correct_xp:'Дұрыс! +15 XP 🎉',g_not_quite:'Дәл емес — жоғарыдағы дұрыс тәртіпті қараңыз',prof_name_empty:'Атау бос болмауы керек',prof_updated:'Профиль жаңартылды! ✓',prof_no_photo:'Сурет орнатылмаған',prof_photo_set:'Сурет жүктелді ✓',prof_streak_goal:'Мақсат: {n} сөз/күн',w_added_xp:'Сөз қосылды! +2 XP ✓',w_enter_char_meaning:'Иероглиф пен мағынасын енгізіңіз',win_removed:'Жеңіс жойылды',win_saved:'Жеңіс сақталды 🔥',exp_exported:'Экспорт жасалды!',exp_imported:'Импорт жасалды!',exp_invalid:'Жарамсыз JSON',tts_no_support:'TTS бұл браузерде қолданылмайды',g_more_practice:'Көбірек жаттығу керек — қайтарылды 📚',storage_full:'Жад толы! Ескі SRS тарихы жойылды.',h_daily_goal_hit:'Күнделікті мақсатқа жеттік! +25 XP 🎯',dr_need_3_words:'Алдымен бүгін кемінде 3 сөз қосыңыз!',fr_removed:'{n} жойылды',gems_not_enough:'Жеткіліксіз асыл тас! 200 💎 керек',pwa_add_home:'Chrome/Safari → Бөлісу → «Негізгі экранға қосу»',fr_invite_copied:'Шақыру сілтемесі көшірілді! 📋',btn_sure:'Сенімдісіз бе?',btn_remove:'Жою',btn_follow:'Жазылу',wo_check_answer:'Жауапты тексеру ✓',btn_clear:'Тазалау',wo_tap_arrange:'Ретке келтіру үшін төмендегі сөздерге басыңыз…',post_btn:'Жариялау ✨',post_btn_posting:'Жариялауда…',post_posted:'Жарияланды! 🎉',post_error:'Жариялай алмады. Байланысты тексеріңіз.',post_login_first:'Жариялау үшін кіріңіз',auth_signing_in:'Кіруде…',auth_login_btn:'Кіру →',auth_creating:'Жасауда…',auth_create_btn:'Тіркелгі жасау →',link_copied:'Сілтеме көшірілді! 🔗',post_login_to_share:'Пост бөлісу үшін кіріңіз',fr_invalid_code:'Жарамсыз код — HANZO-XXXXX форматында болуы керек',fr_own_code:'Бұл сіздің өз кодыңыз!',fr_already_added:'Дос қосылып қойған!',un_min_chars:'Кемінде 3 таңба',un_max_chars:'Максимум 20 таңба',un_start_letter:'Әріптен басталуы керек',un_checking:'Тексеруде…',un_taken:'@{n} бос емес',un_available:'@{n} қолжетімді ✓',un_current:'Бұл сіздің ағымдағы атауыңыз ✓',
     sb_subtitle:'Санатты таңдаңыз — Тәртіп ойынына қосу үшін сөйлемге басыңыз',
     sb_play_btn:'таңдалды — Ойнау',sb_none_selected:'Алдымен сөйлем таңдаңыз',
     so_change:'Сөйлемдерді өзгерту',so_build:'Бұл сөйлемді қытайша жасаңыз',so_your_ans:'Сіздің жауабыңыз',
@@ -6970,7 +6970,7 @@ function lsShowQ(){
       +'</div>'
       +'<div style="background:var(--s2);border-radius:var(--r12);padding:12px 8px;">'
         +'<div style="font-size:18px;font-weight:900;color:var(--text);">'+lsCorrect+'/'+totalQ+'</div>'
-        +'<div style="font-size:9px;font-family:var(--mono);color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.4px;">'+t('g_correct')+'</div>'
+        +'<div style="font-size:9px;font-family:var(--mono);color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.4px;">'+t('g_correct_lbl')+'</div>'
       +'</div>'
       +'</div>';
 
@@ -8293,7 +8293,7 @@ save=function(){
       localStorage.setItem(getUserDataKey(currentUser.email),JSON.stringify(S));
     }catch(e){
       if(e.name==='QuotaExceededError'||e.name==='NS_ERROR_DOM_QUOTA_REACHED'){
-        showMsg('Storage full! Old SRS history pruned to free space.','var(--gold)');
+        showMsg(t('storage_full'),'var(--gold)');
         // Prune oldest study_activity entries (keep last 60 days)
         if(S.study_activity){
           var days=Object.keys(S.study_activity).sort();
@@ -8663,25 +8663,25 @@ function setAuthLang(lang){
   var texts={
     en:{tagline:'Learn Chinese. Build fluency.\nYour personal progress, always saved.',
         welcome:'Welcome back',sub:'Log in to continue your streak',
-        email:'Email',pass:'Password',loginBtn:'Log In →',
+        email:'Email',pass:'Password',loginBtn:'Log In →',signingIn:'Signing in…',
         noAcc:'No account?',createOne:'Create one',
         createTitle:'Create your account',
         namePh:'Your name',emailPh:'ali@example.com',passPh:'Min 6 characters',
-        createBtn:'Create Account →',haveAcc:'Already have an account?',signIn:'Sign in'},
+        createBtn:'Create Account →',creatingAcc:'Creating…',haveAcc:'Already have an account?',signIn:'Sign in'},
     ru:{tagline:'Учите китайский. Говорите свободно.\nВаш прогресс сохраняется.',
         welcome:'С возвращением',sub:'Войдите, чтобы продолжить',
-        email:'Email',pass:'Пароль',loginBtn:'Войти →',
+        email:'Email',pass:'Пароль',loginBtn:'Войти →',signingIn:'Входим…',
         noAcc:'Нет аккаунта?',createOne:'Создать',
         createTitle:'Создайте аккаунт',
         namePh:'Ваше имя',emailPh:'ali@example.com',passPh:'Минимум 6 символов',
-        createBtn:'Создать аккаунт →',haveAcc:'Уже есть аккаунт?',signIn:'Войти'},
+        createBtn:'Создать аккаунт →',creatingAcc:'Создаём…',haveAcc:'Уже есть аккаунт?',signIn:'Войти'},
     kz:{tagline:'Қытай тілін үйреніңіз. Еркін сөйлеңіз.\nПрогресіңіз сақталады.',
         welcome:'Қайта оралдыңыз',sub:'Жалғастыру үшін кіріңіз',
-        email:'Email',pass:'Құпия сөз',loginBtn:'Кіру →',
+        email:'Email',pass:'Құпия сөз',loginBtn:'Кіру →',signingIn:'Кіруде…',
         noAcc:'Тіркелмедіңіз бе?',createOne:'Тіркелу',
         createTitle:'Тіркелгі жасаңыз',
         namePh:'Атыңыз',emailPh:'ali@example.com',passPh:'Кемінде 6 таңба',
-        createBtn:'Тіркелгі жасау →',haveAcc:'Тіркелгі бар ма?',signIn:'Кіру'},
+        createBtn:'Тіркелгі жасау →',creatingAcc:'Жасауда…',haveAcc:'Тіркелгі бар ма?',signIn:'Кіру'},
   };
   var tx=texts[lang]||texts.en;
   var tg=document.getElementById('auth-tagline-text');
@@ -8895,7 +8895,7 @@ function checkDailyGoalBonus(){
   if(studiedToday>=goal&&!S[bonusKey]){
     S[bonusKey]=true;save();
     awardXP(XP_RATES.daily_goal,'Daily goal hit! 🎯');
-    showMsg('Daily goal hit! +25 XP 🎯','var(--green)');
+    showMsg(t('h_daily_goal_hit'),'var(--green)');
   }
 }
 
@@ -9068,7 +9068,7 @@ function startRecall(){
 function showRCCard(){
   if(rcIdx>=rcCards.length){
     var m=el('rc-meaning');if(m)m.textContent='🎉 '+t('g_done');
-    var hp=el('rc-hint-pinyin');if(hp)hp.textContent=rcCorrect+'/'+rcTotal+' '+t('g_correct');
+    var hp=el('rc-hint-pinyin');if(hp)hp.textContent=rcCorrect+'/'+rcTotal+' '+t('g_correct_lbl');
     var sc=el('rc-score');if(sc&&rcTotal)sc.textContent=t('g_final')+': '+Math.round(rcCorrect/rcTotal*100)+'%';
     if(el('rc-next'))el('rc-next').style.display='none';
     if(rcCorrect>=rcTotal*.8)launchConfetti();
@@ -9130,7 +9130,7 @@ function shouldShowDailyReview(){
 function startDailyReview(){
   var today=getLocalDate();
   var todayWords=(S.chars_list||[]).filter(function(w){return w.date===today;});
-  if(todayWords.length<3){showMsg('Add at least 3 words today first!','var(--gold)');return;}
+  if(todayWords.length<3){showMsg(t('dr_need_3_words'),'var(--gold)');return;}
   dailyReviewCards=todayWords.slice().sort(function(){return Math.random()-.5;}).slice(0,Math.min(5,todayWords.length));
   drIdx=0;drCorrect=0;drAnswered=false;
   showDailyReview();
@@ -9146,7 +9146,7 @@ function showDailyReview(){
     body.innerHTML='<div style="text-align:center;padding:20px 0;">'
       +'<div style="font-size:52px;margin-bottom:12px;">'+(pct>=80?'🎉':pct>=60?'💪':'📚')+'</div>'
       +'<div style="font-size:28px;font-weight:900;color:'+(pct>=80?'var(--green)':'var(--gold)')+'">'+pct+'%</div>'
-      +'<div style="font-size:14px;color:var(--muted2);margin-top:6px;margin-bottom:20px;">'+drCorrect+' '+t('dr_of')+' '+drTotal+' '+t('g_correct')+'</div>'
+      +'<div style="font-size:14px;color:var(--muted2);margin-top:6px;margin-bottom:20px;">'+drCorrect+' '+t('dr_of')+' '+drTotal+' '+t('g_correct_lbl')+'</div>'
       +'<button class="btn" onclick="closeDailyReview()">'+t('dr_nice_work')+'</button>'
       +'</div>';
     if(pct>=80){awardXP(30,'Daily Review aced! 🎯');launchConfetti();}
@@ -9534,7 +9534,7 @@ function toggleFollow(name,btn){
   var i=S.followed.indexOf(name);
   if(i>-1){
     S.followed.splice(i,1);
-    if(btn){btn.textContent='Follow';btn.classList.remove('following');}
+    if(btn){btn.textContent=t('btn_follow');btn.classList.remove('following');}
     friendsNotify(t('fr_unfollowed').replace('{n}',name));
   } else {
     S.followed.push(name);
@@ -9677,7 +9677,7 @@ function _shareInvite() {
   if (navigator.share) {
     navigator.share({ title: 'Join me on Hanzo!', text: 'Use my code ' + code + ' to join Hanzo and we both get a Streak Shield! 🛡️', url: url });
   } else {
-    navigator.clipboard.writeText(url).then(function() { _showToast('Link copied! 🔗', 'success'); }).catch(function() { _showToast('Copy: ' + url, 'success'); });
+    navigator.clipboard.writeText(url).then(function() { _showToast(t('link_copied'), 'success'); }).catch(function() { _showToast('Copy: ' + url, 'success'); });
   }
 }
 
@@ -9769,18 +9769,18 @@ function addFriendByCode(){
   if(!input)return;
   var code=input.value.trim().toUpperCase();
   if(!code.startsWith('HANZO-')||code.length<10){
-    if(msg){msg.textContent='Invalid code — should look like HANZO-XXXXX';msg.style.color='var(--red)';}
+    if(msg){msg.textContent=t('fr_invalid_code');msg.style.color='var(--red)';}
     return;
   }
   if(code===getMyInviteCode()){
-    if(msg){msg.textContent='That\'s your own code!';msg.style.color='var(--gold)';}
+    if(msg){msg.textContent=t('fr_own_code');msg.style.color='var(--gold)';}
     return;
   }
   // Check if already added
   if(!S.friends)S.friends=[];
   var already=S.friends.find(function(f){return f.code===code;});
   if(already){
-    if(msg){msg.textContent='Friend already added!';msg.style.color='var(--gold)';}
+    if(msg){msg.textContent=t('fr_already_added');msg.style.color='var(--gold)';}
     return;
   }
   // Check demo friends
@@ -10070,7 +10070,7 @@ function renderFriendsPage(){
           e.stopPropagation();
           if(!S.followed)S.followed=[];
           var ix=S.followed.indexOf(pl.name);
-          if(ix>-1){S.followed.splice(ix,1);b.textContent=t('fr_add_lbl');b.classList.remove('following');friendsNotify('Removed '+pl.name);}
+          if(ix>-1){S.followed.splice(ix,1);b.textContent=t('fr_add_lbl');b.classList.remove('following');friendsNotify(t('fr_removed').replace('{n}',pl.name));}
           else{
             S.followed.push(pl.name);b.textContent=t('fr_added_lbl');b.classList.add('following');
             if(!S.xp_given_follow)S.xp_given_follow=[];
@@ -10078,7 +10078,7 @@ function renderFriendsPage(){
               S.xp_given_follow.push(pl.name);
               awardXP(5,'Added friend');
             }
-            friendsNotify('Added '+pl.name+'! 🎉');
+            friendsNotify(t('fr_added_friend').replace('{n}',pl.name));
           }
           save();
         };})(player,btn);
@@ -10311,7 +10311,7 @@ function clearAvatar(){
   refreshEPAvatar();
   updateAllAvatars();
   updateDsSidebar();
-  var ps=el('ep-photo-status');if(ps)ps.textContent='No photo set';
+  var ps=el('ep-photo-status');if(ps)ps.textContent=t('prof_no_photo');
 }
 
 function saveProfile(){
@@ -10340,7 +10340,7 @@ function saveProfile(){
   save();
 
   // Refresh streak goal label
-  if(el('streak-goal-label'))el('streak-goal-label').textContent='Goal: '+(S.daily_goal||10)+' words/day';
+  if(el('streak-goal-label'))el('streak-goal-label').textContent=t('prof_streak_goal').replace('{n}',S.daily_goal||10);
   renderWeekRings();
 
   // Update all UI
@@ -10572,7 +10572,7 @@ function confirmCrop(){
   if(img){ img.src = dataUrl; img.style.display='block'; }
   if(letter) letter.style.display='none';
   var photoStatus = document.getElementById('ep-photo-status');
-  if(photoStatus) photoStatus.textContent='Photo uploaded ✓';
+  if(photoStatus) photoStatus.textContent=t('prof_photo_set');
   updateAllAvatars();
 
   // Update all avatar displays in the app
@@ -10719,7 +10719,7 @@ function showMQCard(){
   pyEl.textContent=w.pinyin||'';body.appendChild(pyEl);
   var qEl=document.createElement('div');
   qEl.style.cssText='font-size:13px;color:var(--muted2);text-align:center;margin-bottom:12px;';
-  qEl.textContent='What does this mean?';body.appendChild(qEl);
+  qEl.textContent=t('g_what_mean');body.appendChild(qEl);
   var grid=document.createElement('div');
   grid.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px;';
   choices.forEach(function(ch){
@@ -10843,7 +10843,7 @@ function renderWO(){
   checkBtn.id='wo-check-btn';
   checkBtn.className='btn';
   checkBtn.style.cssText='width:100%;font-size:15px;font-weight:800;opacity:.4;';
-  checkBtn.textContent='Check Answer ✓';
+  checkBtn.textContent=t('wo_check_answer');
   checkBtn.disabled=true;
   checkBtn.onclick=function(){woCheckAnswer(syllables,slotsDiv,tilesDiv,checkBtn);};
   body.appendChild(checkBtn);
@@ -10851,10 +10851,10 @@ function renderWO(){
   // Clear button
   var clearBtn=document.createElement('button');
   clearBtn.style.cssText='width:100%;background:none;border:none;color:var(--muted2);font-size:12px;cursor:pointer;padding:8px;margin-top:4px;';
-  clearBtn.textContent='Clear';
+  clearBtn.textContent=t('btn_clear');
   clearBtn.onclick=function(){
     woSelected=[];
-    slotsDiv.innerHTML='<div style="color:var(--muted);font-size:12px;font-style:italic;align-self:center;padding:4px;">Tap words below to arrange...</div>';
+    slotsDiv.innerHTML='<div style="color:var(--muted);font-size:12px;font-style:italic;align-self:center;padding:4px;">'+t('wo_tap_arrange')+'</div>';
     tilesDiv.querySelectorAll('.wo-tile').forEach(function(t){t.disabled=false;t.style.opacity='1';t.style.transform='';});
     checkBtn.disabled=true;checkBtn.style.opacity='.4';
   };
@@ -11645,7 +11645,7 @@ function deletePhraseFromBank(id){
   if(!btn)return;
   if(btn.getAttribute('data-confirm')!=='1'){
     btn.setAttribute('data-confirm','1');
-    btn.textContent='Sure?';
+    btn.textContent=t('btn_sure');
     btn.style.color='var(--red)';
     setTimeout(function(){
       if(btn.getAttribute('data-confirm')==='1'){
@@ -12592,17 +12592,17 @@ function _checkUsername(val) {
   var inp = el('signup-username');
   if (inp) inp.value = val;
   if (!val) { msg.textContent = ''; return; }
-  if (val.length < 3) { msg.textContent = 'At least 3 characters'; msg.style.color = 'var(--red)'; return; }
-  if (val.length > 20) { msg.textContent = 'Max 20 characters'; msg.style.color = 'var(--red)'; return; }
-  if (!/^[a-z]/.test(val)) { msg.textContent = 'Must start with a letter'; msg.style.color = 'var(--red)'; return; }
-  msg.textContent = 'Checking…'; msg.style.color = 'var(--muted2)';
+  if (val.length < 3) { msg.textContent = t('un_min_chars'); msg.style.color = 'var(--red)'; return; }
+  if (val.length > 20) { msg.textContent = t('un_max_chars'); msg.style.color = 'var(--red)'; return; }
+  if (!/^[a-z]/.test(val)) { msg.textContent = t('un_start_letter'); msg.style.color = 'var(--red)'; return; }
+  msg.textContent = t('un_checking'); msg.style.color = 'var(--muted2)';
   clearTimeout(_usernameCheckTimer);
   _usernameCheckTimer = setTimeout(async function() {
     var res = await _db.from('profiles').select('id').eq('username', val).single();
     if (res.data) {
-      msg.textContent = '@' + val + ' is taken'; msg.style.color = 'var(--red)';
+      msg.textContent = t('un_taken').replace('{n}',val); msg.style.color = 'var(--red)';
     } else {
-      msg.textContent = '@' + val + ' is available ✓'; msg.style.color = 'var(--green)';
+      msg.textContent = t('un_available').replace('{n}',val); msg.style.color = 'var(--green)';
     }
   }, 500);
 }
@@ -12616,20 +12616,20 @@ function _checkUsernameEdit(val) {
   var inp = el('ep-username-input');
   if (inp) inp.value = val;
   if (!val) { msg.textContent = ''; return; }
-  if (val.length < 3) { msg.textContent = 'At least 3 characters'; msg.style.color = 'var(--red)'; return; }
-  if (!/^[a-z]/.test(val)) { msg.textContent = 'Must start with a letter'; msg.style.color = 'var(--red)'; return; }
+  if (val.length < 3) { msg.textContent = t('un_min_chars'); msg.style.color = 'var(--red)'; return; }
+  if (!/^[a-z]/.test(val)) { msg.textContent = t('un_start_letter'); msg.style.color = 'var(--red)'; return; }
   // If same as current username, it's fine
   if (currentUser && currentUser.username && val === currentUser.username) {
-    msg.textContent = 'Your current username ✓'; msg.style.color = 'var(--green)'; return;
+    msg.textContent = t('un_current'); msg.style.color = 'var(--green)'; return;
   }
-  msg.textContent = 'Checking…'; msg.style.color = 'var(--muted2)';
+  msg.textContent = t('un_checking'); msg.style.color = 'var(--muted2)';
   clearTimeout(_usernameEditTimer);
   _usernameEditTimer = setTimeout(async function() {
     var res = await _db.from('profiles').select('id').eq('username', val).single();
     if (res.data) {
-      msg.textContent = '@' + val + ' is taken'; msg.style.color = 'var(--red)';
+      msg.textContent = t('un_taken').replace('{n}',val); msg.style.color = 'var(--red)';
     } else {
-      msg.textContent = '@' + val + ' is available ✓'; msg.style.color = 'var(--green)';
+      msg.textContent = t('un_available').replace('{n}',val); msg.style.color = 'var(--green)';
     }
   }, 500);
 }
@@ -12642,11 +12642,11 @@ doLogin = async function() {
   if (!pass)  { showAuthErr('login-err', 'Enter your password.'); return; }
 
   var btn = document.querySelector('#auth-login-card .btn');
-  if (btn) { btn.textContent = 'Signing in…'; btn.disabled = true; }
+  if (btn) { btn.textContent = t('auth_signing_in'); btn.disabled = true; }
 
   var res = await _db.auth.signInWithPassword({ email: email, password: pass });
 
-  if (btn) { btn.textContent = 'Log In →'; btn.disabled = false; }
+  if (btn) { btn.textContent = t('auth_login_btn'); btn.disabled = false; }
 
   if (res.error) { showAuthErr('login-err', res.error.message); return; }
 
@@ -12676,11 +12676,11 @@ doSignup = async function() {
   if (taken.data) { showAuthErr('signup-err', '@' + username + ' is already taken. Choose another.'); return; }
 
   var btn = document.querySelector('#auth-signup-card .btn');
-  if (btn) { btn.textContent = 'Creating…'; btn.disabled = true; }
+  if (btn) { btn.textContent = t('auth_creating'); btn.disabled = true; }
 
   var res = await _db.auth.signUp({ email: email, password: pass, options: { data: { name: name } } });
 
-  if (btn) { btn.textContent = 'Create Account →'; btn.disabled = false; }
+  if (btn) { btn.textContent = t('auth_create_btn'); btn.disabled = false; }
   if (res.error) { showAuthErr('signup-err', res.error.message); return; }
 
   var uid = res.data.user.id;
@@ -12857,11 +12857,11 @@ addFriendByCode = async function() {
   var code = input.value.trim().toUpperCase();
 
   if (!code.startsWith('HANZO-') || code.length < 10) {
-    if (msg) { msg.textContent = 'Invalid code — should look like HANZO-XXXXX'; msg.style.color = 'var(--red)'; }
+    if (msg) { msg.textContent = t('fr_invalid_code'); msg.style.color = 'var(--red)'; }
     return;
   }
   if (code === getMyInviteCode()) {
-    if (msg) { msg.textContent = "That's your own code!"; msg.style.color = 'var(--gold)'; }
+    if (msg) { msg.textContent = t('fr_own_code'); msg.style.color = 'var(--gold)'; }
     return;
   }
   if (!currentUser || !currentUser.id) { _origAddFriendByCode(); return; }
@@ -12871,7 +12871,7 @@ addFriendByCode = async function() {
   // Already added?
   var exRes = await _db.from('friendships').select('id').eq('user_id', uid).eq('friend_code', code);
   if (exRes.data && exRes.data.length) {
-    if (msg) { msg.textContent = 'Friend already added!'; msg.style.color = 'var(--gold)'; }
+    if (msg) { msg.textContent = t('fr_already_added'); msg.style.color = 'var(--gold)'; }
     return;
   }
 
@@ -12982,7 +12982,7 @@ function _renderMyFriends() {
     // Action button
     var btn = document.createElement('button');
     btn.style.cssText = 'flex-shrink:0;padding:7px 12px;border-radius:20px;font-family:var(--mono);font-size:10px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:var(--s3);color:var(--muted2);transition:all .2s;';
-    btn.textContent = 'Remove';
+    btn.textContent = t('btn_remove');
     btn.onclick = function() {
       if (!confirm(t('fr_remove_confirm').replace('{n}',f.name))) return;
       removeFriend(f.code);
@@ -13625,7 +13625,7 @@ function _cancelComposer() {
   if (composer) composer.style.display = 'none';
   _clearComposerImage();
   var postBtn = document.querySelector('#feed-composer button[onclick="_submitPost()"]');
-  if (postBtn) { postBtn.textContent = 'Post ✨'; postBtn.disabled = false; }
+  if (postBtn) { postBtn.textContent = t('post_btn'); postBtn.disabled = false; }
 }
 
 async function _submitPost() {
@@ -13634,13 +13634,13 @@ async function _submitPost() {
   var hasImage = !!_composerImageBase64;
   if (!text && !hasImage) { if (ta) ta.focus(); return; }
   if (!currentUser || !currentUser.id) {
-    _showToast('Please log in to post', 'error');
+    _showToast(t('post_login_first'), 'error');
     return;
   }
 
   // Show loading state on button
   var postBtn = document.querySelector('#feed-composer button[onclick="_submitPost()"]');
-  if (postBtn) { postBtn.textContent = 'Posting…'; postBtn.disabled = true; }
+  if (postBtn) { postBtn.textContent = t('post_btn_posting'); postBtn.disabled = true; }
 
   var nm = typeof S !== 'undefined' && typeof S.name === 'string' ? S.name : (currentUser.user_metadata && currentUser.user_metadata.name) || currentUser.email || 'User';
   var content = { text: text };
@@ -13660,25 +13660,25 @@ async function _submitPost() {
     var result = await _db.from('posts').insert(post).select().single();
     if (result.error) {
       console.error('Post error:', result.error);
-      _showToast('Could not post: ' + (result.error.message || 'Unknown error'), 'error');
-      if (postBtn) { postBtn.textContent = 'Post ✨'; postBtn.disabled = false; }
+      _showToast(t('post_error'), 'error');
+      if (postBtn) { postBtn.textContent = t('post_btn'); postBtn.disabled = false; }
       return;
     }
     _cancelComposer();
     _feedCache = {};
     _loadFeed();
-    _showToast('Posted! 🎉', 'success');
+    _showToast(t('post_posted'), 'success');
     if (typeof _addNotif === 'function') _addNotif('post', 'You shared a new post!');
   } catch(e) {
     console.error('Post exception:', e);
-    _showToast('Could not post. Check your connection.', 'error');
-    if (postBtn) { postBtn.textContent = 'Post ✨'; postBtn.disabled = false; }
+    _showToast(t('post_error'), 'error');
+    if (postBtn) { postBtn.textContent = t('post_btn'); postBtn.disabled = false; }
   }
 }
 
 function _createPost(type) {
   if (!currentUser || !currentUser.id) {
-    _showToast('Log in to share posts', 'error');
+    _showToast(t('post_login_to_share'), 'error');
     return;
   }
   var composer = el('feed-composer');
@@ -13839,7 +13839,7 @@ function _toggleSound() {
 // ============================================================
 function _buyShield() {
   var gems = S.gems || 0;
-  if (gems < 200) { showMsg('Not enough gems! You need 200 💎', 'var(--red)'); return; }
+  if (gems < 200) { showMsg(t('gems_not_enough'), 'var(--red)'); return; }
   S.gems = gems - 200;
   var shields = parseInt(localStorage.getItem('hanzo_shields') || '0');
   localStorage.setItem('hanzo_shields', shields + 1);
@@ -14017,7 +14017,7 @@ function _pwaInstall() {
       localStorage.setItem('hanzo_pwa_prompt_shown', '1');
     });
   } else {
-    showMsg('Open this page in Chrome/Safari and use "Add to Home Screen"', 'var(--blue)');
+    showMsg(t('pwa_add_home'), 'var(--blue)');
   }
 }
 
@@ -14227,7 +14227,7 @@ function _startHeartsRefillTimer() {
   var label = el('hearts-refill-timer');
   if (!label) return;
   var refillTime = parseInt(localStorage.getItem('hanzo_hearts_refill_time') || '0');
-  if (!refillTime) { label.textContent = 'Full hearts restored!'; return; }
+  if (!refillTime) { label.textContent = t('hearts_full'); return; }
   var interval = setInterval(function() {
     var left = refillTime - Date.now();
     if (left <= 0) { clearInterval(interval); _checkHeartRefill(); _renderHeartsDisplay(); label.textContent = t('hearts_refilled'); return; }
@@ -14254,7 +14254,7 @@ function _renderHeartsDisplay() {
       var left = Math.max(0, refillTime - Date.now());
       var m = Math.floor(left / 60000);
       var s = Math.floor((left % 60000) / 1000);
-      label.textContent = 'Refill in ' + m + ':' + String(s).padStart(2, '0');
+      label.textContent = t('hearts_refill_in') + ' ' + m + ':' + String(s).padStart(2, '0');
     } else {
       label.textContent = '';
     }
@@ -14485,7 +14485,7 @@ function _copyReferralCode() {
   var txt = 'Join me on Hanzo! Use my code ' + code + ' — we both get a Shield: https://hanzo.app?ref=' + code;
   if (typeof robustCopy === 'function') { robustCopy(txt, 'Invite link copied!'); }
   else if (navigator.clipboard) {
-    navigator.clipboard.writeText(txt).then(function() { showMsg('Invite link copied! 📋', 'var(--purple)'); });
+    navigator.clipboard.writeText(txt).then(function() { showMsg(t('fr_invite_copied'), 'var(--purple)'); });
   } else { showMsg('📋 ' + code, 'var(--purple)'); }
 }
 
