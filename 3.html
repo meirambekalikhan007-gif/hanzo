@@ -1491,9 +1491,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <div class="srs-due-card" id="srs-due-card" style="display:none;" onclick="goPage('games',document.querySelector('.bni[data-page=\'games\']'))">
     <div>
       <div style="font-size:14px;font-weight:800;color:var(--blue);" id="srs-due-text">📅 0 words due for review</div>
-      <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);margin-top:2px;">Review these words to keep them fresh</div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);margin-top:2px;" data-i18n="srs_keep_fresh">Review these words to keep them fresh</div>
     </div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--blue);font-weight:700;">Review →</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--blue);font-weight:700;" data-i18n="h_review_btn">Review →</div>
   </div>
 
   <!-- STREAK SHIELD CARD -->
@@ -1576,7 +1576,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <div class="card" style="margin-bottom:10px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
       <div style="font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted2);" id="study-queue-label">Due for Review Today</div>
-      <button id="srs-review-btn" onclick="startQuickSession()" style="display:none;background:var(--blue);border:none;color:#fff;font-family:var(--mono);font-size:8px;font-weight:700;padding:4px 10px;border-radius:20px;cursor:pointer;letter-spacing:.3px;">Review →</button>
+      <button id="srs-review-btn" onclick="startQuickSession()" style="display:none;background:var(--blue);border:none;color:#fff;font-family:var(--mono);font-size:8px;font-weight:700;padding:4px 10px;border-radius:20px;cursor:pointer;letter-spacing:.3px;" data-i18n="h_review_btn">Review →</button>
     </div>
     <div class="srs-row"><div class="srs-dot" style="background:var(--blue);"></div><div class="srs-label" data-i18n="h_new">New</div><div class="srs-track"><div class="srs-bar" id="srs-bar-new" style="background:var(--blue);width:0%"></div></div><div class="srs-count" id="srs-new" style="color:var(--blue);">0</div></div>
     <div class="srs-row"><div class="srs-dot" style="background:var(--gold);"></div><div class="srs-label" data-i18n="h_learning">Learning</div><div class="srs-track"><div class="srs-bar" id="srs-bar-learning" style="background:var(--gold);width:0%"></div></div><div class="srs-count" id="srs-learning" style="color:var(--gold);">0</div></div>
@@ -3371,7 +3371,7 @@ function renderHome(){
         +'<div style="flex:1;"><div style="font-size:12px;font-weight:700;color:'+(step.done?'rgba(165,180,252,.5)':step.active?'#e0e7ff':'rgba(165,180,252,.5)')+';text-decoration:'+(step.done?'line-through':'none')+';">'+step.title+'</div>'
         +(step.active&&!step.done?'<div style="font-size:10px;color:rgba(165,180,252,.6);margin-top:2px;">'+step.desc+'</div>':'')
         +'</div>'
-        +(step.active&&!step.done?'<div style="font-size:11px;color:rgba(165,180,252,.7);font-weight:700;">Go →</div>':'');
+        +(step.active&&!step.done?'<div style="font-size:11px;color:rgba(165,180,252,.7);font-weight:700;">'+t('h_go_arrow')+'</div>':'');
       if(step.action&&!step.done&&step.active){div.onclick=step.action;}
       stepsEl.appendChild(div);
     });
@@ -3852,7 +3852,7 @@ function renderChars(){
   var q=(el('cn-search')?.value||'').toLowerCase();
   var list=(S.chars_list||[]).filter(function(c){return(cnFilter==='All'||c.hsk===cnFilter||c.status===cnFilter)&&(!q||c.char.includes(q)||(c.pinyin&&c.pinyin.toLowerCase().includes(q))||(c.meaning&&c.meaning.toLowerCase().includes(q)));}).sort(function(a,b){return b.id-a.id;});
   var container=el('char-list');
-  if(!list.length){container.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:32px;font-family:var(--mono);font-size:11px;color:var(--muted);">No characters yet.<br>Add your first word above.</div>';return;}
+  if(!list.length){container.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:32px;font-family:var(--mono);font-size:11px;color:var(--muted);">'+t('w_no_chars')+'</div>';return;}
   container.innerHTML=list.map(function(c){
     var colors={new:'var(--blue)',learning:'var(--gold)',mastered:'var(--green)'};
     return'<div class="char-card '+c.status+'">'
@@ -3862,9 +3862,9 @@ function renderChars(){
       +(c.example?'<div class="char-ex">'+c.example+'</div>':'')
       +'<div class="char-meta">'
       +'<select class="char-status-sel" onchange="updateCharStatus('+c.id+',this.value)">'
-      +'<option value="new"'+(c.status==='new'?' selected':'')+'>New</option>'
-      +'<option value="learning"'+(c.status==='learning'?' selected':'')+'>Learning</option>'
-      +'<option value="mastered"'+(c.status==='mastered'?' selected':'')+'>Mastered</option>'
+      +'<option value="new"'+(c.status==='new'?' selected':'')+'>'+t('w_new')+'</option>'
+      +'<option value="learning"'+(c.status==='learning'?' selected':'')+'>'+t('w_learning')+'</option>'
+      +'<option value="mastered"'+(c.status==='mastered'?' selected':'')+'>'+t('w_mastered')+'</option>'
       +'</select>'
       +'<button class="char-del" onclick="deleteChar('+c.id+',this)">✕</button>'
       +'</div>'
@@ -5465,7 +5465,7 @@ var I18N={
     h_see_month:'See full month →',
     h_back_month:'← Back to streak',
     h_this_week:'This Week',
-    h_see_all:'See all →',
+    h_see_all:'See all →',h_go_arrow:'Go →',h_review_btn:'Review →',srs_keep_fresh:'Review these words to keep them fresh',
     h_you_are:'You are #{rank} this week',
     h_study_queue:'Study Queue',
     h_month_consistency:'{pct}% consistency — {done} of {total} days studied',
@@ -5647,7 +5647,7 @@ var I18N={
     h_see_month:'Посмотреть месяц →',
     h_back_month:'← Назад к серии',
     h_this_week:'Эта неделя',
-    h_see_all:'Смотреть все →',
+    h_see_all:'Смотреть все →',h_go_arrow:'Перейти →',h_review_btn:'Повторить →',srs_keep_fresh:'Повторите эти слова, чтобы не забыть',
     h_you_are:'Ты #{rank} на этой неделе',
     h_study_queue:'Очередь обучения',
     h_month_consistency:'{pct}% успеваемость — {done} из {total} дней',
@@ -5818,7 +5818,7 @@ var I18N={
     h_see_month:'Толық айды көру →',
     h_back_month:'← Сериясына оралу',
     h_this_week:'Осы апта',
-    h_see_all:'Барлығын көру →',
+    h_see_all:'Барлығын көру →',h_go_arrow:'Өту →',h_review_btn:'Қайталау →',srs_keep_fresh:'Ұмытпау үшін осы сөздерді қайталаңыз',
     h_you_are:'Сіз #{rank} осы аптада',
     h_study_queue:'Оқу кезегі',
     h_month_consistency:'{pct}% үздіксіздік — {total} күннің {done} күні оқыдым',
@@ -7702,9 +7702,9 @@ function renderMyPhrases(){
       +'<div style="font-family:var(--mono);font-size:10px;color:var(--gold);margin-bottom:3px;">'+p.py+'</div>'
       +'<div style="font-size:12px;color:var(--muted2);margin-bottom:6px;">'+tr+'</div>'
       +'<select onchange="updatePhraseStatus('+p.id+',this.value)" style="background:var(--s2);border:1px solid var(--border);color:var(--muted2);font-family:var(--mono);font-size:8px;padding:2px 4px;border-radius:6px;cursor:pointer;width:auto;">'
-      +'<option value="new"'+(p.status==='new'?' selected':'')+'>New</option>'
-      +'<option value="learning"'+(p.status==='learning'?' selected':'')+'>Learning</option>'
-      +'<option value="mastered"'+(p.status==='mastered'?' selected':'')+'>Mastered</option>'
+      +'<option value="new"'+(p.status==='new'?' selected':'')+'>'+t('w_new')+'</option>'
+      +'<option value="learning"'+(p.status==='learning'?' selected':'')+'>'+t('w_learning')+'</option>'
+      +'<option value="mastered"'+(p.status==='mastered'?' selected':'')+'>'+t('w_mastered')+'</option>'
       +'</select>';
     container.appendChild(card);
   });
@@ -12519,7 +12519,7 @@ function renderCharsV() {
   var container = el('char-list-v');
   if (!container) return;
   if (!list.length) {
-    container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:32px;font-family:var(--mono);font-size:11px;color:var(--muted2);">'+t('w_no_words_yet')+'</div>';
+    container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:32px;font-family:var(--mono);font-size:11px;color:var(--muted2);">'+t('w_no_chars')+'</div>';
     return;
   }
   var STATUS_C = { new:'#60a5fa', learning:'#f59e0b', mastered:'#4ade80' };
@@ -13805,7 +13805,8 @@ function _updateSRSDueBadge() {
   if (!card) return;
   if (due.length > 0) {
     card.style.display = 'flex';
-    if (txt) txt.textContent = '📅 ' + due.length + ' word' + (due.length === 1 ? '' : 's') + ' due for review';
+    var _dueWord=LANG==='ru'?(due.length===1?'слово':'слов')+' на повторение':LANG==='kz'?due.length+' сөз қайталауға':'📅 '+due.length+' word'+(due.length===1?'':'s')+' due for review';
+    if (txt) txt.textContent = LANG==='ru'?'📅 '+due.length+' '+_dueWord:LANG==='kz'?'📅 '+_dueWord:_dueWord;
   } else {
     card.style.display = 'none';
   }
