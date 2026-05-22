@@ -40,7 +40,8 @@
       "Bash(npm run *)",
       "Bash(curl -s http://localhost:3000)",
       "Bash(sudo npm install -g vercel)",
-      "Bash(npx vercel *)"
+      "Bash(npx vercel *)",
+      "Bash(sips -s format jpeg \"/Users/bauyrzan/Desktop/Screenshot 2026-05-22 at 12.15.08.heic\" --out /tmp/vercel_screen.jpg)"
     ]
   }
 }
