@@ -1838,7 +1838,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div class="ph-meaning" id="ph-meaning"></div>
     <div style="font-family:var(--mono);font-size:9px;color:var(--muted);text-align:center;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px;" data-i18n="g_type_pinyin">Type the pinyin — tone marks optional</div>
     <div class="ph-input-row">
-      <input type="text" id="ph-input" class="ph-input" placeholder="e.g. nǐ or ni" onkeydown="if(event.key==='Enter'){if(_phAnswered)phNext();else checkPinyin();}">
+      <input type="text" id="ph-input" class="ph-input" data-i18n-ph="g_type_ph" placeholder="e.g. nǐ or ni" onkeydown="if(event.key==='Enter'){if(_phAnswered)phNext();else checkPinyin();}">
       <button class="btn btn-sm" onclick="checkPinyin()" style="white-space:nowrap;width:auto;">Check</button>
     </div>
     <div class="ph-result" id="ph-result"></div>
@@ -5548,7 +5548,7 @@ var I18N={
     g_no_words_mode:'No words in this mode',g_add_words_first:'Add words first',g_empty_state_desc:'Go to Bank and add some words to start playing',g_browse_bank:'🏦 Browse Word Bank',
     g_fill_blank_correct:'Fill blank correct!',g_true_false_correct:'True / False correct!',
     g_what_mean:'What does this mean?',g_see_pinyin:'See the pinyin — find the character',
-    g_type_pinyin:'Type the pinyin — tone marks optional',g_check:'Check',g_restart:'Restart',
+    g_type_pinyin:'Type the pinyin — tone marks optional',g_check:'Check',g_restart:'Restart',g_type_ph:'e.g. nǐ or ni',
     g_match_pairs:'Match {n} pairs',g_next_round:'Next Round',
     g_no_words:'Add words first',g_need_words:'You need at least 4 words in this mode',
     g_complete:'Complete!',g_final:'Final score',g_done:'Done!',g_correct:'correct',g_all_matched:'All matched!',h_goal_complete:'Goal Complete! 🎯',lu_was:'Was',lu_level:'Level',ob_continue_n:'Continue → ({n} selected)',ob_select_one:'Select at least one →',g_see_results:'See Results 🏆',hearts_refilled:'Heart refilled!',hearts_next_in:'Next heart in',g_correct_answer:'Correct',g_correct_xp:'Correct! +15 XP 🎉',g_not_quite:'Not quite — see the correct order above',prof_name_empty:'Name cannot be empty',prof_updated:'Profile updated! ✓',w_added_xp:'Word added! +2 XP ✓',
@@ -5624,7 +5624,7 @@ var I18N={
   prof_settings:'⚙️ Settings',prof_sound_lbl:'Sound',prof_theme_lbl:'Theme',prof_lang_lbl:'🌐 Language',
   prof_goal_lbl:'🎯 Daily Goal',prof_shields_lbl:'🛡️ Streak Shields',prof_sound_sub:'Audio feedback for answers',prof_sign_out:'⎋ Sign Out',
   prof_xp_chart:'📊 7-Day XP Activity',prof_no_activity:'📊 Start learning to see your progress chart!',
-  nav_community:'Community',h_community_sub:'See what learners are doing',nav_profile:'Profile',nav_learn:'Learn',
+  nav_community:'Community',h_community_sub:'See what learners are doing',nav_profile:'Profile',nav_learn:'Learn',feed_empty_title:'Nothing here yet',feed_empty_sub:'Be the first to post on Hanzo!',feed_share:'Share something',feed_first_post:'Be the first to post!',feed_first_post_sub:'Share a word you just learned,<br>your streak, or how studying is going.',feed_add_friends:'Add friends to see their posts',feed_add_friends_sub:'Learning together keeps you<br>motivated 🔥',feed_find_friends:'Find Friends',w_no_words_yet:'No words yet. Add one below!',
   },
   ru:{
     nav_home:'Главная',nav_lessons:'Уроки',nav_phrases:'Фразы',nav_friends:'Друзья',w_my_phrases:'Мои фразы',ph_subtitle:'Ваши сохранённые фразы — нажмите статус для изменения',ph_search:'Поиск фраз…',ph_no_phrases:'Фраз пока нет. Добавьте из Уроки → Фразы.',nav_games:'Игры',nav_words:'Слова',nav_bank:'Банк',
@@ -5723,7 +5723,7 @@ var I18N={
     g_got_it:'Знаю ✓',g_forgot:'Забыл ✗',g_almost:'Почти',g_tap_reveal:'нажмите чтобы открыть',
     g_no_words_mode:'Нет слов в этом режиме',g_add_words_first:'Сначала добавьте слова',g_empty_state_desc:'Перейдите в Банк и добавьте слова для игры',g_browse_bank:'🏦 Открыть Банк слов',
     g_what_mean:'Что это значит?',g_see_pinyin:'Видишь пиньинь — найди иероглиф',
-    g_type_pinyin:'Введите пиньинь — знаки тонов не обязательны',g_check:'Проверить',g_restart:'Заново',
+    g_type_pinyin:'Введите пиньинь — знаки тонов не обязательны',g_check:'Проверить',g_restart:'Заново',g_type_ph:'напр. nǐ или ni',
     g_match_pairs:'Соедини {n} пары',g_next_round:'Следующий раунд',
     g_no_words:'Сначала добавьте слова',g_need_words:'Нужно минимум 4 слова в этом режиме',
     g_complete:'Готово!',g_final:'Итоговый счёт',g_done:'Готово!',g_correct:'правильно',g_all_matched:'Всё соединено!',h_goal_complete:'Цель выполнена! 🎯',lu_was:'Был',lu_level:'Уровень',ob_continue_n:'Продолжить → ({n} выбрано)',ob_select_one:'Выберите хотя бы один →',g_see_results:'Результаты 🏆',hearts_refilled:'Сердечко восстановлено!',hearts_next_in:'Следующее сердце через',g_correct_answer:'Правильно',g_correct_xp:'Правильно! +15 XP 🎉',g_not_quite:'Не совсем — смотрите правильный порядок выше',prof_name_empty:'Имя не может быть пустым',prof_updated:'Профиль обновлён! ✓',w_added_xp:'Слово добавлено! +2 XP ✓',
@@ -5795,7 +5795,7 @@ var I18N={
   prof_settings:'⚙️ Настройки',prof_sound_lbl:'Звук',prof_theme_lbl:'Тема',prof_lang_lbl:'🌐 Язык',
   prof_goal_lbl:'🎯 Дневная цель',prof_shields_lbl:'🛡️ Щиты серии',prof_sound_sub:'Аудио подтверждение ответов',prof_sign_out:'⎋ Выйти',
   prof_xp_chart:'📊 XP за 7 дней',prof_no_activity:'📊 Начните учиться, чтобы увидеть график!',
-  nav_community:'Сообщество',h_community_sub:'Смотрите, что делают другие ученики',nav_profile:'Профиль',nav_learn:'Учёба',
+  nav_community:'Сообщество',h_community_sub:'Смотрите, что делают другие ученики',nav_profile:'Профиль',nav_learn:'Учёба',feed_empty_title:'Пока ничего нет',feed_empty_sub:'Будьте первым — запостите на Hanzo!',feed_share:'Поделиться',feed_first_post:'Будьте первым!',feed_first_post_sub:'Поделитесь словом, которое изучили,<br>серией или прогрессом.',feed_add_friends:'Добавьте друзей для просмотра постов',feed_add_friends_sub:'Учёба вместе мотивирует 🔥',feed_find_friends:'Найти друзей',w_no_words_yet:'Слов ещё нет. Добавьте ниже!',
   },
   kz:{
     nav_home:'Басты бет',nav_lessons:'Сабақтар',nav_phrases:'Фразалар',nav_friends:'Достар',w_my_phrases:'Менің фразаларым',ph_subtitle:'Сақталған фразаларыңыз — мәртебені жаңарту үшін басыңыз',ph_search:'Фразаларды іздеу…',ph_no_phrases:'Фразалар жоқ. Сабақтар → Фразалардан қосыңыз.',nav_games:'Ойындар',nav_words:'Сөздік',nav_bank:'Банк',
@@ -5894,7 +5894,7 @@ var I18N={
     g_got_it:'Білемін ✓',g_forgot:'Ұмыттым ✗',g_almost:'Жақын',g_tap_reveal:'ашу үшін басыңыз',
     g_no_words_mode:'Бұл режимде сөз жоқ',g_add_words_first:'Алдымен сөз қосыңыз',g_empty_state_desc:'Банкке өтіп, ойын үшін сөз қосыңыз',g_browse_bank:'🏦 Сөз банкіне өту',
     g_what_mean:'Бұл не дегенді білдіреді?',g_see_pinyin:'Пиньинді қара — иероглифті тап',
-    g_type_pinyin:'Пиньинді енгізіңіз — тон белгілері міндетті емес',g_check:'Тексеру',g_restart:'Қайта бастау',
+    g_type_pinyin:'Пиньинді енгізіңіз — тон белгілері міндетті емес',g_check:'Тексеру',g_restart:'Қайта бастау',g_type_ph:'мыс. nǐ немесе ni',
     g_match_pairs:'{n} жұпты дәйектестір',g_next_round:'Келесі раунд',
     g_no_words:'Алдымен сөз қосыңыз',g_need_words:'Бұл режимде кемінде 4 сөз қажет',
     g_complete:'Аяқталды!',g_final:'Қорытынды нәтиже',g_done:'Аяқталды!',g_correct:'дұрыс',g_all_matched:'Барлығы сәйкестенді!',h_goal_complete:'Мақсат орындалды! 🎯',lu_was:'Бұрын болды',lu_level:'Деңгей',ob_continue_n:'Жалғастыру → ({n} таңдалды)',ob_select_one:'Кемінде біреуін таңдаңыз →',g_see_results:'Нәтижелер 🏆',hearts_refilled:'Жүрекше толды!',hearts_next_in:'Келесі жүрекше арқылы',g_correct_answer:'Дұрыс жауап',g_correct_xp:'Дұрыс! +15 XP 🎉',g_not_quite:'Дәл емес — жоғарыдағы дұрыс тәртіпті қараңыз',prof_name_empty:'Атау бос болмауы керек',prof_updated:'Профиль жаңартылды! ✓',w_added_xp:'Сөз қосылды! +2 XP ✓',
@@ -5966,7 +5966,7 @@ var I18N={
   prof_settings:'⚙️ Баптаулар',prof_sound_lbl:'Дыбыс',prof_theme_lbl:'Тақырып',prof_lang_lbl:'🌐 Тіл',
   prof_goal_lbl:'🎯 Күнделікті мақсат',prof_shields_lbl:'🛡️ Серия қалқандары',prof_sound_sub:'Жауаптарға аудио кері байланыс',prof_sign_out:'⎋ Шығу',
   prof_xp_chart:'📊 7 күндік XP белсенділігі',prof_no_activity:'📊 Прогресс кестесін көру үшін оқи бастаңыз!',
-  nav_community:'Қоғамдастық',h_community_sub:'Басқа оқушылардың жетістіктерін қараңыз',nav_profile:'Профиль',nav_learn:'Оқу',
+  nav_community:'Қоғамдастық',h_community_sub:'Басқа оқушылардың жетістіктерін қараңыз',nav_profile:'Профиль',nav_learn:'Оқу',feed_empty_title:'Әзірше ештеңе жоқ',feed_empty_sub:'Hanzo-да бірінші болып жариялаңыз!',feed_share:'Бөлісу',feed_first_post:'Бірінші болып жарияла!',feed_first_post_sub:'Жаңа үйренген сөзіңізбен,<br>сериямен немесе прогреспен бөлісіңіз.',feed_add_friends:'Достарын постарын көру үшін қос',feed_add_friends_sub:'Бірге оқу ынталандырады 🔥',feed_find_friends:'Дос тауып',w_no_words_yet:'Сөз жоқ. Төменде қосыңыз!',
   },
 };
 
@@ -7035,7 +7035,7 @@ function lsShowQ(){
       'box-shadow:0 4px 16px rgba(234,88,12,.4),0 2px 6px rgba(0,0,0,.25);'+
       'letter-spacing:.2px;';
     comboBar.innerHTML='<span style="font-size:18px;">🔥</span>'+
-      '<span style="flex:1;text-shadow:0 1px 3px rgba(0,0,0,.4);">'+lsCombo+' correct in a row!</span>'+
+      '<span style="flex:1;text-shadow:0 1px 3px rgba(0,0,0,.4);">'+lsCombo+' '+t('ls_combo_streak')+'</span>'+
       '<span style="background:rgba(255,255,255,.25);border-radius:8px;padding:2px 10px;font-size:10px;font-weight:900;">+BONUS</span>';
     body.appendChild(comboBar);
   }
@@ -12519,7 +12519,7 @@ function renderCharsV() {
   var container = el('char-list-v');
   if (!container) return;
   if (!list.length) {
-    container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:32px;font-family:var(--mono);font-size:11px;color:var(--muted2);">No words yet. Add one below!</div>';
+    container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:32px;font-family:var(--mono);font-size:11px;color:var(--muted2);">'+t('w_no_words_yet')+'</div>';
     return;
   }
   var STATUS_C = { new:'#60a5fa', learning:'#f59e0b', mastered:'#4ade80' };
@@ -13323,11 +13323,11 @@ function _renderFeedEmpty(postsEl) {
   var div = document.createElement('div');
   div.style.cssText = 'text-align:center;padding:52px 20px;';
   if (isExplore) {
-    div.innerHTML = '<div style="font-size:48px;">🌍</div><div style="font-weight:800;font-size:15px;margin:12px 0 6px;">Nothing here yet</div><div style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:20px;">Be the first to post on Hanzo!</div><button onclick="_createPost(\'manual\')" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:13px;padding:12px 24px;border-radius:20px;cursor:pointer;">✨ Share something</button>';
+    div.innerHTML = '<div style="font-size:48px;">🌍</div><div style="font-weight:800;font-size:15px;margin:12px 0 6px;">'+t('feed_empty_title')+'</div><div style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:20px;">'+t('feed_empty_sub')+'</div><button onclick="_createPost(\'manual\')" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:13px;padding:12px 24px;border-radius:20px;cursor:pointer;">✨ '+t('feed_share')+'</button>';
   } else if (hasFriends) {
-    div.innerHTML = '<div style="font-size:48px;">🌱</div><div style="font-weight:800;font-size:15px;margin:12px 0 6px;">Be the first to post!</div><div style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:20px;line-height:1.6;">Share a word you just learned,<br>your streak, or how studying is going.</div><button onclick="_createPost(\'manual\')" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:13px;padding:12px 24px;border-radius:20px;cursor:pointer;">✨ Share something</button>';
+    div.innerHTML = '<div style="font-size:48px;">🌱</div><div style="font-weight:800;font-size:15px;margin:12px 0 6px;">'+t('feed_first_post')+'</div><div style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:20px;line-height:1.6;">'+t('feed_first_post_sub')+'</div><button onclick="_createPost(\'manual\')" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:13px;padding:12px 24px;border-radius:20px;cursor:pointer;">✨ '+t('feed_share')+'</button>';
   } else {
-    div.innerHTML = '<div style="font-size:48px;">👥</div><div style="font-weight:800;font-size:15px;margin:12px 0 6px;">Add friends to see their posts</div><div style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:20px;line-height:1.6;">Learning together keeps you<br>motivated 🔥</div><button onclick="goPage(\'friends\',document.querySelector(\'.bni[data-page=friends]\'))" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:13px;padding:12px 24px;border-radius:20px;cursor:pointer;">👥 Find Friends</button>';
+    div.innerHTML = '<div style="font-size:48px;">👥</div><div style="font-weight:800;font-size:15px;margin:12px 0 6px;">'+t('feed_add_friends')+'</div><div style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:20px;line-height:1.6;">'+t('feed_add_friends_sub')+'</div><button onclick="goPage(\'friends\',document.querySelector(\'.bni[data-page=friends]\'))" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:13px;padding:12px 24px;border-radius:20px;cursor:pointer;">👥 '+t('feed_find_friends')+'</button>';
   }
   postsEl.appendChild(div);
 }
@@ -14355,7 +14355,8 @@ function _renderProfilePage() {
     for (var i = 6; i >= 0; i--) {
       var d = new Date(); d.setDate(d.getDate() - i);
       var ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-      days7.push({ date: ds, xp: dailyXP[ds] || getStudyCount(ds) || 0, label: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()] });
+      var _dayLabels=LANG==='ru'?['Вс','Пн','Вт','Ср','Чт','Пт','Сб']:LANG==='kz'?['Жс','Дс','Сс','Ср','Бс','Жм','Сб']:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      days7.push({ date: ds, xp: dailyXP[ds] || getStudyCount(ds) || 0, label: _dayLabels[d.getDay()] });
     }
     var totalXPDays = days7.reduce(function(sum, d) { return sum + d.xp; }, 0);
     if (totalXPDays === 0) {
