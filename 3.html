@@ -1747,9 +1747,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <!-- EMPTY STATE: shown when user has no words -->
   <div id="games-empty-state" style="display:none;background:var(--s2);border:1px solid var(--border);border-radius:var(--r16);padding:28px 20px;margin-bottom:14px;text-align:center;">
     <div style="font-size:44px;margin-bottom:12px;">📚</div>
-    <div style="font-weight:800;font-size:15px;margin-bottom:6px;">No words to practice yet</div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:18px;line-height:1.6;">Go to Vocab and add some words<br>from the Bank to start playing</div>
-    <button onclick="_goVocab('words',document.querySelector('.bni[data-page=\'bank\']'))" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:13px;padding:12px 24px;border-radius:20px;cursor:pointer;box-shadow:0 4px 14px rgba(232,96,122,.3);">🏦 Browse Word Bank</button>
+    <div style="font-weight:800;font-size:15px;margin-bottom:6px;" data-i18n="g_no_words_mode">No words to practice yet</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:18px;line-height:1.6;" data-i18n="g_empty_state_desc">Go to Bank and add some words to start playing</div>
+    <button onclick="_goVocab('words',document.querySelector('.bni[data-page=\'bank\']'))" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:13px;padding:12px 24px;border-radius:20px;cursor:pointer;box-shadow:0 4px 14px rgba(232,96,122,.3);" data-i18n="g_browse_bank">🏦 Browse Word Bank</button>
   </div>
 
   <!-- WORDS / PHRASES / LISTENING TOGGLE -->
@@ -1864,7 +1864,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <!-- HEADER -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
       <div class="game-prog"><span class="game-prog-txt" id="so-prog">1 / 10</span><span class="game-score-txt" id="so-score-top"></span></div>
-      <button onclick="goPage('sentbank',null)" style="background:var(--s2);border:1px solid var(--border);color:var(--muted2);font-family:var(--mono);font-size:9px;padding:5px 10px;border-radius:var(--r8);cursor:pointer;text-transform:uppercase;letter-spacing:.4px;" data-i18n="so_change">Change sentences</button>
+      <button onclick="_goVocab('phrases')" style="background:var(--s2);border:1px solid var(--border);color:var(--muted2);font-family:var(--mono);font-size:9px;padding:5px 10px;border-radius:var(--r8);cursor:pointer;text-transform:uppercase;letter-spacing:.4px;" data-i18n="so_change">Change sentences</button>
     </div>
     <!-- PROGRESS BAR -->
     <div style="height:5px;background:var(--s3);border-radius:3px;overflow:hidden;margin-bottom:16px;">
@@ -2107,8 +2107,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 
     <!-- LEADERBOARD TABS -->
     <div class="league-tabs">
-      <button class="league-tab on" id="lb-tab-week" onclick="_setLbTab('week',this)">This Week</button>
-      <button class="league-tab" id="lb-tab-alltime" onclick="_setLbTab('alltime',this)">All Time</button>
+      <button class="league-tab on" id="lb-tab-week" onclick="_setLbTab('week',this)" data-i18n="h_this_week">This Week</button>
+      <button class="league-tab" id="lb-tab-alltime" onclick="_setLbTab('alltime',this)" data-i18n="fr_all_time">All Time</button>
     </div>
     <div id="friends-lb-list" style="margin-top:8px;"></div>
   </div>
@@ -2221,8 +2221,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <!-- HEADER -->
   <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 16px 12px;">
     <div>
-      <div style="font-size:22px;font-weight:900;letter-spacing:-.5px;">Community 🌐</div>
-      <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);margin-top:2px;">What learners are doing right now</div>
+      <div style="font-size:22px;font-weight:900;letter-spacing:-.5px;"><span data-i18n="nav_community">Community</span> 🌐</div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);margin-top:2px;" data-i18n="h_community_sub">What learners are doing right now</div>
     </div>
     <button onclick="_createPost('manual')" style="background:var(--red);border:none;color:#fff;font-size:13px;font-weight:800;padding:10px 18px;border-radius:20px;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(232,96,122,.35);">
       ✨ Share
@@ -2269,15 +2269,15 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 <!-- ========== WORD BANK PAGE ========== -->
 <div class="page" id="page-bank">
   <div class="sh" style="margin-top:4px;">
-    <span class="sh-title">Vocab</span>
+    <span class="sh-title" data-i18n="nav_bank">Bank</span>
     <span class="sh-sub" id="wb-count">Loading…</span>
   </div>
 
   <!-- BANK / MY WORDS / PHRASES TOGGLE -->
   <div style="display:flex;background:var(--s2);border-radius:var(--r12);padding:3px;gap:3px;margin-bottom:14px;">
-    <button id="bank-tab-words" onclick="_setBankSection('words',this)" style="flex:1;padding:9px;background:var(--s1);border:none;color:var(--text);font-family:var(--font);font-size:12px;font-weight:700;border-radius:var(--r8);cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.4);transition:all .15s;">🏦 Bank</button>
-    <button id="bank-tab-mywords" onclick="_setBankSection('mywords',this)" style="flex:1;padding:9px;background:transparent;border:none;color:var(--muted2);font-family:var(--font);font-size:12px;font-weight:700;border-radius:var(--r8);cursor:pointer;transition:all .15s;">📚 My Words</button>
-    <button id="bank-tab-phrases" onclick="_setBankSection('phrases',this)" style="flex:1;padding:9px;background:transparent;border:none;color:var(--muted2);font-family:var(--font);font-size:12px;font-weight:700;border-radius:var(--r8);cursor:pointer;transition:all .15s;">💬 Phrases</button>
+    <button id="bank-tab-words" onclick="_setBankSection('words',this)" style="flex:1;padding:9px;background:var(--s1);border:none;color:var(--text);font-family:var(--font);font-size:12px;font-weight:700;border-radius:var(--r8);cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.4);transition:all .15s;">🏦 <span data-i18n="nav_bank">Bank</span></button>
+    <button id="bank-tab-mywords" onclick="_setBankSection('mywords',this)" style="flex:1;padding:9px;background:transparent;border:none;color:var(--muted2);font-family:var(--font);font-size:12px;font-weight:700;border-radius:var(--r8);cursor:pointer;transition:all .15s;">📚 <span data-i18n="w_my_words">My Words</span></button>
+    <button id="bank-tab-phrases" onclick="_setBankSection('phrases',this)" style="flex:1;padding:9px;background:transparent;border:none;color:var(--muted2);font-family:var(--font);font-size:12px;font-weight:700;border-radius:var(--r8);cursor:pointer;transition:all .15s;">💬 <span data-i18n="w_my_phrases">Phrases</span></button>
   </div>
 
   <!-- MY WORDS SECTION (words page content injected here) -->
@@ -2470,33 +2470,33 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <div class="card" style="margin-bottom:14px;">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
       <div>
-        <div style="font-size:13px;font-weight:700;">🌙 Dark Mode</div>
+        <div style="font-size:13px;font-weight:700;" data-i18n="prof_theme_lbl">Theme</div>
         <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:1px;" id="prof-theme-txt">Dark theme active</div>
       </div>
       <button id="prof-theme-btn" onclick="toggleTheme();_syncProfileThemeBtn();" style="background:var(--s2);border:1.5px solid var(--border);color:var(--muted3);font-family:var(--mono);font-size:9px;font-weight:700;padding:7px 14px;border-radius:20px;cursor:pointer;">Dark</button>
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
       <div>
-        <div style="font-size:13px;font-weight:700;">🔊 Sound Effects</div>
-        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:1px;">Audio feedback for answers</div>
+        <div style="font-size:13px;font-weight:700;" data-i18n="prof_sound_lbl">Sound</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:1px;" data-i18n="prof_sound_sub">Audio feedback for answers</div>
       </div>
       <button id="sound-toggle-btn" onclick="_toggleSound()" style="background:var(--s2);border:1.5px solid var(--border);color:var(--muted3);font-family:var(--mono);font-size:9px;font-weight:700;padding:7px 14px;border-radius:20px;cursor:pointer;">ON</button>
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
       <div>
-        <div style="font-size:13px;font-weight:700;">🎯 Daily Goal</div>
+        <div style="font-size:13px;font-weight:700;" data-i18n="prof_goal_lbl">Daily Goal</div>
         <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:1px;" id="prof-daily-goal-txt">10 words/day</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
       <div>
-        <div style="font-size:13px;font-weight:700;">🛡️ Streak Shields</div>
+        <div style="font-size:13px;font-weight:700;" data-i18n="prof_shields_lbl">Shields</div>
         <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:1px;" id="prof-shields-txt">0 shields</div>
       </div>
     </div>
     <!-- LANGUAGE SWITCHER -->
     <div style="padding:10px 0 6px;">
-      <div style="font-size:13px;font-weight:700;margin-bottom:8px;">🌐 Language</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:8px;" data-i18n="prof_lang_lbl">🌐 Language</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
         <button onclick="setLang('en');_syncProfileLangBtns();" id="prof-lang-en" style="padding:8px 4px;border-radius:var(--r8);border:1.5px solid var(--border);background:var(--s2);font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;color:var(--muted2);transition:all .15s;">🇬🇧 EN</button>
         <button onclick="setLang('ru');_syncProfileLangBtns();" id="prof-lang-ru" style="padding:8px 4px;border-radius:var(--r8);border:1.5px solid var(--border);background:var(--s2);font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;color:var(--muted2);transition:all .15s;">🇷🇺 RU</button>
@@ -2508,7 +2508,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 
   <!-- DANGER ZONE -->
   <div class="card" style="margin-bottom:20px;">
-    <button onclick="doLogout()" style="width:100%;background:var(--redbg);border:1.5px solid var(--redbrd);color:var(--red);font-family:var(--font);font-size:14px;font-weight:700;padding:14px;border-radius:var(--r12);cursor:pointer;">⎋ Sign Out</button>
+    <button onclick="doLogout()" style="width:100%;background:var(--redbg);border:1.5px solid var(--redbrd);color:var(--red);font-family:var(--font);font-size:14px;font-weight:700;padding:14px;border-radius:var(--r12);cursor:pointer;" data-i18n="prof_sign_out">⎋ Sign Out</button>
   </div>
 </div>
 
@@ -3283,10 +3283,11 @@ function renderHome(){
   var queueLabel = el('study-queue-label');
   if (queueLabel) {
     if (srsDueTotal === 0) {
-      queueLabel.textContent = '✅ All caught up!';
+      queueLabel.textContent = LANG==='ru'?'✅ Всё сделано!':LANG==='kz'?'✅ Бәрі дайын!':'✅ All caught up!';
       queueLabel.style.color = 'var(--green)';
     } else {
-      queueLabel.textContent = srsDueTotal + ' word' + (srsDueTotal === 1 ? '' : 's') + ' due for review';
+      var wordLbl = LANG==='ru'?'слов на повторение':LANG==='kz'?'сөз қайталауға':'word'+(srsDueTotal===1?'':'s')+' due for review';
+      queueLabel.textContent = srsDueTotal + ' ' + wordLbl;
       queueLabel.style.color = '';
     }
   }
@@ -3297,7 +3298,7 @@ function renderHome(){
   var greetEl = el('hero-title');
   if (greetEl && currentUser) {
     var hr = new Date().getHours();
-    var greetWord = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+    var greetWord = LANG==='ru'?(hr<12?'Доброе утро':hr<17?'Добрый день':'Добрый вечер'):LANG==='kz'?(hr<12?'Қайырлы таң':hr<17?'Қайырлы күн':'Қайырлы кеш'):(hr<12?'Good morning':hr<17?'Good afternoon':'Good evening');
     var fn = (getUserName ? getUserName() : (S.name || '')).split(' ')[0];
     greetEl.textContent = fn ? greetWord + ', ' + fn + '! 👋' : 'Learn Chinese. Build Fluency.';
     greetEl.style.fontSize = fn ? '15px' : '';
@@ -3324,7 +3325,7 @@ function renderHome(){
   if(el('streak-month-label'))el('streak-month-label').textContent='📊 '+t('h_month');
   if(el('month-toggle-label'))el('month-toggle-label').textContent=t('h_see_month');
   if(el('home-lb-title'))el('home-lb-title').textContent='🏆 '+t('h_this_week');
-  if(el('study-queue-label'))el('study-queue-label').textContent=t('h_study_queue');
+  // study-queue-label already set dynamically above with due-count — do NOT override it here
 
   // New user guide — 4 progressive steps, each unlocks when previous is done
   var guideEl=el('new-user-guide');
@@ -3355,7 +3356,7 @@ function renderHome(){
        icon:'📚',
        title:LANG==='ru'?'Пройдите первый урок':LANG==='kz'?'Бірінші сабақты аяқтаңыз':'Complete a lesson',
        desc:LANG==='ru'?'Уроки → откройте первый блок':LANG==='kz'?'Сабақтар → бірінші бөлімді ашыңыз':'Go to Lessons and finish your first unit',
-       action:function(){goPage('lessons',document.querySelector('.bni[data-page="lessons"]'));}},
+       action:function(){_goLearn('lessons',null);}},
       {done:studiedEver>=20, active:lessonsDone>=1&&studiedEver<20,
        icon:'🔥',
        title:LANG==='ru'?'Создайте 2-дневную серию':LANG==='kz'?'2 күндік серия жасаңыз':'Build a 2-day streak',
@@ -4107,11 +4108,24 @@ function speakChinese(text, rate) {
   window.speechSynthesis.cancel();
   var u = new SpeechSynthesisUtterance(text);
   u.lang = 'zh-CN'; u.rate = rate || 0.75; u.pitch = 1;
-  // Try to pick a Chinese voice if available
-  var voices = window.speechSynthesis.getVoices();
-  var zhVoice = voices.find(function(v){ return v.lang.indexOf('zh') === 0; });
-  if (zhVoice) u.voice = zhVoice;
-  window.speechSynthesis.speak(u);
+  // Voices load async in Chrome — try immediately, retry after load
+  function _doSpeak() {
+    var voices = window.speechSynthesis.getVoices();
+    var zhVoice = voices.find(function(v){ return v.lang && v.lang.indexOf('zh') === 0; });
+    if (zhVoice) u.voice = zhVoice;
+    window.speechSynthesis.speak(u);
+  }
+  if (window.speechSynthesis.getVoices().length > 0) {
+    _doSpeak();
+  } else {
+    // Voices not loaded yet — wait for them then speak
+    window.speechSynthesis.onvoiceschanged = function() {
+      window.speechSynthesis.onvoiceschanged = null;
+      _doSpeak();
+    };
+    // Fallback: speak without specific voice after 500ms
+    setTimeout(function() { if (!u.voice) window.speechSynthesis.speak(u); }, 500);
+  }
 }
 
 function _speakCurrentCard() {
@@ -5491,7 +5505,7 @@ var I18N={
     fr_invite_title:'Invite friends to Hanzo',
     fr_invite_desc:'Learning is more fun together. Challenge friends and stay motivated.',
     fr_share_progress:'📤 Share My Progress',
-    fr_copy_link:'🔗 Copy Invite Link',
+    fr_copy_link:'🔗 Copy Invite Link',fr_all_time:'All Time',
     fr_you_rank:'You are #{rank} of {total} this week',
     fr_you:'You ✦',
     fr_streak_d:'{n}d streak',
@@ -5531,7 +5545,7 @@ var I18N={
     g_flashcard:'Flashcard',g_choice:'Choice',g_match:'Match',g_pinyin:'Pinyin',g_char:'Char Hunt',g_order:'Order',
     g_tone_guide:'Tone Guide',g_tone_tip:'Same sound, 4 totally different words — this is why tones matter.',
     g_got_it:'Got it ✓',g_forgot:'Forgot ✗',g_almost:'Almost',g_tap_reveal:'tap to reveal',
-    g_no_words_mode:'No words in this mode',g_add_words_first:'Add words first',
+    g_no_words_mode:'No words in this mode',g_add_words_first:'Add words first',g_empty_state_desc:'Go to Bank and add some words to start playing',g_browse_bank:'🏦 Browse Word Bank',
     g_fill_blank_correct:'Fill blank correct!',g_true_false_correct:'True / False correct!',
     g_what_mean:'What does this mean?',g_see_pinyin:'See the pinyin — find the character',
     g_type_pinyin:'Type the pinyin — tone marks optional',g_check:'Check',g_restart:'Restart',
@@ -5603,12 +5617,12 @@ var I18N={
   prof_copy_btn:'📋 Copy',prof_share_btn:'🔗 Share',
   prof_achievements:'🏆 Achievements',prof_unlocked:' unlocked',
   prof_getting_started:'🚀 Getting Started',
-  prof_gs_word_title:'Add your first word',prof_gs_word_desc:'Go to Vocab → Bank and save a word',
+  prof_gs_word_title:'Add your first word',prof_gs_word_desc:'Go to Bank → browse HSK words and tap + Add',
   prof_gs_practice_title:'Complete a practice session',prof_gs_practice_desc:'Go to Learn and play any game',
   prof_gs_streak_title:'Build a 3-day streak',prof_gs_streak_desc:'Study 3 days in a row',
   prof_gs_friend_title:'Add a friend',prof_gs_friend_desc:'Go to Friends and connect with a learner',
   prof_settings:'⚙️ Settings',prof_sound_lbl:'Sound',prof_theme_lbl:'Theme',prof_lang_lbl:'🌐 Language',
-  prof_goal_lbl:'Daily Goal',prof_shields_lbl:'Shields',
+  prof_goal_lbl:'🎯 Daily Goal',prof_shields_lbl:'🛡️ Streak Shields',prof_sound_sub:'Audio feedback for answers',prof_sign_out:'⎋ Sign Out',
   prof_xp_chart:'📊 7-Day XP Activity',prof_no_activity:'📊 Start learning to see your progress chart!',
   nav_community:'Community',h_community_sub:'See what learners are doing',nav_profile:'Profile',nav_learn:'Learn',
   },
@@ -5671,7 +5685,7 @@ var I18N={
     fr_invite_title:'Пригласить друзей в Hanzo',
     fr_invite_desc:'Учиться вместе веселее. Соревнуйся с друзьями и оставайся мотивированным.',
     fr_share_progress:'📤 Поделиться прогрессом',
-    fr_copy_link:'🔗 Скопировать ссылку',
+    fr_copy_link:'🔗 Скопировать ссылку',fr_all_time:'За всё время',
     fr_you_rank:'Вы #{rank} из {total} на этой неделе',
     fr_you:'Вы ✦',
     fr_streak_d:'{n}д серия',
@@ -5707,7 +5721,7 @@ var I18N={
     g_flashcard:'Карточки',g_choice:'Выбор',g_match:'Пары',g_pinyin:'Пиньинь',g_char:'Иероглиф',g_order:'Порядок',
     g_tone_guide:'Тональный справочник',g_tone_tip:'Одинаковый звук — 4 разных слова. Вот почему тоны важны.',
     g_got_it:'Знаю ✓',g_forgot:'Забыл ✗',g_almost:'Почти',g_tap_reveal:'нажмите чтобы открыть',
-    g_no_words_mode:'Нет слов в этом режиме',g_add_words_first:'Сначала добавьте слова',
+    g_no_words_mode:'Нет слов в этом режиме',g_add_words_first:'Сначала добавьте слова',g_empty_state_desc:'Перейдите в Банк и добавьте слова для игры',g_browse_bank:'🏦 Открыть Банк слов',
     g_what_mean:'Что это значит?',g_see_pinyin:'Видишь пиньинь — найди иероглиф',
     g_type_pinyin:'Введите пиньинь — знаки тонов не обязательны',g_check:'Проверить',g_restart:'Заново',
     g_match_pairs:'Соедини каждый иероглиф',g_next_round:'Следующий раунд',
@@ -5774,12 +5788,12 @@ var I18N={
   prof_copy_btn:'📋 Копировать',prof_share_btn:'🔗 Поделиться',
   prof_achievements:'🏆 Достижения',prof_unlocked:' разблокировано',
   prof_getting_started:'🚀 Начало работы',
-  prof_gs_word_title:'Добавьте первое слово',prof_gs_word_desc:'Перейдите в Словарь → Банк и сохраните слово',
+  prof_gs_word_title:'Добавьте первое слово',prof_gs_word_desc:'Перейдите в Банк → выберите слово и нажмите + Добавить',
   prof_gs_practice_title:'Завершите занятие',prof_gs_practice_desc:'Перейдите в Учёбу и сыграйте любую игру',
   prof_gs_streak_title:'Держите серию 3 дня',prof_gs_streak_desc:'Занимайтесь 3 дня подряд',
   prof_gs_friend_title:'Добавьте друга',prof_gs_friend_desc:'Перейдите в Друзья и свяжитесь с учеником',
   prof_settings:'⚙️ Настройки',prof_sound_lbl:'Звук',prof_theme_lbl:'Тема',prof_lang_lbl:'🌐 Язык',
-  prof_goal_lbl:'Дневная цель',prof_shields_lbl:'Щиты',
+  prof_goal_lbl:'🎯 Дневная цель',prof_shields_lbl:'🛡️ Щиты серии',prof_sound_sub:'Аудио подтверждение ответов',prof_sign_out:'⎋ Выйти',
   prof_xp_chart:'📊 XP за 7 дней',prof_no_activity:'📊 Начните учиться, чтобы увидеть график!',
   nav_community:'Сообщество',h_community_sub:'Смотрите, что делают другие ученики',nav_profile:'Профиль',nav_learn:'Учёба',
   },
@@ -5842,7 +5856,7 @@ var I18N={
     fr_invite_title:'Достарыңызды Hanzo-ға шақырыңыз',
     fr_invite_desc:'Бірге оқу қызықтырақ. Достарыңызбен бәсекелесіп, ынталы болыңыз.',
     fr_share_progress:'📤 Прогресспен бөлісу',
-    fr_copy_link:'🔗 Сілтемені көшіру',
+    fr_copy_link:'🔗 Сілтемені көшіру',fr_all_time:'Барлық уақыт',
     fr_you_rank:'Сіз осы аптада {total} ішінде #{rank} орындасыз',
     fr_you:'Сіз ✦',
     fr_streak_d:'{n}к серия',
@@ -5878,7 +5892,7 @@ var I18N={
     g_flashcard:'Карточкалар',g_choice:'Таңдау',g_match:'Жұптар',g_pinyin:'Пиньинь',g_char:'Иероглиф',g_order:'Тәртіп',
     g_tone_guide:'Тондық анықтамалық',g_tone_tip:'Бір дыбыс — 4 түрлі сөз. Сондықтан тондар маңызды.',
     g_got_it:'Білемін ✓',g_forgot:'Ұмыттым ✗',g_almost:'Жақын',g_tap_reveal:'ашу үшін басыңыз',
-    g_no_words_mode:'Бұл режимде сөз жоқ',g_add_words_first:'Алдымен сөз қосыңыз',
+    g_no_words_mode:'Бұл режимде сөз жоқ',g_add_words_first:'Алдымен сөз қосыңыз',g_empty_state_desc:'Банкке өтіп, ойын үшін сөз қосыңыз',g_browse_bank:'🏦 Сөз банкіне өту',
     g_what_mean:'Бұл не дегенді білдіреді?',g_see_pinyin:'Пиньинді қара — иероглифті тап',
     g_type_pinyin:'Пиньинді енгізіңіз — тон белгілері міндетті емес',g_check:'Тексеру',g_restart:'Қайта бастау',
     g_match_pairs:'Әр иероглифке жұп тап',g_next_round:'Келесі раунд',
@@ -5945,12 +5959,12 @@ var I18N={
   prof_copy_btn:'📋 Көшіру',prof_share_btn:'🔗 Бөлісу',
   prof_achievements:'🏆 Жетістіктер',prof_unlocked:' бұғаты ашылды',
   prof_getting_started:'🚀 Бастауыш нұсқаулық',
-  prof_gs_word_title:'Бірінші сөзді қосыңыз',prof_gs_word_desc:'Сөздік → Банкке өтіп сөз сақтаңыз',
+  prof_gs_word_title:'Бірінші сөзді қосыңыз',prof_gs_word_desc:'Банкке өтіп, HSK сөзін таңдап + Қосу басыңыз',
   prof_gs_practice_title:'Жаттығуды аяқтаңыз',prof_gs_practice_desc:'Оқуға өтіп кез келген ойынды ойнаңыз',
   prof_gs_streak_title:'3 күндік серия жасаңыз',prof_gs_streak_desc:'3 күн қатарынан оқыңыз',
   prof_gs_friend_title:'Дос қосыңыз',prof_gs_friend_desc:'Достарға өтіп білім алушымен байланысыңыз',
   prof_settings:'⚙️ Баптаулар',prof_sound_lbl:'Дыбыс',prof_theme_lbl:'Тақырып',prof_lang_lbl:'🌐 Тіл',
-  prof_goal_lbl:'Күнделікті мақсат',prof_shields_lbl:'Қалқандар',
+  prof_goal_lbl:'🎯 Күнделікті мақсат',prof_shields_lbl:'🛡️ Серия қалқандары',prof_sound_sub:'Жауаптарға аудио кері байланыс',prof_sign_out:'⎋ Шығу',
   prof_xp_chart:'📊 7 күндік XP белсенділігі',prof_no_activity:'📊 Прогресс кестесін көру үшін оқи бастаңыз!',
   nav_community:'Қоғамдастық',h_community_sub:'Басқа оқушылардың жетістіктерін қараңыз',nav_profile:'Профиль',nav_learn:'Оқу',
   },
@@ -6001,7 +6015,7 @@ function applyLangToPageContent(){
   if(el('streak-month-label'))el('streak-month-label').textContent='📊 '+t('h_month');
   if(el('month-toggle-label'))el('month-toggle-label').textContent=t('h_see_month');
   if(el('home-lb-title'))el('home-lb-title').textContent='🏆 '+t('h_this_week');
-  if(el('study-queue-label'))el('study-queue-label').textContent=t('h_study_queue');
+  // study-queue-label is set dynamically with due-word count in renderHome — skip static override
   if(el('streak-goal-label')){var gl=S.daily_goal||10;el('streak-goal-label').textContent=t('h_this_week')+' — '+(LANG==='ru'?'Цель: '+gl+' сл/день':LANG==='kz'?'Мақсат: '+gl+' сөз/күн':'Goal: '+gl+' words/day');}
   // Auth screen labels
   var lce=el('auth-login-card');
@@ -8624,7 +8638,7 @@ function obFinish(){
 
   // Navigate to Lessons so they start immediately
   setTimeout(function(){
-    goPage('lessons',document.querySelector('.bni[data-page="lessons"]'));
+    _goLearn('lessons', null);
     showMsg(msg,'var(--green)');
   },400);
 }
@@ -8748,7 +8762,7 @@ function renderStreakBanner(){
         +'<div style="font-size:13px;font-weight:800;color:'+(urgent?'#ef4444':'var(--red)')+';margin-bottom:3px;">'+titleText+'</div>'
         +'<div style="font-size:11px;color:var(--muted2);line-height:1.4;">'+subText+'</div>'
       +'</div>'
-      +'<button onclick="event.stopPropagation();goPage(\'games\',document.querySelector(\'.bni[data-page=\\\"games\\\"]\'))" style="background:'+(urgent?'#ef4444':'var(--red)')+';border:none;color:#fff;font-family:var(--mono);font-size:10px;font-weight:900;padding:10px 14px;border-radius:var(--r10);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:transform .15s;letter-spacing:.3px;active:scale(.95);">Study 🔥</button>'
+      +'<button onclick="event.stopPropagation();goPage(\'games\',document.querySelector(\'.bni[data-page=\\\"games\\\"]\'))" style="background:'+(urgent?'#ef4444':'var(--red)')+';border:none;color:#fff;font-family:var(--mono);font-size:10px;font-weight:900;padding:10px 14px;border-radius:var(--r10);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:transform .15s;letter-spacing:.3px;active:scale(.95);">'+(LANG==='ru'?'Учить 🔥':LANG==='kz'?'Оқу 🔥':'Study 🔥')+'</button>'
       +'</div>';
     banner.onclick=function(){goPage('games',document.querySelector('.bni[data-page="games"]'));};
     var homeContent=el('page-home');
@@ -8767,7 +8781,7 @@ function renderStreakBanner(){
       note.style.cssText='background:linear-gradient(135deg,rgba(74,222,128,.1),rgba(16,185,129,.06));border:1px solid rgba(74,222,128,.25);border-radius:var(--r12);padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px;animation:slideUp .35s cubic-bezier(.2,.8,.2,1);';
       note.innerHTML='<div style="font-size:24px;animation:celebrationBounce .8s ease;">🔥</div>'
         +'<div><div style="font-size:12px;font-weight:700;color:var(--green);">'+(LANG==='ru'?streak+'-дневная серия сохранена!':LANG==='kz'?streak+'-күндік серия сақталды!':'Streak protected! '+streak+' days strong')+'</div>'
-        +'<div style="font-size:10px;color:var(--muted2);margin-top:1px;">'+(LANG==='ru'?'Продолжайте в том же духе завтра':'Come back tomorrow to keep it going')+'</div></div>';
+        +'<div style="font-size:10px;color:var(--muted2);margin-top:1px;">'+(LANG==='ru'?'Продолжайте в том же духе завтра':LANG==='kz'?'Серияны жалғастыру үшін ертең оралыңыз':'Come back tomorrow to keep it going')+'</div></div>';
       var homeContent2=el('page-home');
       if(homeContent2){
         var xp2=homeContent2.querySelector('.xp-bar-wrap');
@@ -9954,7 +9968,9 @@ function renderFriendsPage(){
     var nextMonday=new Date();nextMonday.setDate(nextMonday.getDate()+daysLeft);
     var mm=String(nextMonday.getMonth()+1).padStart(2,'0');
     var dd=String(nextMonday.getDate()).padStart(2,'0');
-    resetEl.textContent='🔁 Resets Monday '+mm+'/'+dd+' ('+daysLeft+' day'+(daysLeft===1?'':'s')+')';
+    var daysLbl=LANG==='ru'?('дн'+(daysLeft===1?'ь':daysLeft<5?'я':'ей')):LANG==='kz'?'күн':'day'+(daysLeft===1?'':'s');
+    var resetPfx=LANG==='ru'?'🔁 Сбрасывается в понедельник ':LANG==='kz'?'🔁 Дүйсенбіде жаңарады ':'🔁 Resets Monday ';
+    resetEl.textContent=resetPfx+mm+'/'+dd+' ('+daysLeft+' '+daysLbl+')';
   }
 
   var me=getMyFriendCard();
@@ -14056,6 +14072,8 @@ function _renderLeagueCard() {
 }
 
 function _renderLeague() {
+  var _leagueNames={Bronze:{ru:'Бронза',kz:'Қола'},Silver:{ru:'Серебро',kz:'Күміс'},Gold:{ru:'Золото',kz:'Алтын'},Platinum:{ru:'Платина',kz:'Платина'},Diamond:{ru:'Бриллиант',kz:'Бриллиант'},Obsidian:{ru:'Обсидиан',kz:'Обсидиан'}};
+  function _ln(n){return LANG==='ru'?(_leagueNames[n]&&_leagueNames[n].ru||n):LANG==='kz'?(_leagueNames[n]&&_leagueNames[n].kz||n):n;}
   var LEAGUES = [
     { name:'Bronze',   icon:'🥉', color:'#cd7f32', min:0,    max:99    },
     { name:'Silver',   icon:'🥈', color:'#c0c0c0', min:100,  max:299   },
@@ -14095,12 +14113,13 @@ function _renderLeague() {
   var resetTxt = el('league-reset-txt');
 
   if (iconBig) iconBig.textContent = league.icon;
-  if (nameBig) { nameBig.textContent = league.name.toUpperCase(); nameBig.style.color = league.color; }
+  if (nameBig) { nameBig.textContent = _ln(league.name).toUpperCase(); nameBig.style.color = league.color; }
   if (weekXPBig) weekXPBig.textContent = weeklyXP.toLocaleString() + ' XP';
 
   // Days until Monday
   var daysLeft = 8 - (dayOfWeek === 0 ? 7 : dayOfWeek);
-  if (resetTxt) resetTxt.textContent = 'Resets in ' + daysLeft + ' day' + (daysLeft !== 1 ? 's' : '');
+  var dDays=LANG==='ru'?('дн'+(daysLeft===1?'ь':daysLeft<5?'я':'ей')):LANG==='kz'?'күн':'day'+(daysLeft!==1?'s':'');
+  if (resetTxt) resetTxt.textContent = (LANG==='ru'?'Сброс через '+daysLeft+' '+dDays:LANG==='kz'?daysLeft+' '+dDays+' кейін жаңарады':'Resets in '+daysLeft+' '+dDays);
 
   // Progress bar
   var fill = el('league-progress-fill');
@@ -14114,16 +14133,18 @@ function _renderLeague() {
     var rangeMax = nextLeague.min;
     var pct = Math.min(100, Math.round((weeklyXP - rangeMin) / (rangeMax - rangeMin) * 100));
     if (fill) fill.style.width = pct + '%';
-    if (progressLabel) progressLabel.textContent = 'Progress to ' + nextLeague.name + ' ' + nextLeague.icon;
+    var nlName=_ln(nextLeague.name);
+    if (progressLabel) progressLabel.textContent = (LANG==='ru'?'Прогресс до '+nlName+' ':LANG==='kz'?nlName+' деңгейіне прогресс ':'Progress to '+nlName+' ') + nextLeague.icon;
     if (progressPct) progressPct.textContent = pct + '%';
     if (xpTxt) xpTxt.textContent = weeklyXP + ' XP';
     if (nextTxt) nextTxt.textContent = nextLeague.min + ' XP';
-    if (tierDesc) tierDesc.textContent = 'Earn ' + Math.max(0, nextLeague.min - weeklyXP) + ' more XP to reach ' + nextLeague.name;
+    var xpNeeded=Math.max(0,nextLeague.min-weeklyXP);
+    if (tierDesc) tierDesc.textContent = LANG==='ru'?'Наберите ещё '+xpNeeded+' XP для '+nlName:LANG==='kz'?nlName+' жету үшін '+xpNeeded+' XP жина':'Earn '+xpNeeded+' more XP to reach '+nlName;
   } else {
     if (fill) fill.style.width = '100%';
-    if (progressLabel) progressLabel.textContent = 'Max League Reached! 🎉';
+    if (progressLabel) progressLabel.textContent = LANG==='ru'?'Максимальная лига достигнута! 🎉':LANG==='kz'?'Максималды лигаға жеттіңіз! 🎉':'Max League Reached! 🎉';
     if (progressPct) progressPct.textContent = '100%';
-    if (tierDesc) tierDesc.textContent = 'You are in the highest league!';
+    if (tierDesc) tierDesc.textContent = LANG==='ru'?'Вы в высшей лиге!':LANG==='kz'?'Сіз ең жоғары лигадасыз!':'You are in the highest league!';
   }
 
   // League ladder
@@ -14135,7 +14156,7 @@ function _renderLeague() {
       return '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r8);background:' + (isCurrent ? 'rgba(255,195,0,.12)' : 'transparent') + ';border:1px solid ' + (isCurrent ? 'var(--goldbrd)' : 'transparent') + ';">'
         + '<div style="font-size:20px;' + (isUnlocked ? '' : 'filter:grayscale(1);opacity:.4;') + '">' + lg.icon + '</div>'
         + '<div style="flex:1;">'
-          + '<div style="font-size:12px;font-weight:' + (isCurrent ? '800' : '600') + ';color:' + (isCurrent ? lg.color : (isUnlocked ? 'var(--text)' : 'var(--muted)')) + ';">' + lg.name + (isCurrent ? ' ← You are here' : '') + '</div>'
+          + '<div style="font-size:12px;font-weight:' + (isCurrent ? '800' : '600') + ';color:' + (isCurrent ? lg.color : (isUnlocked ? 'var(--text)' : 'var(--muted)')) + ';">' + _ln(lg.name) + (isCurrent ? (LANG==='ru'?' ← Вы здесь':LANG==='kz'?' ← Сіз осындасыз':' ← You are here') : '') + '</div>'
           + '<div style="font-family:var(--mono);font-size:9px;color:var(--muted2);">' + lg.min.toLocaleString() + (lg.max === Infinity ? '+' : '–' + lg.max.toLocaleString()) + ' XP/week</div>'
         + '</div>'
         + (isUnlocked && !isCurrent ? '<div style="font-size:14px;">✅</div>' : '')
@@ -14312,7 +14333,10 @@ function _renderProfilePage() {
   var curLeague2 = LEAGUES2[0];
   for (var li2 = 0; li2 < LEAGUES2.length; li2++) { if (weeklyXP >= LEAGUES2[li2].min) curLeague2 = LEAGUES2[li2]; }
   var plb = el('profile-league-badge');
-  if (plb) plb.textContent = curLeague2.icon + ' ' + curLeague2.name + ' League';
+  var _ln2={Bronze:{ru:'Бронза',kz:'Қола'},Silver:{ru:'Серебро',kz:'Күміс'},Gold:{ru:'Золото',kz:'Алтын'},Platinum:{ru:'Платина',kz:'Платина'},Diamond:{ru:'Бриллиант',kz:'Бриллиант'},Obsidian:{ru:'Обсидиан',kz:'Обсидиан'}};
+  var leagueDisplayName=LANG==='ru'?(_ln2[curLeague2.name]&&_ln2[curLeague2.name].ru||curLeague2.name):LANG==='kz'?(_ln2[curLeague2.name]&&_ln2[curLeague2.name].kz||curLeague2.name):curLeague2.name;
+  var leagueSuffix=LANG==='ru'?' Лига':LANG==='kz'?' Лигасы':' League';
+  if (plb) plb.textContent = curLeague2.icon + ' ' + leagueDisplayName + leagueSuffix;
 
   // Theme + language buttons
   _syncProfileThemeBtn();
