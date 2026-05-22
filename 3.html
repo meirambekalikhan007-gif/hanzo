@@ -1091,7 +1091,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 .profile-stat{background:var(--s1);border:1px solid var(--border);border-radius:var(--r12);padding:12px 4px;text-align:center;transition:all .15s;}
 .profile-stat-n{font-size:22px;font-weight:900;line-height:1;margin-bottom:3px;}
 .profile-stat-l{font-family:var(--mono);font-size:7px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);}
-.profile-achievements{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px;}
+.profile-achievements{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px;padding:0 2px;}
 .achievement-badge{background:var(--s1);border:1px solid var(--border);border-radius:var(--r12);padding:12px 6px;text-align:center;opacity:.35;}
 .achievement-badge.earned{opacity:1;border-color:var(--goldbrd);background:var(--goldbg);}
 .achievement-badge-icon{font-size:24px;margin-bottom:4px;}
@@ -1357,10 +1357,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <span class="bni-icon">📚</span>
     <span class="bni-label">Vocab</span>
   </button>
-  <button class="bni" onclick="goPage('friends',this)" data-page="friends" style="position:relative;">
+  <button class="bni" onclick="goPage('friends',this)" data-page="friends">
     <span class="bni-icon">👥</span>
     <span class="bni-label">Friends</span>
-    <span class="feed-notif-dot" id="feed-notif-dot"></span>
   </button>
   <button class="bni" id="nav-profile-btn" onclick="goPage('profile',this)" data-page="profile">
     <span class="bni-icon" id="nav-profile-icon">👤</span>
@@ -1593,16 +1592,16 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   </div>
   <div id="wins-list"></div>
 
-  <!-- COMMUNITY CARD — quick access to social feed -->
-  <div style="display:flex;align-items:center;justify-content:space-between;background:var(--s2);border:1px solid var(--border);border-radius:var(--r16);padding:14px 16px;margin-bottom:14px;cursor:pointer;" onclick="goPage('feed',null)" id="home-community-card">
+  <!-- COMMUNITY CARD — quick access to community -->
+  <div style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(139,92,246,.05));border:1px solid rgba(99,102,241,.2);border-radius:var(--r16);padding:14px 16px;margin-bottom:14px;cursor:pointer;" onclick="goPage('feed',null)" id="home-community-card">
     <div style="display:flex;align-items:center;gap:12px;">
-      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(99,102,241,.2),rgba(139,92,246,.15));border:1px solid rgba(99,102,241,.3);display:flex;align-items:center;justify-content:center;font-size:20px;">🌐</div>
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(139,92,246,.2));display:flex;align-items:center;justify-content:center;font-size:20px;">🌐</div>
       <div>
-        <div style="font-size:13px;font-weight:800;">Community Feed</div>
-        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:1px;">See what your friends are learning</div>
+        <div style="font-size:13px;font-weight:800;">Community</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:1px;" id="community-card-sub">See what learners are doing</div>
       </div>
     </div>
-    <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);">→</div>
+    <div style="font-family:var(--mono);font-size:11px;color:rgba(99,102,241,.8);font-weight:700;">View →</div>
   </div>
 
   <div id="sync-msg" style="font-family:var(--mono);font-size:10px;min-height:14px;margin-bottom:8px;"></div>
@@ -2208,8 +2207,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <!-- HEADER -->
   <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 16px 12px;">
     <div>
-      <div style="font-size:22px;font-weight:900;letter-spacing:-.5px;">Feed 🌐</div>
-      <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);margin-top:2px;">What your crew is learning</div>
+      <div style="font-size:22px;font-weight:900;letter-spacing:-.5px;">Community 🌐</div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);margin-top:2px;">What learners are doing right now</div>
     </div>
     <button onclick="_createPost('manual')" style="background:var(--red);border:none;color:#fff;font-size:13px;font-weight:800;padding:10px 18px;border-radius:20px;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(232,96,122,.35);">
       ✨ Share
@@ -2222,8 +2221,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <div style="padding:0 16px;">
     <!-- FRIENDS / EXPLORE TABS -->
     <div style="display:flex;background:var(--s2);border-radius:var(--r12);padding:3px;gap:3px;margin:14px 0;">
-      <button id="feed-tab-friends" onclick="_setFeedTab('friends',this)" style="flex:1;padding:9px;background:var(--s1);border:none;color:var(--text);font-family:var(--font);font-size:12px;font-weight:800;border-radius:var(--r8);cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.4);transition:all .15s;">👥 Friends</button>
-      <button id="feed-tab-explore" onclick="_setFeedTab('explore',this)" style="flex:1;padding:9px;background:transparent;border:none;color:var(--muted2);font-family:var(--font);font-size:12px;font-weight:700;border-radius:var(--r8);cursor:pointer;transition:all .15s;">🌍 Explore</button>
+      <button id="feed-tab-explore" onclick="_setFeedTab('explore',this)" style="flex:1;padding:9px;background:var(--s1);border:none;color:var(--text);font-family:var(--font);font-size:12px;font-weight:800;border-radius:var(--r8);cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.4);transition:all .15s;">🌍 Everyone</button>
+      <button id="feed-tab-friends" onclick="_setFeedTab('friends',this)" style="flex:1;padding:9px;background:transparent;border:none;color:var(--muted2);font-family:var(--font);font-size:12px;font-weight:700;border-radius:var(--r8);cursor:pointer;transition:all .15s;">👥 Friends</button>
     </div>
 
     <!-- POST COMPOSER (appears when Share is tapped) -->
@@ -2453,8 +2452,15 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   </div>
 
   <!-- SETTINGS -->
-  <div class="sh"><span class="sh-title">Settings</span></div>
+  <div class="sh"><span class="sh-title">⚙️ Settings</span></div>
   <div class="card" style="margin-bottom:14px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+      <div>
+        <div style="font-size:13px;font-weight:700;">🌙 Dark Mode</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:1px;" id="prof-theme-txt">Dark theme active</div>
+      </div>
+      <button id="prof-theme-btn" onclick="toggleTheme();_syncProfileThemeBtn();" style="background:var(--s2);border:1.5px solid var(--border);color:var(--muted3);font-family:var(--mono);font-size:9px;font-weight:700;padding:7px 14px;border-radius:20px;cursor:pointer;">Dark</button>
+    </div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
       <div>
         <div style="font-size:13px;font-weight:700;">🔊 Sound Effects</div>
@@ -2468,13 +2474,22 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
         <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:1px;" id="prof-daily-goal-txt">10 words/day</div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
       <div>
         <div style="font-size:13px;font-weight:700;">🛡️ Streak Shields</div>
         <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:1px;" id="prof-shields-txt">0 shields</div>
       </div>
     </div>
-    <div style="font-family:var(--mono);font-size:8px;color:var(--muted);padding-top:8px;border-top:1px solid var(--border);text-align:center;">Hanzo v3.0</div>
+    <!-- LANGUAGE SWITCHER -->
+    <div style="padding:10px 0 6px;">
+      <div style="font-size:13px;font-weight:700;margin-bottom:8px;">🌐 Language</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
+        <button onclick="setLang('en');_syncProfileLangBtns();" id="prof-lang-en" style="padding:8px 4px;border-radius:var(--r8);border:1.5px solid var(--border);background:var(--s2);font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;color:var(--muted2);transition:all .15s;">🇬🇧 EN</button>
+        <button onclick="setLang('ru');_syncProfileLangBtns();" id="prof-lang-ru" style="padding:8px 4px;border-radius:var(--r8);border:1.5px solid var(--border);background:var(--s2);font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;color:var(--muted2);transition:all .15s;">🇷🇺 RU</button>
+        <button onclick="setLang('kz');_syncProfileLangBtns();" id="prof-lang-kz" style="padding:8px 4px;border-radius:var(--r8);border:1.5px solid var(--border);background:var(--s2);font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;color:var(--muted2);transition:all .15s;">🇰🇿 KZ</button>
+      </div>
+    </div>
+    <div style="font-family:var(--mono);font-size:8px;color:var(--muted);padding-top:8px;border-top:1px solid var(--border);text-align:center;margin-top:4px;">Hanzo v3.0 · Made with ❤️ in China</div>
   </div>
 
   <!-- DANGER ZONE -->
@@ -13029,7 +13044,7 @@ async function _searchFriend(val) {
 
 // ==================== SOCIAL FEED ====================
 
-var _feedTab = 'friends';
+var _feedTab = 'explore'; // default to global feed so there's always content
 var _feedCache = {}; // keyed by tab
 var _feedLastSeen = {}; // timestamp of last seen newest post per tab
 
@@ -13049,10 +13064,10 @@ function _setFeedTab(tab, btn) {
 
 function _buildFeedQuery() {
   var query = _db.from('posts').select('*').order('created_at', { ascending: false }).limit(40);
-  if (_feedTab === 'friends') {
+  if (_feedTab === 'friends' && currentUser && currentUser.id) {
     var friendIds = (_friendsCache || []).filter(function(f){return f.isReal;}).map(function(f){return f._uid;});
     friendIds.push(currentUser.id);
-    query = query.in('user_id', friendIds);
+    if (friendIds.length > 0) query = query.in('user_id', friendIds);
   }
   return query;
 }
@@ -13080,9 +13095,21 @@ function _showFeedSkeletons(postsEl, count) {
 async function _loadFeed() {
   var postsEl = el('feed-posts');
   var loadingEl = el('feed-loading');
-  if (!postsEl || !currentUser || !currentUser.id) {
-    if (loadingEl) loadingEl.style.display = 'none';
+  // Always hide the static loading indicator immediately
+  if (loadingEl) loadingEl.style.display = 'none';
+  if (!postsEl) return;
+  // No Supabase session — show a helpful placeholder
+  if (!currentUser) {
+    postsEl.innerHTML = '<div style="text-align:center;padding:52px 20px;"><div style="font-size:48px;">🔐</div><div style="font-weight:800;font-size:15px;margin:12px 0 6px;">Sign in to see the community</div><div style="font-family:var(--mono);font-size:11px;color:var(--muted2);">Connect with other Hanzo learners</div></div>';
     return;
+  }
+  // For localStorage users without a Supabase UUID, default to Explore tab
+  if (!currentUser.id && _feedTab === 'friends') {
+    _feedTab = 'explore';
+    var friendsBtn = el('feed-tab-friends');
+    var exploreBtn = el('feed-tab-explore');
+    if (friendsBtn) { friendsBtn.style.background = 'transparent'; friendsBtn.style.color = 'var(--muted2)'; friendsBtn.style.boxShadow = 'none'; }
+    if (exploreBtn) { exploreBtn.style.background = 'var(--s1)'; exploreBtn.style.color = 'var(--text)'; exploreBtn.style.boxShadow = '0 1px 6px rgba(0,0,0,.4)'; }
   }
 
   // ── Instant cache render ──────────────────────────────────────
@@ -14188,14 +14215,11 @@ function _renderProfilePage() {
   var soundBtn = el('sound-toggle-btn');
   if (soundBtn) soundBtn.textContent = localStorage.getItem('hanzo_sound') === '0' ? 'OFF' : 'ON';
 
-  // Invite code in profile card
+  // Invite code in profile card — use the same generator as Friends page
   var profInviteEl = el('prof-invite-code');
   if (profInviteEl) {
-    var ic = cu.invite_code || S.invite_code || localStorage.getItem('hanzo_invite_code_' + (cu.email || ''));
-    if (!ic && cu.email) {
-      ic = 'HANZO-' + (cu.email.replace(/[^a-z0-9]/gi,'').toUpperCase().slice(0,5) || 'XXXXX');
-    }
-    profInviteEl.textContent = ic || 'HANZO-XXXXX';
+    var ic = typeof getMyInviteCode === 'function' ? getMyInviteCode() : 'HANZO-XXXXX';
+    profInviteEl.textContent = ic;
   }
 
   // League badge in profile
@@ -14205,6 +14229,10 @@ function _renderProfilePage() {
   for (var li2 = 0; li2 < LEAGUES2.length; li2++) { if (weeklyXP >= LEAGUES2[li2].min) curLeague2 = LEAGUES2[li2]; }
   var plb = el('profile-league-badge');
   if (plb) plb.textContent = curLeague2.icon + ' ' + curLeague2.name + ' League';
+
+  // Theme + language buttons
+  _syncProfileThemeBtn();
+  _syncProfileLangBtns();
 
   // Achievements + Getting Started
   _renderAchievements();
@@ -14241,6 +14269,26 @@ function _renderProfilePage() {
   }
 }
 
+function _syncProfileThemeBtn() {
+  var isDark = document.body.getAttribute('data-theme') !== 'light';
+  var btn = el('prof-theme-btn');
+  var txt = el('prof-theme-txt');
+  if (btn) btn.textContent = isDark ? '🌙 Dark' : '☀️ Light';
+  if (txt) txt.textContent = isDark ? 'Dark theme active' : 'Light theme active';
+}
+
+function _syncProfileLangBtns() {
+  var langs = ['en','ru','kz'];
+  langs.forEach(function(l) {
+    var btn = el('prof-lang-' + l);
+    if (!btn) return;
+    var active = (typeof LANG !== 'undefined' ? LANG : 'en') === l;
+    btn.style.background = active ? 'var(--redbg)' : 'var(--s2)';
+    btn.style.borderColor = active ? 'var(--redbrd)' : 'var(--border)';
+    btn.style.color = active ? 'var(--red)' : 'var(--muted2)';
+  });
+}
+
 function _renderAchievements() {
   var el2 = el('profile-achievements');
   if (!el2) return;
@@ -14275,10 +14323,9 @@ function _renderAchievements() {
   countDiv.textContent = earnedCount + ' / ' + achievements.length + ' unlocked';
 
   el2.innerHTML = achievements.map(function(a) {
-    return '<div style="display:flex;flex-direction:column;align-items:center;gap:3px;cursor:default;" title="' + a.desc + '">'
-      + '<div style="width:50px;height:50px;border-radius:50%;background:' + (a.done ? 'linear-gradient(135deg,rgba(255,195,0,.25),rgba(255,195,0,.08))' : 'var(--s2)') + ';border:2px solid ' + (a.done ? 'var(--goldbrd)' : 'var(--border)') + ';display:flex;align-items:center;justify-content:center;font-size:22px;opacity:' + (a.done ? '1' : '0.3') + ';' + (a.done ? 'box-shadow:0 0 14px rgba(255,195,0,.2);' : '') + 'transition:all .2s;">' + a.icon + '</div>'
-      + '<div style="font-family:var(--mono);font-size:7px;font-weight:700;text-align:center;color:' + (a.done ? 'var(--text)' : 'var(--muted)') + ';line-height:1.2;opacity:' + (a.done ? '1' : '0.4') + ';">' + a.name + '</div>'
-      + (a.done ? '<div style="font-size:8px;">✅</div>' : '')
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:default;" title="' + a.name + ': ' + a.desc + '">'
+      + '<div style="width:52px;height:52px;border-radius:14px;background:' + (a.done ? 'linear-gradient(135deg,rgba(255,195,0,.3),rgba(255,170,0,.15))' : 'var(--s3)') + ';border:2px solid ' + (a.done ? 'var(--goldbrd)' : 'var(--border)') + ';display:flex;align-items:center;justify-content:center;font-size:24px;' + (a.done ? 'box-shadow:0 4px 12px rgba(255,195,0,.2);' : 'filter:grayscale(0.6);opacity:0.55;') + 'transition:all .2s;">' + a.icon + '</div>'
+      + '<div style="font-family:var(--mono);font-size:7px;font-weight:700;text-align:center;line-height:1.25;color:' + (a.done ? 'var(--gold)' : 'var(--muted2)') + ';padding:0 2px;">' + a.name + '</div>'
       + '</div>';
   }).join('');
 
@@ -14434,6 +14481,13 @@ goPage = function(p, btn) {
   if (prof) {
     if (p === 'profile') {
       prof.classList.add('on');
+      // Always render achievements + sync settings when profile opens
+      if (typeof _renderAchievements === 'function') _renderAchievements();
+      if (typeof _syncProfileLangBtns === 'function') _syncProfileLangBtns();
+      if (typeof _syncProfileThemeBtn === 'function') _syncProfileThemeBtn();
+      // Also ensure invite code is shown
+      var icEl = el('prof-invite-code');
+      if (icEl && typeof getMyInviteCode === 'function') icEl.textContent = getMyInviteCode();
     } else {
       prof.classList.remove('on');
     }
