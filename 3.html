@@ -4321,7 +4321,7 @@ function fcVerifyAnswer(chosenId,correctId,verifyEl){
 // MC
 function startMC(){
   var list=getGameWords(),allList=S.chars_list||[];
-  if(list.length<4){if(el('mc-char'))el('mc-char').textContent=allList.length<4?'Need 4+ words':'Switch mode';if(el('mc-choices'))el('mc-choices').innerHTML='<div style="text-align:center;padding:20px;font-family:var(--mono);font-size:11px;color:var(--muted);">Add more words or switch study mode</div>';return;}
+  if(list.length<4){if(el('mc-char'))el('mc-char').textContent=allList.length<4?t('g_need_words'):t('g_no_words_mode');if(el('mc-choices'))el('mc-choices').innerHTML='<div style="text-align:center;padding:20px;font-family:var(--mono);font-size:11px;color:var(--muted);">'+t('g_add_words_first')+'</div>';return;}
   mcCards=sortByHSKPriority(list);mcIdx=0;mcCorrect=0;mcTotal=0;showMCCard();
 }
 function showMCCard(){
@@ -4363,7 +4363,7 @@ function mcNext(){mcIdx++;showMCCard();}
 // MATCH
 function startMatch(){
   var list=getGameWords(),allList=S.chars_list||[];
-  if(list.length<4){if(el('match-prog'))el('match-prog').textContent=allList.length<4?'Need 4+ words':'Switch mode';return;}
+  if(list.length<4){if(el('match-prog'))el('match-prog').textContent=allList.length<4?t('g_need_words'):t('g_no_words_mode');return;}
   matchPairs=list.slice().sort(function(){return Math.random()-.5;}).slice(0,Math.min(6,list.length));
   matchSelected=null;matchCorrect=0;renderMatch();
   if(el('match-next-btn'))el('match-next-btn').style.display='none';
@@ -4407,7 +4407,7 @@ function handleMatch(elem,type){
 function startPinyinHunt(){
   var list=getGameWords().filter(function(c){return c.pinyin;});
   var allList=(S.chars_list||[]).filter(function(c){return c.pinyin;});
-  if(!list.length){if(el('ph-char'))el('ph-char').textContent='—';if(el('ph-meaning'))el('ph-meaning').textContent=allList.length?'No words with pinyin in this mode':'Add words with pinyin first';return;}
+  if(!list.length){if(el('ph-char'))el('ph-char').textContent='—';if(el('ph-meaning'))el('ph-meaning').textContent=allList.length?t('g_no_words_mode'):t('g_add_words_first');return;}
   phCards=list.slice().sort(function(){return Math.random()-.5;});phIdx=0;phCorrect=0;phTotal=0;_phAnswered=false;showPhCard();
 }
 function showPhCard(){
@@ -4470,7 +4470,7 @@ function phNext(){
 function startCharHunt(){
   var list=getGameWords().filter(function(c){return c.pinyin;});
   var allList=(S.chars_list||[]).filter(function(c){return c.pinyin;});
-  if(list.length<4){if(el('lp-pinyin'))el('lp-pinyin').textContent=list.length?'Need 4+':'—';if(el('lp-meaning'))el('lp-meaning').textContent=allList.length<4?'Add words with pinyin':'Switch mode';return;}
+  if(list.length<4){if(el('lp-pinyin'))el('lp-pinyin').textContent=list.length?t('g_need_words'):'—';if(el('lp-meaning'))el('lp-meaning').textContent=allList.length<4?t('g_add_words_first'):t('g_no_words_mode');return;}
   lpCards=list.slice().sort(function(){return Math.random()-.5;});lpIdx=0;lpCorrect=0;lpTotal=0;lpAnswered=false;showChCard();
 }
 function showChCard(){
@@ -10659,7 +10659,7 @@ function launchStreakQuiz(){
   if(!pool.length)pool=all.slice().sort(function(){return Math.random()-.5;});
   if(!pool.length){
     goPage('bank',document.querySelector('.bni[data-page="bank"]'));
-    showMsg('Add words to your list first!','var(--gold)');
+    showMsg(t('g_add_words_first'),'var(--gold)');
     return;
   }
   mqCards=pool.slice().sort(function(){return Math.random()-.5;}).slice(0,5);
@@ -11784,7 +11784,7 @@ function renderBankPhrases(){
 }
 function startQuickSession(){
   var list=getGameWords();
-  if(!list.length){showMsg('Add words to your bank first!','var(--gold)');goPage('bank',document.querySelector('.bni[data-page="bank"]'));return;}
+  if(!list.length){showMsg(t('g_add_words_first'),'var(--gold)');goPage('bank',document.querySelector('.bni[data-page="bank"]'));return;}
   var due=sortByHSKPriority(list.filter(function(w){var td=getLocalDate();return !w.srs_next||w.srs_next<=td;}));
   var pool=due.length>=4?due:sortByHSKPriority(list);
   quizCards=pool.slice(0,10);
