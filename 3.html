@@ -996,7 +996,13 @@ input:focus, textarea:focus{
     box-shadow:0 0 80px rgba(0,0,0,.8);
   }
   .page{max-width:430px;margin:0 auto;}
-  .bnav{max-width:430px;}
+  .bnav{
+    left:50%!important;
+    right:auto!important;
+    transform:translateX(-50%)!important;
+    width:430px!important;
+    max-width:430px!important;
+  }
   .navbar{max-width:430px;}
 }
 /* MEDIUM SCREENS */
@@ -1121,7 +1127,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 .referral-code-box:hover{background:rgba(0,0,0,.4);border-color:var(--purple);}
 </style>
 </head>
-<body data-theme="light">
+<body>
 
 <!-- ========== DESKTOP SIDEBAR ========== -->
 <div id="desktop-sidebar" style="display:none;flex-direction:column;">
