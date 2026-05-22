@@ -1347,23 +1347,23 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 <div class="bnav">
   <button class="bni on" onclick="goPage('home',this)" data-page="home">
     <span class="bni-icon">🏠</span>
-    <span class="bni-label">Home</span>
+    <span class="bni-label" data-i18n="nav_home">Home</span>
   </button>
   <button class="bni" onclick="_goLearn('practice',this)" data-page="games">
     <span class="bni-icon">🎮</span>
-    <span class="bni-label">Learn</span>
+    <span class="bni-label" data-i18n="nav_learn">Learn</span>
   </button>
   <button class="bni" onclick="_goVocab('words',this)" data-page="bank">
-    <span class="bni-icon">📚</span>
-    <span class="bni-label">Vocab</span>
+    <span class="bni-icon">🏦</span>
+    <span class="bni-label" data-i18n="nav_bank">Bank</span>
   </button>
   <button class="bni" onclick="goPage('friends',this)" data-page="friends">
     <span class="bni-icon">👥</span>
-    <span class="bni-label">Friends</span>
+    <span class="bni-label" data-i18n="nav_friends">Friends</span>
   </button>
   <button class="bni" id="nav-profile-btn" onclick="goPage('profile',this)" data-page="profile">
     <span class="bni-icon" id="nav-profile-icon">👤</span>
-    <span class="bni-label">Profile</span>
+    <span class="bni-label" data-i18n="nav_profile">Profile</span>
   </button>
 </div>
 
@@ -1789,10 +1789,14 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
         <div class="fc-example" id="fc-example"></div>
       </div>
     </div>
+    <!-- SPEAK ROW: TTS + mic always visible during study -->
+    <div id="fc-speak-row" style="display:flex;gap:10px;justify-content:center;margin:0 0 12px;">
+      <button onclick="event.stopPropagation();_speakCurrentCard();" style="display:flex;align-items:center;gap:6px;background:var(--s2);border:1.5px solid var(--border);border-radius:20px;padding:8px 18px;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--muted2);cursor:pointer;transition:all .15s;" title="Hear pronunciation" onmouseenter="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'">🔊 <span>Listen</span></button>
+      <button id="fc-pron-btn" onclick="event.stopPropagation();" style="display:none;align-items:center;gap:6px;background:var(--s2);border:1.5px solid var(--border);border-radius:20px;padding:8px 18px;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--muted2);cursor:pointer;transition:all .15s;" title="Practice your pronunciation" onmouseenter="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'">🎙️ <span>Speak</span></button>
+    </div>
     <div class="quiz-btns" id="fc-btns" style="display:none;">
       <button class="qbw" id="fc-btn-forgot" onclick="quizResult('wrong')">✗ Forgot</button>
       <button class="qbo" onclick="quizResult('ok')">~ Almost</button>
-      <button id="fc-pron-btn" style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r8);padding:8px 12px;font-size:14px;cursor:pointer;display:none;" title="Practice pronunciation">🎙️</button>
       <button class="qbm" id="fc-btn-got" onclick="quizResult('mastered')">✓ Got it</button>
     </div>
     <div class="quiz-score" id="fc-score"></div>
@@ -1803,7 +1807,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <div id="g-mc" class="game-panel" style="display:none;">
     <div class="game-prog"><span class="game-prog-txt" id="mc-prog">—</span><span class="game-score-txt" id="mc-score-top"></span></div>
     <div style="margin-bottom:18px;">
-      <div class="mc-char-big" id="mc-char">—</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+        <div class="mc-char-big" id="mc-char" style="margin-bottom:0;">—</div>
+        <button onclick="var c=el('mc-char');if(c&&c.textContent.length<=4)speakChinese(c.textContent);" style="background:var(--s3);border:1px solid var(--border);border-radius:50%;width:34px;height:34px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;" title="Listen">🔊</button>
+      </div>
       <div class="mc-pinyin-lbl" id="mc-pinyin"></div>
       <div class="mc-prompt" data-i18n="g_what_mean">What does this mean?</div>
     </div>
@@ -1897,6 +1904,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
         <div style="font-size:16px;font-weight:700;text-align:center;margin-bottom:6px;" id="pf-tr"></div>
       </div>
     </div>
+    <!-- SPEAK ROW for phrase flashcard -->
+    <div style="display:flex;gap:10px;justify-content:center;margin:0 0 12px;">
+      <button onclick="event.stopPropagation();_speakCurrentPhrase();" style="display:flex;align-items:center;gap:6px;background:var(--s2);border:1.5px solid var(--border);border-radius:20px;padding:8px 18px;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--muted2);cursor:pointer;transition:all .15s;" title="Hear pronunciation" onmouseenter="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'">🔊 <span>Listen</span></button>
+    </div>
     <div class="quiz-btns" id="pf-btns" style="display:none;">
       <button class="qbw" id="pf-btn-forgot" onclick="pfResult('wrong')">✗ Forgot</button>
       <button class="qbo" onclick="pfResult('ok')">~ Almost</button>
@@ -1972,7 +1983,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
       <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;margin:10px 0 8px;" id="rt-scene-label"></div>
       <!-- Dialog card -->
       <div style="background:linear-gradient(135deg,var(--s2),var(--s1));border:1.5px solid var(--border);border-radius:var(--r16);padding:20px;margin-bottom:16px;">
-        <div style="font-family:var(--cn);font-size:28px;font-weight:900;color:var(--red);line-height:1.3;margin-bottom:8px;" id="rt-cn"></div>
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <div style="font-family:var(--cn);font-size:28px;font-weight:900;color:var(--red);line-height:1.3;margin-bottom:8px;flex:1;" id="rt-cn"></div>
+          <button onclick="var c=el('rt-cn');if(c)speakChinese(c.textContent);" style="flex-shrink:0;background:var(--s3);border:1px solid var(--border);border-radius:50%;width:34px;height:34px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:2px;" title="Listen">🔊</button>
+        </div>
         <div style="font-family:var(--mono);font-size:12px;color:var(--gold);margin-bottom:6px;" id="rt-py"></div>
         <div style="font-size:13px;color:var(--muted2);" id="rt-en"></div>
       </div>
@@ -2366,7 +2380,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 </div><!-- end page-bank -->
 
 <!-- ========== PROFILE PAGE (Feature 11) ========== -->
-<div id="page-profile">
+<div id="page-profile" class="page">
   <!-- Back button row -->
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
     <button onclick="goPage('home',document.querySelector('.bni[data-page=\'home\']'))" style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r12);padding:8px 14px;font-family:var(--mono);font-size:11px;color:var(--muted2);cursor:pointer;" data-i18n="prof_back">← Back</button>
@@ -4023,6 +4037,7 @@ function showFlashcard(){
   if(el('fc-hint'))el('fc-hint').textContent='tap to reveal';
   var back=el('fc-back');if(back)back.classList.remove('show');
   if(el('fc-btns'))el('fc-btns').style.display='none';
+  var _pb=el('fc-pron-btn');if(_pb)_pb.style.display='none'; // hide mic until flipped
   if(el('fc-pinyin'))el('fc-pinyin').textContent=ch.pinyin||'';
   if(el('fc-meaning'))el('fc-meaning').textContent=ch.meaning||'';
   if(el('fc-example'))el('fc-example').textContent=ch.example||'';
@@ -4043,13 +4058,13 @@ function flipCard(){
   var back=el('fc-back');if(back)back.classList.add('show');
   if(el('fc-hint'))el('fc-hint').textContent='';
   // Anti-cheat: disable Got it for 1.5s — must actually read the card
-  // Pronunciation button (if speech API available)
+  // Mic pronunciation button (shows after flip if speech API available)
   var pronBtn=el('fc-pron-btn');
   if(pronBtn){
     if(_speechSupported){
-      pronBtn.style.display='inline-block';
+      pronBtn.style.display='flex';
       var ch=quizCards[quizIdx];
-      pronBtn.onclick=function(){startPronunciation(ch.char,ch.pinyin,pronBtn);};
+      pronBtn.onclick=function(e){e.stopPropagation();startPronunciation(ch.char,ch.pinyin,pronBtn);};
     } else {
       pronBtn.style.display='none';
     }
@@ -4086,6 +4101,29 @@ var XP_RATES={
 
 
 // ==================== SPACED REPETITION ====================
+// ── Text-to-Speech: hear the Chinese word ─────────────────────
+function speakChinese(text, rate) {
+  if (!window.speechSynthesis) { showMsg('TTS not supported in this browser', 'var(--muted)'); return; }
+  window.speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-CN'; u.rate = rate || 0.75; u.pitch = 1;
+  // Try to pick a Chinese voice if available
+  var voices = window.speechSynthesis.getVoices();
+  var zhVoice = voices.find(function(v){ return v.lang.indexOf('zh') === 0; });
+  if (zhVoice) u.voice = zhVoice;
+  window.speechSynthesis.speak(u);
+}
+
+function _speakCurrentCard() {
+  var ch = quizCards && quizCards[quizIdx];
+  if (ch && ch.char) speakChinese(ch.char);
+}
+
+function _speakCurrentPhrase() {
+  var ph = pfCards && pfCards[pfIdx];
+  if (ph && ph.phrase_cn) speakChinese(ph.phrase_cn);
+}
+
 // ── Speech Recognition — Pronunciation Practice ───────────────
 var _speechSupported=!!(window.SpeechRecognition||window.webkitSpeechRecognition);
 
@@ -5572,7 +5610,7 @@ var I18N={
   prof_settings:'⚙️ Settings',prof_sound_lbl:'Sound',prof_theme_lbl:'Theme',prof_lang_lbl:'🌐 Language',
   prof_goal_lbl:'Daily Goal',prof_shields_lbl:'Shields',
   prof_xp_chart:'📊 7-Day XP Activity',prof_no_activity:'📊 Start learning to see your progress chart!',
-  nav_community:'Community',h_community_sub:'See what learners are doing',
+  nav_community:'Community',h_community_sub:'See what learners are doing',nav_profile:'Profile',nav_learn:'Learn',
   },
   ru:{
     nav_home:'Главная',nav_lessons:'Уроки',nav_phrases:'Фразы',nav_friends:'Друзья',w_my_phrases:'Мои фразы',ph_subtitle:'Ваши сохранённые фразы — нажмите статус для изменения',ph_search:'Поиск фраз…',ph_no_phrases:'Фраз пока нет. Добавьте из Уроки → Фразы.',nav_games:'Игры',nav_words:'Слова',nav_bank:'Банк',
@@ -5743,7 +5781,7 @@ var I18N={
   prof_settings:'⚙️ Настройки',prof_sound_lbl:'Звук',prof_theme_lbl:'Тема',prof_lang_lbl:'🌐 Язык',
   prof_goal_lbl:'Дневная цель',prof_shields_lbl:'Щиты',
   prof_xp_chart:'📊 XP за 7 дней',prof_no_activity:'📊 Начните учиться, чтобы увидеть график!',
-  nav_community:'Сообщество',h_community_sub:'Смотрите, что делают другие ученики',
+  nav_community:'Сообщество',h_community_sub:'Смотрите, что делают другие ученики',nav_profile:'Профиль',nav_learn:'Учёба',
   },
   kz:{
     nav_home:'Басты бет',nav_lessons:'Сабақтар',nav_phrases:'Фразалар',nav_friends:'Достар',w_my_phrases:'Менің фразаларым',ph_subtitle:'Сақталған фразаларыңыз — мәртебені жаңарту үшін басыңыз',ph_search:'Фразаларды іздеу…',ph_no_phrases:'Фразалар жоқ. Сабақтар → Фразалардан қосыңыз.',nav_games:'Ойындар',nav_words:'Сөздік',nav_bank:'Банк',
@@ -5914,7 +5952,7 @@ var I18N={
   prof_settings:'⚙️ Баптаулар',prof_sound_lbl:'Дыбыс',prof_theme_lbl:'Тақырып',prof_lang_lbl:'🌐 Тіл',
   prof_goal_lbl:'Күнделікті мақсат',prof_shields_lbl:'Қалқандар',
   prof_xp_chart:'📊 7 күндік XP белсенділігі',prof_no_activity:'📊 Прогресс кестесін көру үшін оқи бастаңыз!',
-  nav_community:'Қоғамдастық',h_community_sub:'Басқа оқушылардың жетістіктерін қараңыз',
+  nav_community:'Қоғамдастық',h_community_sub:'Басқа оқушылардың жетістіктерін қараңыз',nav_profile:'Профиль',nav_learn:'Оқу',
   },
 };
 
