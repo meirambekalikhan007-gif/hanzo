@@ -1087,7 +1087,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 .profile-avatar-lg{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--red),#c2410c);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:#fff;margin:0 auto 14px;border:4px solid rgba(232,96,122,.35);box-shadow:0 8px 24px rgba(232,96,122,.3),0 0 0 1px rgba(232,96,122,.1);}
 .profile-username{font-size:22px;font-weight:900;margin-bottom:3px;letter-spacing:-.3px;}
 .profile-handle{font-family:var(--mono);font-size:11px;color:var(--muted2);}
-.profile-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px;}
+.profile-stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px;}
 .profile-stat{background:var(--s1);border:1px solid var(--border);border-radius:var(--r12);padding:12px 4px;text-align:center;transition:all .15s;}
 .profile-stat-n{font-size:22px;font-weight:900;line-height:1;margin-bottom:3px;}
 .profile-stat-l{font-family:var(--mono);font-size:7px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);}
@@ -1400,6 +1400,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
       <span class="xp-level" id="xp-level-label">Level 1</span>
       <div style="display:flex;align-items:center;gap:6px;">
         <span style="font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:20px;background:var(--goldbg);border:1px solid var(--goldbrd);color:var(--gold);font-weight:700;" id="hsk-badge">HSK 1</span>
+        <span style="font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:20px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.4);color:#a78bfa;font-weight:700;display:flex;align-items:center;gap:3px;" id="home-gem-badge">💎 <span class="gem-count">0</span></span>
         <span class="xp-num" id="xp-num-label">0 XP</span>
       </div>
     </div>
@@ -2400,6 +2401,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <div class="profile-stats-row" id="profile-stats-row">
     <div class="profile-stat"><div class="profile-stat-n" id="prof-xp" style="color:var(--gold);">0</div><div class="profile-stat-l" data-i18n="prof_total_xp">Total XP</div></div>
     <div class="profile-stat"><div class="profile-stat-n" id="prof-words" style="color:var(--blue);">0</div><div class="profile-stat-l" data-i18n="prof_words">Words</div></div>
+    <div class="profile-stat"><div class="profile-stat-n gem-count" id="prof-gems" style="color:#a78bfa;">0</div><div class="profile-stat-l">💎 Gems</div></div>
     <div class="profile-stat"><div class="profile-stat-n" id="prof-streak" style="color:var(--red);">0</div><div class="profile-stat-l" data-i18n="prof_streak">🔥 Streak</div></div>
     <div class="profile-stat"><div class="profile-stat-n" id="prof-friends" style="color:var(--green);">0</div><div class="profile-stat-l" data-i18n="prof_friends">Friends</div></div>
   </div>
@@ -2492,6 +2494,25 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
       <div>
         <div style="font-size:13px;font-weight:700;" data-i18n="prof_shields_lbl">Shields</div>
         <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:1px;" id="prof-shields-txt">0 shields</div>
+      </div>
+    </div>
+    <!-- GEMS -->
+    <div style="padding:10px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:13px;font-weight:700;">💎 Gems</div>
+        <div style="font-family:var(--mono);font-size:14px;font-weight:900;color:#a78bfa;" id="prof-gems-big"><span class="gem-count">0</span></div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid #7c3aed;border-radius:var(--r12);padding:12px 14px;">
+        <div style="font-family:var(--mono);font-size:9px;color:#7c3aed;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">How to earn gems</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <div style="font-size:11px;color:#a78bfa;">🏫 Lesson complete</div><div style="font-family:var(--mono);font-size:10px;font-weight:700;color:#c4b5fd;">+3 to +8💎</div>
+          <div style="font-size:11px;color:#a78bfa;">🎮 Game complete</div><div style="font-family:var(--mono);font-size:10px;font-weight:700;color:#c4b5fd;">+2 to +3💎</div>
+          <div style="font-size:11px;color:#a78bfa;">🎯 Daily goal</div><div style="font-family:var(--mono);font-size:10px;font-weight:700;color:#c4b5fd;">+5💎</div>
+          <div style="font-size:11px;color:#a78bfa;">✅ Word mastered</div><div style="font-family:var(--mono);font-size:10px;font-weight:700;color:#c4b5fd;">+1💎</div>
+          <div style="font-size:11px;color:#a78bfa;">🔥 7-day streak</div><div style="font-family:var(--mono);font-size:10px;font-weight:700;color:#c4b5fd;">+10💎</div>
+          <div style="font-size:11px;color:#a78bfa;">🔥🔥 30-day streak</div><div style="font-family:var(--mono);font-size:10px;font-weight:700;color:#c4b5fd;">+25💎</div>
+        </div>
+        <div style="font-size:10px;color:var(--muted2);margin-top:8px;border-top:1px solid rgba(124,58,237,.3);padding-top:6px;">Spend: 200💎 = 1 Streak Shield 🛡️</div>
       </div>
     </div>
     <!-- LANGUAGE SWITCHER -->
@@ -3445,6 +3466,8 @@ function renderHome(){
       if (qsTitleEl2) qsTitleEl2.textContent = t('h_quick_session') || 'Quick Session 🚀';
     }
   }
+  // Update gem counter in home HUD
+  if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
 }
 
 // ==================== STREAK ====================
@@ -4135,7 +4158,7 @@ function _speakCurrentCard() {
 
 function _speakCurrentPhrase() {
   var ph = pfCards && pfCards[pfIdx];
-  if (ph && ph.phrase_cn) speakChinese(ph.phrase_cn);
+  if (ph && (ph.cn || ph.phrase_cn)) speakChinese(ph.cn || ph.phrase_cn);
 }
 
 // ── Speech Recognition — Pronunciation Practice ───────────────
@@ -4251,6 +4274,7 @@ function quizResult(r){
     updateCharStatus(ch.id,'mastered');
     updateWordSRS(ch.id,true);
     awardXP(XP_RATES.master_word,'Mastered! ✓');
+    awardGems(GEM_RATES.word_mastered,'Word ✓');
     markStreakDay();
     onCorrectAnswer();
     save();
@@ -4394,7 +4418,7 @@ function handleMatch(elem,type){
   if(matchSelected.el.dataset.id===elem.dataset.id){
     matchSelected.el.classList.remove('selected');matchSelected.el.classList.add('matched');elem.classList.add('matched');matchSelected=null;matchCorrect++;awardXP(5,'Match ✓');onCorrectAnswer();
     if(el('match-score-top'))el('match-score-top').textContent=matchCorrect+'/'+matchPairs.length+' ✓';
-    if(matchCorrect===matchPairs.length){if(el('match-score'))el('match-score').textContent='🎉 '+t('g_all_matched');if(el('match-next-btn'))el('match-next-btn').style.display='block';launchConfetti();awardXP(20,'All pairs! 🔗');}
+    if(matchCorrect===matchPairs.length){if(el('match-score'))el('match-score').textContent='🎉 '+t('g_all_matched');if(el('match-next-btn'))el('match-next-btn').style.display='block';launchConfetti();awardXP(20,'All pairs! 🔗');setTimeout(function(){awardGems(GEM_RATES.game_all_match,'Match');},600);}
   }else{
     var sel=matchSelected;sel.el.classList.add('wrong-flash');elem.classList.add('wrong-flash');
     onWrongAnswer();
@@ -6930,6 +6954,9 @@ function lsShowQ(){
     if(el('ls-q-prog'))el('ls-q-prog').style.width='100%';
     if(el('ls-q-xp'))el('ls-q-xp').textContent=xp+' XP';
     if(score>=80){awardXP(XP_RATES.lesson_complete,'Unit mastered! 🎓');markStreakDay();}
+    // Gem rewards — tiered by performance
+    var gemReward = score===100 ? GEM_RATES.lesson_perfect : score>=80 ? GEM_RATES.lesson_mastered : GEM_RATES.lesson_complete;
+    setTimeout(function(){ awardGems(gemReward, 'Lesson'); }, 900);
 
     var emoji=score===100?'🏆':score>=80?'🎉':score>=60?'💪':'📚';
     var col=score===100?'#ffd700':score>=80?'#10b981':score>=60?'#f59e0b':'#ef4444';
@@ -6958,8 +6985,8 @@ function lsShowQ(){
     var comboHTML='';
     if(lsCombo>=3)comboHTML='<div style="background:linear-gradient(135deg,#ea580c,#d97706);color:#fff;font-family:var(--mono);font-size:11px;font-weight:900;padding:6px 16px;border-radius:20px;display:inline-block;margin-bottom:12px;box-shadow:0 4px 14px rgba(234,88,12,.4);">🔥 '+lsCombo+' '+t('ls_combo_streak')+'</div>';
 
-    // Stats row
-    var statsHTML='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0;">'
+    // Stats row — 4 cols: score, xp, gems, correct
+    var statsHTML='<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin:14px 0;">'
       +'<div style="background:var(--s2);border-radius:var(--r12);padding:12px 8px;">'
         +'<div style="font-size:18px;font-weight:900;color:'+col+';">'+score+'%</div>'
         +'<div style="font-size:9px;font-family:var(--mono);color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.4px;">'+t('g_score_lbl')+'</div>'
@@ -6967,6 +6994,10 @@ function lsShowQ(){
       +'<div style="background:var(--s2);border-radius:var(--r12);padding:12px 8px;">'
         +'<div style="font-size:18px;font-weight:900;color:var(--gold);">+'+xp+'</div>'
         +'<div style="font-size:9px;font-family:var(--mono);color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.4px;">XP</div>'
+      +'</div>'
+      +'<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid #7c3aed;border-radius:var(--r12);padding:12px 8px;">'
+        +'<div style="font-size:18px;font-weight:900;color:#a78bfa;">+'+gemReward+'💎</div>'
+        +'<div style="font-size:9px;font-family:var(--mono);color:#7c3aed;margin-top:2px;text-transform:uppercase;letter-spacing:.4px;">Gems</div>'
       +'</div>'
       +'<div style="background:var(--s2);border-radius:var(--r12);padding:12px 8px;">'
         +'<div style="font-size:18px;font-weight:900;color:var(--text);">'+lsCorrect+'/'+totalQ+'</div>'
@@ -7848,6 +7879,7 @@ function pfResult(r){
   if(r==='mastered'){
     pfCorrect++;_pfGotItStreak++;
     awardXP(XP_RATES.master_phrase,'Phrase mastered! 🗣️');
+    awardGems(GEM_RATES.phrase_mastered,'Phrase ✓');
     onCorrectAnswer();
     updatePhraseStatus(p.id,'mastered');save();
   } else if(r==='ok'){
@@ -8227,6 +8259,52 @@ function awardXP(amount,source){
 }
 
 
+// ── Gem Economy ──────────────────────────────────────────────────────────────
+// Gem rates: earned through gameplay, spent on streak shields
+// Calibrated for retention: easy to see progress, hard enough to feel earned
+var GEM_RATES = {
+  lesson_complete: 3,    // any score — you showed up
+  lesson_mastered: 5,    // 80%+ — you earned it
+  lesson_perfect:  8,    // 100% — rare, big dopamine hit
+  game_complete:   2,    // any mini-game finished
+  game_all_match:  3,    // all pairs matched in match game
+  daily_goal:      5,    // daily goal hit
+  word_mastered:   1,    // word moves to mastered
+  phrase_mastered: 1,    // phrase mastered
+  streak_7:       10,    // weekly streak bonus
+  streak_30:      25,    // monthly streak bonus (huge reward)
+};
+
+function awardGems(amount, source) {
+  if (!amount || amount <= 0) return;
+  if (!S.gems) S.gems = 0;
+  S.gems += amount;
+  save();
+  // Show gem popup
+  _showGemPopup(amount, source);
+  // Update profile gem display if visible
+  if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
+}
+
+function _showGemPopup(amount, source) {
+  var popup = document.createElement('div');
+  popup.style.cssText = 'position:fixed;top:70px;right:16px;z-index:9999;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1.5px solid #7c3aed;border-radius:20px;padding:10px 18px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;font-weight:900;color:#a78bfa;box-shadow:0 8px 32px rgba(124,58,237,.4);animation:springIn .4s cubic-bezier(.34,1.56,.64,1) both;pointer-events:none;';
+  popup.innerHTML = '💎 <span style="color:#fff;">+' + amount + '</span>';
+  document.body.appendChild(popup);
+  setTimeout(function() {
+    popup.style.transition = 'opacity .4s,transform .4s';
+    popup.style.opacity = '0';
+    popup.style.transform = 'translateY(-12px)';
+    setTimeout(function() { if (popup.parentNode) popup.parentNode.removeChild(popup); }, 400);
+  }, 1800);
+}
+
+function _updateGemsDisplay() {
+  var gemEls = document.querySelectorAll('.gem-count');
+  var count = S.gems || 0;
+  gemEls.forEach(function(el) { el.textContent = count; });
+}
+
 // ==================== AUTH SYSTEM ====================
 var USERS_KEY='hanzo_users';
 var SESSION_KEY='hanzo_session';
@@ -8412,6 +8490,10 @@ if(S.phrases_list&&S.phrases_list.length){
   if(S.lang){setLang(S.lang);}else{setLang('en');}
   // Re-render home after data is ready to fix streak display
   setTimeout(function(){if(currentPage==='home'){renderStreak();renderXPBar();renderStreakBanner();}},500);
+  // Re-render profile if already on that page when auth resolves
+  setTimeout(function(){
+    if(currentPage==='profile'&&typeof _renderProfilePage==='function')_renderProfilePage();
+  },400);
 }
 
 function updateNavUser(){
@@ -8877,8 +8959,8 @@ function checkStreakBonus(){
   var bonusKey='streak_bonus_'+getLocalDate();
   if(S[bonusKey])return;
   S[bonusKey]=true;save();
-  if(streak===7){awardXP(XP_RATES.streak_7,'7-day streak! 🔥');showMsg('7 day streak bonus! +100 XP 🔥','var(--gold)');}
-  else if(streak===30){awardXP(XP_RATES.streak_30,'30-day streak! 🔥🔥🔥');showMsg('30 day streak bonus! +500 XP 🔥','var(--gold)');}
+  if(streak===7){awardXP(XP_RATES.streak_7,'7-day streak! 🔥');awardGems(GEM_RATES.streak_7,'7-Day Streak');showMsg('7 day streak bonus! +100 XP +10💎 🔥','var(--gold)');}
+  else if(streak===30){awardXP(XP_RATES.streak_30,'30-day streak! 🔥🔥🔥');awardGems(GEM_RATES.streak_30,'30-Day Streak');showMsg('30 day streak bonus! +500 XP +25💎 🔥','var(--gold)');}
 }
 
 // Check daily goal bonus
@@ -8895,6 +8977,7 @@ function checkDailyGoalBonus(){
   if(studiedToday>=goal&&!S[bonusKey]){
     S[bonusKey]=true;save();
     awardXP(XP_RATES.daily_goal,'Daily goal hit! 🎯');
+    awardGems(GEM_RATES.daily_goal,'Daily Goal');
     showMsg(t('h_daily_goal_hit'),'var(--green)');
   }
 }
@@ -10786,6 +10869,8 @@ function renderWO(){
       +'<button onclick="closeWordOrder()" class="btn" style="width:100%;font-size:15px;font-weight:800;">'+t('wo_continue')+'</button>'
       +'</div>';
     awardXP(woScore*15,'Word order bonus');
+    var woGems=pct>=75?GEM_RATES.game_all_match:GEM_RATES.game_complete;
+    setTimeout(function(){awardGems(woGems,'Word Order');},600);
     if(pct>=75)launchConfetti();
     return;
   }
@@ -13140,6 +13225,16 @@ async function _searchFriend(val) {
   await _loadSupaData(uid);
   loginUser({ name: name, email: user.email, id: uid, username: username });
   await _loadFriendsData();
+  // Re-render pages that may have rendered before auth resolved
+  if (typeof currentPage !== 'undefined') {
+    if (currentPage === 'profile' && typeof _renderProfilePage === 'function') {
+      _renderProfilePage();
+    }
+    if (currentPage === 'community') {
+      _feedCache = {};
+      if (typeof _loadFeed === 'function') _loadFeed();
+    }
+  }
 })();
 
 // ==================== SOCIAL FEED ====================
@@ -14311,6 +14406,9 @@ function _renderProfilePage() {
   if (el('prof-daily-goal-txt')) el('prof-daily-goal-txt').textContent = (S.daily_goal || 10) + (LANG==='ru'?' слов/день':LANG==='kz'?' сөз/күн':' words/day');
   var shields = parseInt(localStorage.getItem('hanzo_shields') || '0');
   if (el('prof-shields-txt')) el('prof-shields-txt').textContent = shields + ' ' + (LANG==='ru'?(shields===1?'щит':shields<5?'щита':'щитов'):LANG==='kz'?'қалқан':'shield'+(shields===1?'':'s'));
+  // Gems
+  var gems = S.gems || 0;
+  if (el('prof-gems')) el('prof-gems').textContent = gems;
 
   // Friends count (rough estimate from friends data)
   var friendCount = 0;
