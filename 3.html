@@ -8288,9 +8288,12 @@ function awardGems(amount, source) {
 
 function _showGemPopup(amount, source) {
   var popup = document.createElement('div');
-  popup.style.cssText = 'position:fixed;top:70px;right:16px;z-index:9999;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1.5px solid #7c3aed;border-radius:20px;padding:10px 18px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;font-weight:900;color:#a78bfa;box-shadow:0 8px 32px rgba(124,58,237,.4);animation:springIn .4s cubic-bezier(.34,1.56,.64,1) both;pointer-events:none;';
+  // Anchor inside #app-content so it stays within the phone frame on desktop
+  var container = document.getElementById('app-content') || document.body;
+  var useAbsolute = container !== document.body;
+  popup.style.cssText = (useAbsolute ? 'position:absolute;' : 'position:fixed;') + 'top:70px;right:16px;z-index:9999;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1.5px solid #7c3aed;border-radius:20px;padding:10px 18px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;font-weight:900;color:#a78bfa;box-shadow:0 8px 32px rgba(124,58,237,.4);animation:springIn .4s cubic-bezier(.34,1.56,.64,1) both;pointer-events:none;';
   popup.innerHTML = '💎 <span style="color:#fff;">+' + amount + '</span>';
-  document.body.appendChild(popup);
+  container.appendChild(popup);
   setTimeout(function() {
     popup.style.transition = 'opacity .4s,transform .4s';
     popup.style.opacity = '0';
@@ -8490,10 +8493,11 @@ if(S.phrases_list&&S.phrases_list.length){
   if(S.lang){setLang(S.lang);}else{setLang('en');}
   // Re-render home after data is ready to fix streak display
   setTimeout(function(){if(currentPage==='home'){renderStreak();renderXPBar();renderStreakBanner();}},500);
-  // Re-render profile if already on that page when auth resolves
+  // Re-render profile/feed after Supabase data merge completes (~800ms)
   setTimeout(function(){
     if(currentPage==='profile'&&typeof _renderProfilePage==='function')_renderProfilePage();
-  },400);
+    if(currentPage==='feed'&&typeof _loadFeed==='function'){_feedCache={};_loadFeed();}
+  },900);
 }
 
 function updateNavUser(){
@@ -13222,15 +13226,51 @@ async function _searchFriend(val) {
   var profRes = await _db.from('profiles').select('name,username').eq('id', uid).single();
   var name = (profRes.data && profRes.data.name) || user.email.split('@')[0];
   var username = (profRes.data && profRes.data.username) || null;
+
+  // ── IMPORTANT ORDER ──────────────────────────────────────────────────────
+  // _loadSupaData sets S.chars_list, S.name, S.xp_earned etc. but loginUser()
+  // then resets S via S=loadUserData(email). Snapshot the Supabase data first,
+  // then re-apply it after loginUser so stats are never blank on first load.
   await _loadSupaData(uid);
+  var _snap = {
+    chars_list:    S.chars_list,
+    phrases_list:  S.phrases_list,
+    study_activity:S.study_activity,
+    xp_earned:     S.xp_earned,
+    sentences:     S.sentences,
+    name:          S.name,
+    username:      S.username,
+    daily_goal:    S.daily_goal,
+    lang:          S.lang,
+  };
+
   loginUser({ name: name, email: user.email, id: uid, username: username });
+
+  // Re-apply Supabase data that loginUser's S=loadUserData() just wiped
+  if (_snap.chars_list    && _snap.chars_list.length)    S.chars_list    = _snap.chars_list;
+  if (_snap.phrases_list  && _snap.phrases_list.length)  S.phrases_list  = _snap.phrases_list;
+  if (_snap.study_activity && Object.keys(_snap.study_activity).length)
+    S.study_activity = Object.assign(S.study_activity || {}, _snap.study_activity);
+  if (_snap.xp_earned)   S.xp_earned   = _snap.xp_earned;
+  if (_snap.sentences    && _snap.sentences.length)      S.sentences     = _snap.sentences;
+  if (_snap.name)        { S.name = _snap.name; if (currentUser) currentUser.name = _snap.name; }
+  if (_snap.username)    { S.username = _snap.username; if (currentUser) currentUser.username = _snap.username; }
+  if (_snap.daily_goal)  S.daily_goal  = _snap.daily_goal;
+  if (_snap.lang)        S.lang        = _snap.lang;
+  save(); // persist the merged local+Supabase data
+
+  // Re-render home with complete data (loginUser already rendered it with blank S)
+  renderHome();
+  if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
+
   await _loadFriendsData();
-  // Re-render pages that may have rendered before auth resolved
+
+  // Re-render profile or feed if user is already on those pages
   if (typeof currentPage !== 'undefined') {
     if (currentPage === 'profile' && typeof _renderProfilePage === 'function') {
       _renderProfilePage();
     }
-    if (currentPage === 'community') {
+    if (currentPage === 'feed') {
       _feedCache = {};
       if (typeof _loadFeed === 'function') _loadFeed();
     }
@@ -13842,7 +13882,11 @@ if (_origGoPage) {
         _loadFeed();
       }
     }
-    if (page === 'profile') { _renderProfilePage(); }
+    if (page === 'profile') {
+      _renderProfilePage();
+      // Re-render again after a tick in case Supabase data is still loading
+      setTimeout(_renderProfilePage, 600);
+    }
     if (page === 'friends') { _renderLeagueCard(); _renderReferralCard(); }
   };
 }
