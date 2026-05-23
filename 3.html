@@ -15096,6 +15096,579 @@ if(_origLoadSupaData2){
   parent.insertAdjacentElement('afterend',notifDiv);
 })();
 
+// ============================================================
+// 🎮  HAPTIC FEEDBACK — unified helper
+// ============================================================
+function _haptic(type) {
+  if (!navigator.vibrate || S.mute) return;
+  var patterns = {
+    correct: [40],
+    wrong:   [80, 40, 80],
+    success: [40, 30, 80, 30, 120],
+    tap:     [15],
+    heavy:   [100]
+  };
+  navigator.vibrate(patterns[type] || [30]);
+}
+
+// Inject haptics into correct/wrong answer hooks
+(function(){
+  var _origCorrect = onCorrectAnswer;
+  onCorrectAnswer = function(fromLesson) {
+    _haptic('correct');
+    return _origCorrect.apply(this, arguments);
+  };
+  var _origWrong = onWrongAnswer;
+  onWrongAnswer = function() {
+    _haptic('wrong');
+    return _origWrong.apply(this, arguments);
+  };
+})();
+
+// ============================================================
+// ⌨️  KEYBOARD SHORTCUTS
+// ============================================================
+(function(){
+  document.addEventListener('keydown', function(e) {
+    // Don't fire when typing in an input
+    var tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+    var key = e.key;
+
+    // Escape — close any visible overlay / modal
+    if (key === 'Escape') {
+      var overlays = document.querySelectorAll('[id$="-overlay"].show,[id$="-modal"][style*="flex"],[id$="-overlay"][style*="flex"]');
+      if (overlays.length) { overlays[overlays.length-1].style.display = 'none'; overlays[overlays.length-1].classList.remove('show'); return; }
+    }
+
+    var page = typeof currentPage !== 'undefined' ? currentPage : '';
+    var game = typeof currentGame !== 'undefined' ? currentGame : '';
+
+    // ── Flashcard ──────────────────────────────────────────────
+    if (game === 'flashcard' || page === 'games') {
+      // Space = flip card
+      if (key === ' ' && !e.shiftKey) {
+        e.preventDefault();
+        var fcCard = document.getElementById('fc-card');
+        if (fcCard && typeof fcFlipped !== 'undefined') {
+          if (!fcFlipped) { if (typeof flipCard === 'function') flipCard(); }
+        }
+        return;
+      }
+      // Arrow Right / 1 = Got it (after flip)
+      if ((key === 'ArrowRight' || key === '1') && typeof fcFlipped !== 'undefined' && fcFlipped) {
+        e.preventDefault();
+        var gotItBtn = document.querySelector('#fc-btns .qbm');
+        if (gotItBtn && gotItBtn.style.display !== 'none') gotItBtn.click();
+        return;
+      }
+      // Arrow Left / 2 = Again (after flip)
+      if ((key === 'ArrowLeft' || key === '2') && typeof fcFlipped !== 'undefined' && fcFlipped) {
+        e.preventDefault();
+        var againBtn = document.querySelector('#fc-btns .qbs');
+        if (againBtn && againBtn.style.display !== 'none') againBtn.click();
+        return;
+      }
+    }
+
+    // ── Multiple choice — 1/2/3/4 select answer ───────────────
+    if (game === 'mc' || game === 'charhunt') {
+      if (key >= '1' && key <= '4') {
+        var choices = document.querySelectorAll('.mc-choice:not(.correct):not(.wrong):not(.reveal-correct)');
+        var idx = parseInt(key) - 1;
+        if (choices[idx]) { e.preventDefault(); choices[idx].click(); }
+        return;
+      }
+    }
+
+    // ── Phrase flashcard ───────────────────────────────────────
+    if (game === 'pflash') {
+      if (key === ' ' && !e.shiftKey) {
+        e.preventDefault();
+        if (typeof pfFlipped !== 'undefined' && !pfFlipped && typeof flipPhraseCard === 'function') flipPhraseCard();
+        return;
+      }
+      if ((key === 'ArrowRight' || key === '1') && typeof pfFlipped !== 'undefined' && pfFlipped) {
+        e.preventDefault();
+        var pfGot = document.querySelector('#pf-btns .qbm');
+        if (pfGot) pfGot.click();
+        return;
+      }
+      if ((key === 'ArrowLeft' || key === '2') && typeof pfFlipped !== 'undefined' && pfFlipped) {
+        e.preventDefault();
+        var pfAgain = document.querySelector('#pf-btns .qbs');
+        if (pfAgain) pfAgain.click();
+        return;
+      }
+    }
+  });
+
+  // Show keyboard hint in games page (subtle, one-time)
+  var _kbHintKey = 'hanzo_kb_hint_shown';
+  if (!localStorage.getItem(_kbHintKey)) {
+    var _origGoPage = typeof goPage === 'function' ? goPage : null;
+    if (_origGoPage) {
+      var _kbGoPage = goPage;
+      goPage = function(page) {
+        _kbGoPage.apply(this, arguments);
+        if (page === 'games' && !localStorage.getItem(_kbHintKey)) {
+          localStorage.setItem(_kbHintKey, '1');
+          setTimeout(function(){
+            var hint = document.createElement('div');
+            var r = _appRect();
+            hint.style.cssText = 'position:fixed;bottom:'+(window.innerHeight-r.bottom+16)+'px;left:'+(r.left+r.width/2)+'px;'
+              +'transform:translateX(-50%);background:rgba(0,0,0,.75);color:#fff;font-family:var(--mono);'
+              +'font-size:10px;padding:6px 14px;border-radius:20px;z-index:9000;pointer-events:none;white-space:nowrap;'
+              +'animation:fadeUp .3s ease;';
+            hint.textContent = '⌨️  Space=flip  ←=Again  →=Got it  Esc=close';
+            document.body.appendChild(hint);
+            setTimeout(function(){hint.style.opacity='0';hint.style.transition='opacity .5s';setTimeout(function(){if(hint.parentNode)hint.remove();},500);},3500);
+          }, 800);
+        }
+      };
+    }
+  }
+})();
+
+// ============================================================
+// 🎯  DAILY GOAL CELEBRATION MODAL (replaces plain showMsg)
+// ============================================================
+(function(){
+  var _origCheckDailyGoal = checkDailyGoalBonus;
+  checkDailyGoalBonus = function() {
+    var goal = S.daily_goal || 10;
+    var studiedToday = (S.study_activity && S.study_activity[getLocalDate()]) || 0;
+    var bonusKey = 'daily_goal_' + getLocalDate();
+    if (studiedToday >= goal && !S[bonusKey]) {
+      // Run the original for XP/gems award
+      _origCheckDailyGoal.apply(this, arguments);
+      // Then show full-screen celebration
+      setTimeout(function() { _showDailyGoalCelebration(goal); }, 300);
+    } else {
+      _origCheckDailyGoal.apply(this, arguments);
+    }
+  };
+
+  window._showDailyGoalCelebration = function(goal) {
+    if (document.getElementById('daily-goal-modal')) return;
+    _haptic('success');
+    launchConfetti();
+    var overlay = document.createElement('div');
+    overlay.id = 'daily-goal-modal';
+    overlay.style.cssText = _overlayCSS('z-index:9500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.82);');
+    overlay.innerHTML = '<div style="text-align:center;padding:36px 28px;max-width:320px;">'
+      + '<div style="font-size:72px;margin-bottom:4px;animation:bounceIn .5s cubic-bezier(.36,.07,.19,.97);">🎯</div>'
+      + '<div style="font-size:26px;font-weight:900;color:#fff;margin-bottom:6px;">Daily Goal Hit!</div>'
+      + '<div style="font-family:var(--mono);font-size:13px;color:var(--gold);font-weight:800;margin-bottom:4px;">+' + (XP_RATES && XP_RATES.daily_goal || 25) + ' XP  &  +' + (GEM_RATES && GEM_RATES.daily_goal || 5) + ' 💎</div>'
+      + '<div style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.55);margin-bottom:28px;">' + goal + ' words practiced today 🔥</div>'
+      + '<button onclick="document.getElementById(\'daily-goal-modal\').remove()" '
+      + 'style="background:linear-gradient(135deg,var(--green),#059669);border:none;color:#fff;font-size:15px;font-weight:800;'
+      + 'padding:14px 36px;border-radius:24px;cursor:pointer;box-shadow:0 6px 20px rgba(16,185,129,.4);width:100%;">'
+      + 'Keep going! 💪</button>'
+      + '</div>';
+    overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
+    document.body.appendChild(overlay);
+    setTimeout(function(){ if(overlay.parentNode) overlay.remove(); }, 6000);
+  };
+})();
+
+// ============================================================
+// 🛡️  STREAK SHIELD COUNT BADGE in home page card
+// ============================================================
+(function(){
+  function _refreshShieldCard() {
+    var shields = parseInt(localStorage.getItem('hanzo_shields') || '0');
+    var txt = document.getElementById('shield-count-txt');
+    var card = document.getElementById('shield-card');
+    if (!card) return;
+    if (txt) {
+      if (shields > 0) {
+        txt.innerHTML = '<span style="color:var(--purple);font-weight:800;">'+shields+'</span> shield'+(shields>1?'s':'')+' ready · Auto-protects your streak';
+        card.style.borderColor = 'var(--purplebrd)';
+        card.style.background = 'var(--purplebg)';
+      } else {
+        txt.textContent = '0 shields · Buy one to protect your streak';
+        card.style.borderColor = '';
+        card.style.background = '';
+      }
+    }
+    // Also update profile shield text
+    var profTxt = document.getElementById('prof-shields-txt');
+    if (profTxt) profTxt.textContent = shields + ' shield'+(shields!==1?'s':'')+' owned';
+  }
+
+  // Run on load and hook into renderHome
+  _refreshShieldCard();
+  var _origRH = typeof renderHome === 'function' ? renderHome : null;
+  if (_origRH) {
+    renderHome = function() {
+      _origRH.apply(this, arguments);
+      setTimeout(_refreshShieldCard, 50);
+    };
+  }
+
+  // Patch _buyShield and _useShield to refresh display
+  var _origBuy = typeof _buyShield === 'function' ? _buyShield : null;
+  if (_origBuy) {
+    _buyShield = function() {
+      _origBuy.apply(this, arguments);
+      setTimeout(_refreshShieldCard, 100);
+    };
+  }
+})();
+
+// ============================================================
+// 📭  EMPTY STATES — words bank & words list
+// ============================================================
+(function(){
+  // Inject empty state into Bank page when user has no words
+  var _origSetBankSection = typeof _setBankSection === 'function' ? _setBankSection : null;
+  if (_origSetBankSection) {
+    _setBankSection = function(section, btn) {
+      _origSetBankSection.apply(this, arguments);
+      // After switching to "My Words" tab, check if list is empty
+      if (section === 'mywords') {
+        setTimeout(function() {
+          var wordList = document.getElementById('bank-mywords-list');
+          if (!wordList) return;
+          if ((S.chars_list || []).length === 0 && !document.getElementById('bank-empty-state')) {
+            var es = document.createElement('div');
+            es.id = 'bank-empty-state';
+            es.style.cssText = 'text-align:center;padding:48px 24px;';
+            es.innerHTML = '<div style="font-size:60px;margin-bottom:16px;">📖</div>'
+              + '<div style="font-size:16px;font-weight:800;margin-bottom:8px;">No words yet</div>'
+              + '<div style="font-family:var(--mono);font-size:12px;color:var(--muted2);line-height:1.7;margin-bottom:24px;">'
+              + 'Add your first Chinese character to start<br>building your vocabulary</div>'
+              + '<button onclick="_setBankSection(\'add\')" style="background:var(--blue);color:#fff;border:none;'
+              + 'padding:12px 28px;border-radius:20px;font-weight:800;font-size:14px;cursor:pointer;">+ Add First Word</button>';
+            wordList.appendChild(es);
+          }
+        }, 80);
+      }
+    };
+  }
+})();
+
+// ============================================================
+// 👤  USERNAME PROMPT — nudge users without a username
+// ============================================================
+(function(){
+  var _usernameNudgeKey = 'hanzo_username_nudge_shown';
+  function _maybeShowUsernameNudge() {
+    if (localStorage.getItem(_usernameNudgeKey)) return;
+    if (!currentUser || !currentUser.id) return;
+    var hasUsername = (S.username && S.username.length > 0) || (currentUser.username && currentUser.username.length > 0);
+    if (hasUsername) return;
+    localStorage.setItem(_usernameNudgeKey, '1');
+    setTimeout(function() {
+      var nudge = document.createElement('div');
+      nudge.id = 'username-nudge';
+      nudge.style.cssText = _overlayCSS('z-index:9400;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.6);');
+      nudge.innerHTML = '<div style="background:var(--bg);border-radius:var(--r16) var(--r16) 0 0;padding:28px 24px 32px;width:100%;max-width:430px;">'
+        + '<div style="font-size:28px;margin-bottom:10px;text-align:center;">✍️</div>'
+        + '<div style="font-size:16px;font-weight:800;margin-bottom:6px;text-align:center;">Choose a username</div>'
+        + '<div style="font-family:var(--mono);font-size:11px;color:var(--muted2);text-align:center;margin-bottom:20px;line-height:1.6;">'
+        + 'Show up on the leaderboard and let friends find you</div>'
+        + '<div style="position:relative;margin-bottom:12px;">'
+        + '<span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted2);font-family:var(--mono);font-size:14px;">@</span>'
+        + '<input id="nudge-username-inp" type="text" placeholder="yourname" autocorrect="off" autocapitalize="none" spellcheck="false" '
+        + 'style="width:100%;box-sizing:border-box;padding:13px 14px 13px 28px;border-radius:var(--r12);border:2px solid var(--border);'
+        + 'background:var(--s2);font-family:var(--mono);font-size:15px;color:var(--text);outline:none;">'
+        + '</div>'
+        + '<div id="nudge-username-status" style="font-family:var(--mono);font-size:11px;margin-bottom:14px;min-height:16px;text-align:center;"></div>'
+        + '<button id="nudge-username-btn" onclick="_saveNudgeUsername()" '
+        + 'style="width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:var(--r12);'
+        + 'font-size:15px;font-weight:800;cursor:pointer;">Set Username →</button>'
+        + '<button onclick="document.getElementById(\'username-nudge\').remove()" '
+        + 'style="width:100%;padding:10px;background:none;border:none;color:var(--muted2);font-family:var(--mono);'
+        + 'font-size:11px;cursor:pointer;margin-top:6px;">Skip for now</button>'
+        + '</div>';
+      document.body.appendChild(nudge);
+      // Live validation
+      var inp = document.getElementById('nudge-username-inp');
+      if (inp) inp.addEventListener('input', function() { _validateNudgeUsername(this.value); });
+    }, 2000);
+  }
+
+  window._validateNudgeUsername = function(val) {
+    var status = document.getElementById('nudge-username-status');
+    if (!status) return;
+    if (!val) { status.textContent = ''; return; }
+    if (val.length < 3) { status.style.color='var(--red)'; status.textContent='At least 3 characters'; return; }
+    if (val.length > 20) { status.style.color='var(--red)'; status.textContent='Max 20 characters'; return; }
+    if (!/^[a-zA-Z]/.test(val)) { status.style.color='var(--red)'; status.textContent='Must start with a letter'; return; }
+    if (!/^[a-zA-Z0-9_]+$/.test(val)) { status.style.color='var(--red)'; status.textContent='Letters, numbers, _ only'; return; }
+    status.style.color='var(--muted2)'; status.textContent='Checking…';
+    if (typeof _db !== 'undefined') {
+      _db.from('profiles').select('id').eq('username', val.toLowerCase()).then(function(res) {
+        var s = document.getElementById('nudge-username-status');
+        if (!s) return;
+        if (res.data && res.data.length > 0) { s.style.color='var(--red)'; s.textContent='@'+val+' is taken'; }
+        else { s.style.color='var(--green)'; s.textContent='@'+val+' is available ✓'; }
+      });
+    } else { status.style.color='var(--green)'; status.textContent='@'+val+' looks good ✓'; }
+  };
+
+  window._saveNudgeUsername = async function() {
+    var inp = document.getElementById('nudge-username-inp');
+    if (!inp) return;
+    var val = (inp.value || '').trim().toLowerCase();
+    if (!val || val.length < 3) return;
+    var btn = document.getElementById('nudge-username-btn');
+    if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
+    S.username = val;
+    if (currentUser) currentUser.username = val;
+    save();
+    if (typeof _db !== 'undefined' && currentUser && currentUser.id) {
+      await _db.from('profiles').update({ username: val }).eq('id', currentUser.id);
+    }
+    var nudge = document.getElementById('username-nudge');
+    if (nudge) nudge.remove();
+    showMsg('@' + val + ' set! 🎉', 'var(--green)');
+    if (typeof _renderProfilePage === 'function') _renderProfilePage();
+  };
+
+  // Hook into loginUser completion
+  var _origLoginUser = typeof loginUser === 'function' ? loginUser : null;
+  if (_origLoginUser) {
+    loginUser = function(data) {
+      _origLoginUser.apply(this, arguments);
+      setTimeout(_maybeShowUsernameNudge, 3500);
+    };
+  }
+})();
+
+// ============================================================
+// 📊  PROGRESS EXPORT — shareable card (canvas-free, HTML→clip)
+// ============================================================
+(function(){
+  // Inject "Share Progress" button into profile page
+  var _origRPP = typeof _renderProfilePage === 'function' ? _renderProfilePage : null;
+  if (_origRPP) {
+    _renderProfilePage = function() {
+      _origRPP.apply(this, arguments);
+      setTimeout(function() {
+        if (document.getElementById('share-progress-btn')) return;
+        // Find a good anchor: stats section in profile
+        var profStats = document.querySelector('#page-profile .stats-grid, #page-profile [id="prof-streak"]');
+        var anchor = profStats ? profStats.parentElement : document.querySelector('#page-profile');
+        if (!anchor) return;
+        var btn = document.createElement('button');
+        btn.id = 'share-progress-btn';
+        btn.style.cssText = 'width:100%;padding:13px;background:linear-gradient(135deg,var(--blue),#6366f1);'
+          +'color:#fff;border:none;border-radius:var(--r12);font-size:14px;font-weight:800;cursor:pointer;'
+          +'margin:14px 0 4px;box-shadow:0 4px 16px rgba(99,102,241,.35);display:flex;align-items:center;justify-content:center;gap:8px;';
+        btn.innerHTML = '<span>📤</span><span>Share My Progress</span>';
+        btn.onclick = _showProgressExport;
+        anchor.appendChild(btn);
+      }, 120);
+    };
+  }
+
+  window._showProgressExport = function() {
+    var xp = typeof getTotalXP === 'function' ? getTotalXP() : (S.xp_earned || 0);
+    var words = (S.chars_list || []).length;
+    var mastered = (S.chars_list || []).filter(function(w){ return w.status === 'mastered'; }).length;
+    var streak = typeof calcStreak === 'function' ? (calcStreak().current || 0) : (S.streak || 0);
+    var name = (currentUser && currentUser.name) || S.name || 'Hanzo Learner';
+    var level = typeof getLevelData === 'function' ? getLevelData(xp).title : '';
+    var today = new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+
+    var shareText = '🇨🇳 My Hanzo Chinese Progress — ' + today + '\n\n'
+      + '👤 ' + name + (level ? '  ·  ' + level : '') + '\n'
+      + '📚 ' + words + ' words learned  ·  ' + mastered + ' mastered\n'
+      + '🔥 ' + streak + '-day streak\n'
+      + '⚡ ' + xp.toLocaleString() + ' total XP\n\n'
+      + '学中文 with Hanzo 🈶';
+
+    var modal = document.createElement('div');
+    modal.style.cssText = _overlayCSS('z-index:9600;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.75);');
+    modal.innerHTML = '<div style="background:var(--bg);border-radius:var(--r16);padding:24px;width:90%;max-width:360px;">'
+      + '<div style="font-size:18px;font-weight:800;margin-bottom:14px;text-align:center;">📤 Share Your Progress</div>'
+      + '<div id="prog-card" style="background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:var(--r12);padding:20px;margin-bottom:16px;">'
+      + '<div style="font-size:13px;color:rgba(255,255,255,.5);font-family:var(--mono);margin-bottom:4px;">Hanzo Chinese · ' + today + '</div>'
+      + '<div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:14px;">' + name + (level ? ' <span style="font-size:12px;font-weight:500;color:var(--gold);">'+level+'</span>' : '') + '</div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
+      + '<div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;">'
+      + '<div style="font-size:22px;font-weight:900;color:#fff;">' + words + '</div>'
+      + '<div style="font-size:10px;color:rgba(255,255,255,.5);font-family:var(--mono);">WORDS</div></div>'
+      + '<div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;">'
+      + '<div style="font-size:22px;font-weight:900;color:var(--gold);">' + mastered + '</div>'
+      + '<div style="font-size:10px;color:rgba(255,255,255,.5);font-family:var(--mono);">MASTERED</div></div>'
+      + '<div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;">'
+      + '<div style="font-size:22px;font-weight:900;color:var(--red);">🔥 ' + streak + '</div>'
+      + '<div style="font-size:10px;color:rgba(255,255,255,.5);font-family:var(--mono);">DAY STREAK</div></div>'
+      + '<div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;">'
+      + '<div style="font-size:22px;font-weight:900;color:var(--blue);">' + (xp >= 1000 ? (xp/1000).toFixed(1)+'k' : xp) + '</div>'
+      + '<div style="font-size:10px;color:rgba(255,255,255,.5);font-family:var(--mono);">TOTAL XP</div></div>'
+      + '</div></div>'
+      // Share buttons
+      + '<div style="display:flex;gap:10px;margin-bottom:10px;">'
+      + '<button onclick="_copyProgressText()" style="flex:1;padding:12px;background:var(--s2);border:1.5px solid var(--border);'
+      + 'border-radius:var(--r12);font-weight:700;font-size:13px;cursor:pointer;color:var(--text);">📋 Copy Text</button>'
+      + (navigator.share ? '<button onclick="_nativeShare()" style="flex:1;padding:12px;background:var(--blue);border:none;'
+      + 'border-radius:var(--r12);font-weight:700;font-size:13px;cursor:pointer;color:#fff;">🔗 Share</button>' : '')
+      + '</div>'
+      + '<button onclick="this.closest(\'div[style*=z-index\\:9600]\').remove()" style="width:100%;padding:10px;background:none;'
+      + 'border:none;color:var(--muted2);font-family:var(--mono);font-size:11px;cursor:pointer;">Close</button>'
+      + '</div>';
+    modal.addEventListener('click', function(e){ if(e.target===modal) modal.remove(); });
+    document.body.appendChild(modal);
+
+    window._copyProgressText = function() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareText).then(function(){
+          showMsg('Copied! 📋', 'var(--green)');
+        });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = shareText; document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+        showMsg('Copied! 📋', 'var(--green)');
+      }
+    };
+    window._nativeShare = function() {
+      navigator.share({ title: 'My Hanzo Progress', text: shareText }).catch(function(){});
+    };
+  };
+})();
+
+// ============================================================
+// 🏆  GLOBAL LEADERBOARD TAB in Friends page
+// ============================================================
+(function(){
+  // After renderFriendsPage, inject a Global tab alongside Friends
+  var _patchedFriendsLB = false;
+  var _origRFP2 = renderFriendsPage;
+  renderFriendsPage = function() {
+    _origRFP2.apply(this, arguments);
+    setTimeout(function() {
+      if (document.getElementById('lb-tab-global')) return;
+      // Find the leaderboard section header inside friends page
+      var friendsPage = document.getElementById('page-friends');
+      if (!friendsPage) return;
+      // Find "This Week" heading or home-lb-widget area
+      var lbWidget = friendsPage.querySelector('.home-lb-widget, [id="home-lb-widget"]');
+      // Actually find the leaderboard section by looking for weekly xp heading
+      var lbSection = friendsPage.querySelector('h3, [style*="font-weight:900"]');
+      // Inject above the friends list — find a stable anchor
+      var addFriendSection = friendsPage.querySelector('.add-friend-form');
+      if (!addFriendSection) return;
+      if (document.getElementById('global-lb-section')) return;
+
+      var section = document.createElement('div');
+      section.id = 'global-lb-section';
+      section.style.cssText = 'margin-bottom:20px;';
+      section.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">'
+        + '<div style="font-size:15px;font-weight:800;">🏆 Global Leaderboard</div>'
+        + '<div style="display:flex;gap:6px;">'
+        + '<button id="lb-tab-weekly" onclick="_switchGlobalLB(\'weekly\',this)" style="font-family:var(--mono);font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px;border:1.5px solid var(--blue);background:var(--blue);color:#fff;cursor:pointer;">This Week</button>'
+        + '<button id="lb-tab-alltime" onclick="_switchGlobalLB(\'alltime\',this)" style="font-family:var(--mono);font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:var(--muted2);cursor:pointer;">All Time</button>'
+        + '</div></div>'
+        + '<div id="global-lb-rows" style="display:flex;flex-direction:column;gap:6px;">'
+        + '<div style="text-align:center;padding:20px;font-family:var(--mono);font-size:11px;color:var(--muted2);">Loading…</div>'
+        + '</div>';
+      addFriendSection.insertAdjacentElement('beforebegin', section);
+      _loadGlobalLB('weekly');
+    }, 200);
+  };
+
+  var _globalLBMode = 'weekly';
+  window._switchGlobalLB = function(mode, btn) {
+    _globalLBMode = mode;
+    ['weekly','alltime'].forEach(function(m) {
+      var b = document.getElementById('lb-tab-'+m);
+      if (!b) return;
+      var active = m === mode;
+      b.style.background = active ? 'var(--blue)' : 'transparent';
+      b.style.color = active ? '#fff' : 'var(--muted2)';
+      b.style.borderColor = active ? 'var(--blue)' : 'var(--border)';
+    });
+    _loadGlobalLB(mode);
+  };
+
+  window._loadGlobalLB = async function(mode) {
+    var container = document.getElementById('global-lb-rows');
+    if (!container) return;
+    container.innerHTML = '<div style="text-align:center;padding:20px;font-family:var(--mono);font-size:11px;color:var(--muted2);">Loading…</div>';
+    if (typeof _db === 'undefined') {
+      container.innerHTML = '<div style="text-align:center;padding:16px;font-family:var(--mono);font-size:11px;color:var(--muted2);">Sign in to see the global leaderboard</div>';
+      return;
+    }
+    try {
+      var res;
+      if (mode === 'weekly') {
+        res = await _db.from('profiles').select('id,name,username,weekly_xp').order('weekly_xp', { ascending: false }).limit(20);
+      } else {
+        res = await _db.from('profiles').select('id,name,username,xp_total').order('xp_total', { ascending: false }).limit(20);
+      }
+      if (!res.data || !res.data.length) {
+        container.innerHTML = '<div style="text-align:center;padding:16px;font-family:var(--mono);font-size:11px;color:var(--muted2);">No data yet</div>';
+        return;
+      }
+      var myId = currentUser && currentUser.id;
+      container.innerHTML = '';
+      res.data.forEach(function(row, i) {
+        var xp = mode === 'weekly' ? (row.weekly_xp || 0) : (row.xp_total || 0);
+        var isMe = row.id === myId;
+        var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i+1)+'.';
+        var rowEl = document.createElement('div');
+        rowEl.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r12);'
+          + 'background:' + (isMe ? 'var(--bluebg,rgba(59,130,246,.12))' : 'var(--s2)') + ';'
+          + 'border:1.5px solid ' + (isMe ? 'var(--blue)' : 'var(--border)') + ';';
+        rowEl.innerHTML = '<div style="font-size:' + (i < 3 ? '18' : '13') + 'px;min-width:24px;text-align:center;font-weight:800;color:var(--muted2);">' + medal + '</div>'
+          + '<div style="flex:1;">'
+          + '<div style="font-size:13px;font-weight:' + (isMe ? '900' : '700') + ';color:' + (isMe ? 'var(--blue)' : 'var(--text)') + ';">'
+          + (row.name || 'Learner') + (isMe ? ' <span style="font-size:9px;font-family:var(--mono);color:var(--blue);">(you)</span>' : '') + '</div>'
+          + (row.username ? '<div style="font-family:var(--mono);font-size:10px;color:var(--muted2);">@' + row.username + '</div>' : '')
+          + '</div>'
+          + '<div style="font-family:var(--mono);font-size:12px;font-weight:800;color:' + (isMe?'var(--blue)':'var(--gold)') + ';">' + xp.toLocaleString() + ' XP</div>';
+        container.appendChild(rowEl);
+      });
+    } catch(err) {
+      container.innerHTML = '<div style="text-align:center;padding:16px;font-family:var(--mono);font-size:11px;color:var(--muted2);">Could not load leaderboard</div>';
+    }
+  };
+})();
+
+// ============================================================
+// 📱  SERVICE WORKER — offline shell cache
+// ============================================================
+(function(){
+  if (!('serviceWorker' in navigator)) return;
+  var swCode = [
+    'var CACHE="hanzo-v2";',
+    'var SHELL=["./"];',
+    'self.addEventListener("install",function(e){',
+    '  e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(SHELL);}));',
+    '  self.skipWaiting();',
+    '});',
+    'self.addEventListener("activate",function(e){',
+    '  e.waitUntil(caches.keys().then(function(keys){',
+    '    return Promise.all(keys.filter(function(k){return k!==CACHE;}).map(function(k){return caches.delete(k);}));',
+    '  }));',
+    '  self.clients.claim();',
+    '});',
+    'self.addEventListener("fetch",function(e){',
+    '  if(e.request.method!=="GET")return;',
+    '  e.respondWith(caches.match(e.request).then(function(cached){',
+    '    var net=fetch(e.request).then(function(res){',
+    '      if(res&&res.status===200&&res.type==="basic"){',
+    '        var clone=res.clone();',
+    '        caches.open(CACHE).then(function(c){c.put(e.request,clone);});',
+    '      }',
+    '      return res;',
+    '    });',
+    '    return cached||net;',
+    '  }));',
+    '});'
+  ].join('\n');
+  var blob = new Blob([swCode], { type: 'application/javascript' });
+  var swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl, { scope: './' }).catch(function(){});
+})();
+
 </script>
 </body>
 </html>
