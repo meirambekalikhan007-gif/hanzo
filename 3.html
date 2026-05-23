@@ -1757,6 +1757,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <div style="display:flex;background:var(--s2);border-radius:var(--r12);padding:3px;gap:3px;margin-bottom:12px;">
     <button id="gtoggle-words" onclick="setGameMode('words')" style="flex:1;padding:9px;background:var(--s1);border:none;color:var(--text);font-family:var(--font);font-size:12px;font-weight:700;border-radius:var(--r8);cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.4);transition:all .15s;"><span>📖 </span><span data-i18n="g_mode_words">Words</span></button>
     <button id="gtoggle-phrases" onclick="setGameMode('phrases')" style="flex:1;padding:9px;background:transparent;border:none;color:var(--muted2);font-family:var(--font);font-size:12px;font-weight:700;border-radius:var(--r8);cursor:pointer;transition:all .15s;"><span>💬 </span><span data-i18n="g_mode_phrases">Phrases</span></button>
+    <button id="gtoggle-listen" onclick="setGameMode('listen')" style="flex:1;padding:9px;background:transparent;border:none;color:var(--muted2);font-family:var(--font);font-size:12px;font-weight:700;border-radius:var(--r8);cursor:pointer;transition:all .15s;">🎧 Listen</button>
   </div>
 
   <!-- WORD GAME TABS -->
@@ -1775,6 +1776,21 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <button class="gtab" onclick="setPhraseGame('pfill',this)">✏️ Fill Blank</button>
     <button class="gtab" onclick="setPhraseGame('ptf',this)">✅ True/False</button>
     <button class="gtab" onclick="setPhraseGame('realtalk',this)">🗣️ Real Talk</button>
+  </div>
+
+  <!-- LISTENING GAME -->
+  <div id="g-listen" class="game-panel" style="display:none;">
+    <div class="game-prog"><span class="game-prog-txt" id="ls-g-prog">—</span><span class="game-score-txt" id="ls-g-score-top"></span></div>
+    <!-- Audio button — big, central, tappable -->
+    <div style="text-align:center;margin:18px 0 22px;">
+      <button id="ls-g-play-btn" onclick="listenGamePlay()" style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#2563eb);border:none;font-size:36px;cursor:pointer;box-shadow:0 8px 28px rgba(59,130,246,.45);transition:transform .15s;display:flex;align-items:center;justify-content:center;margin:0 auto;" onmousedown="this.style.transform='scale(.93)'" onmouseup="this.style.transform='scale(1)'">🔊</button>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);margin-top:10px;" id="ls-g-hint">Tap to hear the word</div>
+    </div>
+    <!-- 4-choice grid -->
+    <div id="ls-g-choices" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;"></div>
+    <div id="ls-g-result" style="text-align:center;min-height:28px;font-family:var(--mono);font-size:13px;font-weight:800;margin-bottom:8px;"></div>
+    <div class="quiz-score" id="ls-g-score"></div>
+    <button class="btn btn-outline" onclick="startListenGame()" style="margin-top:10px;font-size:12px;">▶ Restart</button>
   </div>
 
   <!-- FLASHCARD -->
@@ -3732,14 +3748,29 @@ function cleanupPopups(){
   });
 }
 
+// ── Popup positioning helpers — keep everything inside the app frame ──────────
+// Returns the live bounding rect of #app-content (the phone frame on desktop)
+function _appRect(){
+  var ac=document.getElementById('app-content');
+  return ac?ac.getBoundingClientRect():{left:0,top:0,width:window.innerWidth,height:window.innerHeight};
+}
+// Returns CSS string for a full-frame fixed overlay (covers exactly the phone frame)
+function _overlayCSS(extra){
+  var r=_appRect();
+  return 'position:fixed;top:'+r.top+'px;left:'+r.left+'px;width:'+r.width+'px;height:'+r.height+'px;overflow:hidden;'+(extra||'');
+}
+
 function launchConfetti(){
   var colors=['var(--gold)','var(--green)','var(--red)','var(--blue)','var(--purple)'];
-  for(var i=0;i<12;i++){
+  var r=_appRect();
+  for(var i=0;i<16;i++){
     var p=document.createElement('div');
     p.className='confetti-piece';
-    p.style.cssText='left:'+(30+Math.random()*40)+'%;top:50%;background:'+colors[i%colors.length]+';transform:rotate('+Math.random()*360+'deg);animation-delay:'+Math.random()*0.3+'s;animation-duration:'+(0.6+Math.random()*0.4)+'s;';
+    var lx=r.left+r.width*(0.1+Math.random()*0.8);
+    var ty=r.top +r.height*0.4;
+    p.style.cssText='position:fixed;left:'+lx+'px;top:'+ty+'px;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:9999;background:'+colors[i%colors.length]+';transform:rotate('+Math.random()*360+'deg);animation:confetti '+(0.6+Math.random()*0.4)+'s ease-out '+(Math.random()*0.3)+'s forwards;';
     document.body.appendChild(p);
-    setTimeout(function(piece){document.body.removeChild(piece);},1200,p);
+    setTimeout(function(piece){if(piece.parentNode)piece.parentNode.removeChild(piece);},1200,p);
   }
 }
 
@@ -4081,6 +4112,9 @@ function flipCard(){
   }
   var back=el('fc-back');if(back)back.classList.add('show');
   if(el('fc-hint'))el('fc-hint').textContent='';
+  // Auto-speak the character when card flips — core language-learning UX
+  var _fcCh=quizCards[quizIdx];
+  if(_fcCh&&_fcCh.char)setTimeout(function(){if(!S.mute)speakChinese(_fcCh.char);},160);
   // Anti-cheat: disable Got it for 1.5s — must actually read the card
   // Mic pronunciation button (shows after flip if speech API available)
   var pronBtn=el('fc-pron-btn');
@@ -6898,8 +6932,7 @@ function showLuckyBonus(){
   if(Math.random()>0.05)return;
   var bonusXP=20;
   var overlay=document.createElement('div');
-  overlay.style.cssText='position:fixed;inset:0;z-index:8500;pointer-events:none;'+
-    'display:flex;align-items:center;justify-content:center;';
+  overlay.style.cssText=_overlayCSS('z-index:8500;pointer-events:none;display:flex;align-items:center;justify-content:center;');
   overlay.innerHTML='<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);'+
     'border:2px solid #ffd700;border-radius:20px;padding:20px 28px;text-align:center;'+
     'animation:comboScale .6s cubic-bezier(.175,.885,.32,1.275) forwards;'+
@@ -6918,8 +6951,7 @@ function showComboPopup(count){
   var bonus=count*5;
   // Create full-screen burst overlay
   var burst=document.createElement('div');
-  burst.style.cssText='position:fixed;inset:0;z-index:8000;pointer-events:none;display:flex;'+
-    'align-items:center;justify-content:center;background:rgba(0,0,0,0.55);animation:comboBurst .7s ease forwards;';
+  burst.style.cssText=_overlayCSS('z-index:8000;pointer-events:none;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);animation:comboBurst .7s ease forwards;');
   burst.innerHTML='<div style="text-align:center;animation:comboScale .5s cubic-bezier(.175,.885,.32,1.275) forwards;">'+
     '<div style="font-size:clamp(28px,8vw,48px);font-weight:900;color:#fff;'+
     'background:linear-gradient(135deg,#ea580c,#d97706);-webkit-background-clip:text;'+
@@ -7781,14 +7813,23 @@ function setGameMode(mode){
   updateModeCounts();
   var wtog=document.getElementById('gtoggle-words');
   var ptog=document.getElementById('gtoggle-phrases');
+  var ltog=document.getElementById('gtoggle-listen');
   var wtabs=document.getElementById('word-game-tabs');
   var ptabs=document.getElementById('phrase-game-tabs');
-  if(wtog){wtog.style.background=mode==='words'?'var(--s1)':'transparent';wtog.style.color=mode==='words'?'var(--text)':'var(--muted2)';wtog.style.boxShadow=mode==='words'?'0 1px 6px rgba(0,0,0,.4)':'none';}
-  if(ptog){ptog.style.background=mode==='phrases'?'var(--s1)':'transparent';ptog.style.color=mode==='phrases'?'var(--text)':'var(--muted2)';ptog.style.boxShadow=mode==='phrases'?'0 1px 6px rgba(0,0,0,.4)':'none';}
+  var activeStyle={background:'var(--s1)',color:'var(--text)',boxShadow:'0 1px 6px rgba(0,0,0,.4)'};
+  var inactiveStyle={background:'transparent',color:'var(--muted2)',boxShadow:'none'};
+  [wtog,ptog,ltog].forEach(function(btn,i){
+    if(!btn)return;
+    var active=(mode==='words'&&i===0)||(mode==='phrases'&&i===1)||(mode==='listen'&&i===2);
+    btn.style.background=active?activeStyle.background:inactiveStyle.background;
+    btn.style.color=active?activeStyle.color:inactiveStyle.color;
+    btn.style.boxShadow=active?activeStyle.boxShadow:inactiveStyle.boxShadow;
+    btn.style.fontWeight=active?'800':'700';
+  });
   if(wtabs)wtabs.style.display=mode==='words'?'flex':'none';
   if(ptabs)ptabs.style.display=mode==='phrases'?'flex':'none';
   // Hide ALL game panels including phrase games and realtalk
-  var allPanels=['flashcard','mc','match','pinyin','charhunt','sentence','pflash','pfill','ptf','realtalk'];
+  var allPanels=['flashcard','mc','match','pinyin','charhunt','sentence','pflash','pfill','ptf','realtalk','listen'];
   allPanels.forEach(function(g){var p=document.getElementById('g-'+g);if(p)p.style.display='none';});
   if(mode==='words'){
     currentGame='flashcard';
@@ -7796,6 +7837,9 @@ function setGameMode(mode){
     var firstTab=document.querySelector('#word-game-tabs .gtab');if(firstTab)firstTab.classList.add('on');
     var fp=document.getElementById('g-flashcard');if(fp)fp.style.display='block';
     startFlashcard();
+  } else if(mode==='listen'){
+    var lp=document.getElementById('g-listen');if(lp)lp.style.display='block';
+    startListenGame();
   } else {
     currentPhraseGame='pflash';
     document.querySelectorAll('#phrase-game-tabs .gtab').forEach(function(b){b.classList.remove('on');});
@@ -7865,6 +7909,9 @@ function flipPhraseCard(){
   pfFlipped=true;pfTotal++;
   var back=document.getElementById('pf-back');if(back)back.classList.add('show');
   var hint=document.getElementById('pf-hint');if(hint)hint.textContent='';
+  // Auto-speak phrase on flip
+  var _pfp=pfCards[pfIdx];
+  if(_pfp&&(_pfp.cn||_pfp.phrase_cn))setTimeout(function(){if(!S.mute)speakChinese(_pfp.cn||_pfp.phrase_cn);},160);
   var btnsEl=document.getElementById('pf-btns');if(btnsEl)btnsEl.style.display='flex';
   // Anti-cheat: 1.5s delay on Got it for phrase flashcard
   var pfGotIt=btnsEl?btnsEl.querySelector('.qbm'):null;
@@ -8573,9 +8620,10 @@ function showXPPopup(amount,source){
   var popup=document.createElement('div');
   popup.className='xp-popup';
   popup.textContent='+'+amount+' XP';
-  // Random position near center-top
-  var x=30+Math.random()*40;
-  popup.style.cssText='left:'+x+'%;top:35%;position:fixed;pointer-events:none;z-index:9999;font-family:var(--mono);font-weight:800;font-size:'+( amount>=50?'20':'15')+'px;color:'+(amount>=50?'var(--gold)':amount>=20?'var(--green)':'var(--muted3)')+';text-shadow:0 0 20px rgba(212,168,50,.6);animation:xpFloat 1.2s ease-out forwards;';
+  var r=_appRect();
+  var lx=r.left+r.width*(0.3+Math.random()*0.4);
+  var ty=r.top+r.height*0.35;
+  popup.style.cssText='position:fixed;left:'+lx+'px;top:'+ty+'px;pointer-events:none;z-index:9999;font-family:var(--mono);font-weight:800;font-size:'+(amount>=50?'20':'15')+'px;color:'+(amount>=50?'var(--gold)':amount>=20?'var(--green)':'var(--muted3)')+';text-shadow:0 0 20px rgba(212,168,50,.6);animation:xpFloat 1.2s ease-out forwards;';
   document.body.appendChild(popup);
   setTimeout(function(){if(popup.parentNode)popup.parentNode.removeChild(popup);},1300);
 }
@@ -9560,7 +9608,8 @@ function friendsNotify(msg){
   if(existing)existing.remove();
   var toast=document.createElement('div');
   toast.id='friends-toast';
-  toast.style.cssText='position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;font-family:var(--mono);font-size:12px;font-weight:700;padding:10px 20px;border-radius:20px;z-index:5000;animation:fadeUp .3s ease;pointer-events:none;white-space:nowrap;';
+  var _tr=_appRect();
+  toast.style.cssText='position:fixed;bottom:'+(window.innerHeight-_tr.bottom+100)+'px;left:'+(_tr.left+_tr.width/2)+'px;transform:translateX(-50%);background:var(--green);color:#fff;font-family:var(--mono);font-size:12px;font-weight:700;padding:10px 20px;border-radius:20px;z-index:5000;animation:fadeUp .3s ease;pointer-events:none;white-space:nowrap;';
   toast.textContent=msg;
   document.body.appendChild(toast);
   setTimeout(function(){if(toast.parentNode)toast.remove();},2500);
@@ -11098,7 +11147,10 @@ function showComboFloat(n){
   var color=n>=10?'#ffd700':n>=7?colors[5]:n>=5?colors[4]:n>=3?colors[2]:colors[0];
   var size=Math.min(24+n*2,52);
   var floater=document.createElement('div');
-  floater.style.cssText='position:fixed;left:50%;bottom:160px;transform:translateX(-50%) scale(0);'+
+  var _fr=_appRect();
+  var _flx=Math.round(_fr.left+_fr.width/2);
+  var _fly=Math.round(_fr.top+_fr.height-160);
+  floater.style.cssText='position:fixed;left:'+_flx+'px;top:'+_fly+'px;transform:translateX(-50%) scale(0);'+
     'z-index:9999;pointer-events:none;font-family:"Plus Jakarta Sans",sans-serif;font-weight:900;'+
     'font-size:'+size+'px;color:'+color+';text-shadow:0 0 20px '+color+'88;'+
     'animation:comboFloat 0.9s cubic-bezier(.175,.885,.32,1.275) forwards;white-space:nowrap;';
@@ -11434,7 +11486,7 @@ function showRTCard(){
     awardXP(Math.floor(rtCorrect*3),'Real Talk round');
     // Flash micro-celebration then continue
     var milestoneEl=document.createElement('div');
-    milestoneEl.style.cssText='position:fixed;inset:0;z-index:8000;display:flex;align-items:center;justify-content:center;pointer-events:none;';
+    milestoneEl.style.cssText=_overlayCSS('z-index:8000;display:flex;align-items:center;justify-content:center;pointer-events:none;');
     milestoneEl.innerHTML='<div style="background:linear-gradient(135deg,var(--red),#c2410c);color:#fff;border-radius:var(--r16);padding:20px 32px;text-align:center;animation:comboScale .4s ease;box-shadow:0 8px 32px rgba(0,0,0,.4);">'
       +'<div style="font-size:32px;margin-bottom:4px;">🔥</div>'
       +'<div style="font-size:15px;font-weight:900;">'+t('rt_round_complete')+'!</div>'
@@ -13747,7 +13799,8 @@ function _clearComposerImage() {
 function _showToast(msg, type) {
   var t = document.createElement('div');
   t.textContent = msg;
-  t.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:' + (type==='error'?'#e63946':'#2d9e5f') + ';color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;';
+  var _tr2=_appRect();
+  t.style.cssText = 'position:fixed;bottom:'+(window.innerHeight-_tr2.bottom+100)+'px;left:'+(_tr2.left+_tr2.width/2)+'px;transform:translateX(-50%) translateY(20px);background:' + (type==='error'?'#e63946':'#2d9e5f') + ';color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;';
   document.body.appendChild(t);
   setTimeout(function(){t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';},10);
   setTimeout(function(){t.style.opacity='0';setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},300);},2800);
@@ -14756,6 +14809,293 @@ setInterval(function() {
     _renderHeartsDisplay();
   }
 }, 30000);
+
+// ============================================================
+// 🎧  LISTENING GAME — hear the audio, pick the right character
+// ============================================================
+var _lgCards=[], _lgIdx=0, _lgCorrect=0, _lgTotal=0, _lgCurrent=null, _lgPlayed=false;
+
+function startListenGame(){
+  var words=(S.chars_list||[]).filter(function(w){return w.char&&w.char.length<=4;});
+  if(words.length<4){
+    var lg=document.getElementById('g-listen');
+    if(lg)lg.innerHTML='<div style="text-align:center;padding:32px 16px;"><div style="font-size:36px;">📚</div><div style="font-weight:700;margin:10px 0 6px;">Add at least 4 words to play</div><div style="font-family:var(--mono);font-size:11px;color:var(--muted2);">Go to Bank and add some words first</div></div>';
+    return;
+  }
+  _lgCards=words.sort(function(){return Math.random()-.5;});
+  _lgIdx=0;_lgCorrect=0;_lgTotal=0;
+  _lgShowCard();
+}
+
+function _lgShowCard(){
+  var progEl=document.getElementById('ls-g-prog');
+  var scoreTopEl=document.getElementById('ls-g-score-top');
+  var hintEl=document.getElementById('ls-g-hint');
+  var resEl=document.getElementById('ls-g-result');
+  var choicesEl=document.getElementById('ls-g-choices');
+  var scoreEl=document.getElementById('ls-g-score');
+
+  if(_lgIdx>=_lgCards.length){
+    var pct=_lgTotal?Math.round(_lgCorrect/_lgTotal*100):0;
+    if(progEl)progEl.textContent='Done!';
+    if(scoreTopEl)scoreTopEl.textContent='';
+    if(resEl)resEl.textContent='';
+    if(hintEl)hintEl.textContent='';
+    if(choicesEl)choicesEl.innerHTML='';
+    if(scoreEl)scoreEl.textContent=pct+'% correct ('+_lgCorrect+'/'+_lgTotal+')';
+    if(pct>=80){launchConfetti();awardXP(XP_RATES.lesson_complete,'Listen game!');awardGems(GEM_RATES.game_all_match,'Listen 🎧');}
+    else{awardGems(GEM_RATES.game_complete,'Listen 🎧');}
+    var playBtn=document.getElementById('ls-g-play-btn');
+    if(playBtn)playBtn.style.display='none';
+    return;
+  }
+
+  _lgCurrent=_lgCards[_lgIdx];_lgPlayed=false;
+  if(progEl)progEl.textContent=(_lgIdx+1)+' / '+Math.min(_lgCards.length,20);
+  if(scoreTopEl)scoreTopEl.textContent=_lgCorrect>0?_lgCorrect+' ✓':'';
+  if(resEl)resEl.textContent='';
+  if(hintEl)hintEl.textContent='Tap 🔊 to hear the word';
+  var playBtn=document.getElementById('ls-g-play-btn');
+  if(playBtn)playBtn.style.display='flex';
+
+  // Build 4 choices: correct + 3 distractors
+  var pool=(S.chars_list||[]).filter(function(w){return w.char&&w.char!==_lgCurrent.char;});
+  var distractors=pool.sort(function(){return Math.random()-.5;}).slice(0,3);
+  var choices=[_lgCurrent].concat(distractors).sort(function(){return Math.random()-.5;});
+
+  if(choicesEl){
+    choicesEl.innerHTML='';
+    choices.forEach(function(w){
+      var btn=document.createElement('button');
+      btn.style.cssText='background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);padding:16px 8px;font-size:28px;font-weight:900;cursor:pointer;transition:all .15s;color:var(--text);';
+      btn.textContent=w.char;
+      btn.dataset.char=w.char;
+      btn.onclick=function(){_lgAnswer(w.char,choices,btn);};
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  // Limit to 20 per round
+  if(_lgIdx>=19){_lgIdx=_lgCards.length;}
+}
+
+function listenGamePlay(){
+  if(!_lgCurrent)return;
+  _lgPlayed=true;
+  var hintEl=document.getElementById('ls-g-hint');
+  if(hintEl)hintEl.textContent='Now pick the character you heard 👆';
+  speakChinese(_lgCurrent.char);
+  // Visual pulse on button
+  var btn=document.getElementById('ls-g-play-btn');
+  if(btn){btn.style.transform='scale(1.12)';setTimeout(function(){btn.style.transform='scale(1)';},300);}
+}
+
+function _lgAnswer(char,choices,btnEl){
+  if(!_lgCurrent)return;
+  _lgTotal++;
+  var correct=char===_lgCurrent.char;
+  if(correct)_lgCorrect++;
+  var resEl=document.getElementById('ls-g-result');
+  var choicesEl=document.getElementById('ls-g-choices');
+
+  // Color all buttons
+  if(choicesEl){
+    choicesEl.querySelectorAll('button').forEach(function(b){
+      b.onclick=null; // disable further clicks
+      if(b.dataset.char===_lgCurrent.char){
+        b.style.background='rgba(16,185,129,.2)';b.style.borderColor='var(--green)';b.style.color='var(--green)';
+      } else if(b===btnEl&&!correct){
+        b.style.background='rgba(239,68,68,.15)';b.style.borderColor='var(--red)';b.style.color='var(--red)';
+      }
+    });
+  }
+
+  if(resEl){
+    if(correct){
+      resEl.textContent='✓ '+(_lgCurrent.meaning||'');resEl.style.color='var(--green)';
+      awardXP(5,'Listen correct!');
+      onCorrectAnswer();
+    } else {
+      resEl.textContent='✗ It was '+_lgCurrent.char+' ('+(_lgCurrent.meaning||'')+')';resEl.style.color='var(--red)';
+    }
+  }
+
+  _lgIdx++;
+  setTimeout(_lgShowCard,1400);
+}
+
+// ============================================================
+// 🔔  PUSH NOTIFICATIONS — streak reminder at 7 PM
+// ============================================================
+var _notifScheduled=false;
+
+function _requestNotifPermission(){
+  if(!('Notification' in window)){showMsg('Notifications not supported in this browser','var(--muted)');return;}
+  if(Notification.permission==='granted'){
+    localStorage.setItem('hanzo_notif_streak','1');
+    _scheduleStreakReminder();
+    showMsg('🔔 Streak reminder enabled!','var(--green)');
+    _syncProfileNotifToggle(true);
+    return;
+  }
+  if(Notification.permission==='denied'){showMsg('Notifications blocked — enable in browser settings','var(--muted)');return;}
+  Notification.requestPermission(function(perm){
+    if(perm==='granted'){
+      localStorage.setItem('hanzo_notif_streak','1');
+      _scheduleStreakReminder();
+      showMsg('🔔 Streak reminder enabled!','var(--green)');
+      _syncProfileNotifToggle(true);
+    } else {
+      showMsg('Notifications permission denied','var(--muted)');
+    }
+  });
+}
+
+function _disableNotif(){
+  localStorage.removeItem('hanzo_notif_streak');
+  showMsg('Streak reminder disabled','var(--muted2)');
+  _syncProfileNotifToggle(false);
+}
+
+function _scheduleStreakReminder(){
+  if(_notifScheduled)return;
+  _notifScheduled=true;
+  (function tick(){
+    var now=new Date();
+    var target=new Date(now.getFullYear(),now.getMonth(),now.getDate(),19,0,0);
+    if(now>=target)target.setDate(target.getDate()+1);
+    var ms=target-now;
+    setTimeout(function(){
+      var enabled=localStorage.getItem('hanzo_notif_streak');
+      if(enabled&&Notification.permission==='granted'){
+        var studied=typeof getStudyCount==='function'?getStudyCount(getLocalDate()):0;
+        var streak=typeof calcStreak==='function'?calcStreak().current:0;
+        if(studied===0&&streak>0){
+          try{new Notification('🔥 Protect your '+streak+'-day streak!',{
+            body:'You haven\'t studied today. Tap to keep your streak alive!',
+            icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><text y="52" font-size="52">🔥</text></svg>'
+          });}catch(e){}
+        }
+      }
+      _notifScheduled=false;
+      if(localStorage.getItem('hanzo_notif_streak'))tick();
+    },ms);
+  })();
+}
+
+// Auto-resume scheduler on load
+if(localStorage.getItem('hanzo_notif_streak')&&typeof Notification!=='undefined'&&Notification.permission==='granted'){
+  _scheduleStreakReminder();
+}
+
+function _syncProfileNotifToggle(on){
+  var btn=document.getElementById('prof-notif-btn');
+  if(btn){btn.textContent=on?'🔔 On':'🔕 Off';btn.style.color=on?'var(--green)':'var(--muted2)';}
+}
+
+// ============================================================
+// 💎  GEMS + HEARTS + SHIELDS → SUPABASE SYNC
+// ============================================================
+// Extends _syncNow profile upsert to include gem economy fields.
+// Requires Supabase migration (run once in SQL editor):
+//   ALTER TABLE profiles
+//     ADD COLUMN IF NOT EXISTS gems INTEGER DEFAULT 0,
+//     ADD COLUMN IF NOT EXISTS streak_shields INTEGER DEFAULT 0;
+var _origSyncNow = typeof _syncNow === 'function' ? _syncNow : null;
+if(_origSyncNow){
+  _syncNow = async function(){
+    await _origSyncNow();
+    // Patch: add gems + shields to profile row
+    if(!currentUser||!currentUser.id)return;
+    try{
+      await _db.from('profiles').update({
+        gems: S.gems||0,
+        streak_shields: parseInt(localStorage.getItem('hanzo_shields')||'0'),
+      }).eq('id',currentUser.id);
+    }catch(e){}
+  };
+}
+
+// Load gems + shields from Supabase on login
+var _origLoadSupaData2 = typeof _loadSupaData === 'function' ? _loadSupaData : null;
+if(_origLoadSupaData2){
+  _loadSupaData = async function(uid){
+    await _origLoadSupaData2(uid);
+    // Extra: load gems and shields from profiles
+    try{
+      var pr=await _db.from('profiles').select('gems,streak_shields').eq('id',uid).single();
+      if(pr.data){
+        if(pr.data.gems!=null&&pr.data.gems>0&&(!S.gems||(pr.data.gems>S.gems)))S.gems=pr.data.gems;
+        if(pr.data.streak_shields!=null){
+          var local=parseInt(localStorage.getItem('hanzo_shields')||'0');
+          var cloud=pr.data.streak_shields||0;
+          localStorage.setItem('hanzo_shields',String(Math.max(local,cloud)));
+        }
+      }
+    }catch(e){}
+  };
+}
+
+// ============================================================
+// 🎁  REFERRAL REWARD — complete the referral loop
+// ============================================================
+(function(){
+  if(!localStorage.getItem('hanzo_referred_by'))return;
+  if(localStorage.getItem('hanzo_referral_rewarded'))return;
+  // Wait for auth to resolve then fire once
+  var _refCheck=setInterval(function(){
+    if(!currentUser||!currentUser.id)return;
+    clearInterval(_refCheck);
+    // Only reward if user is relatively new (< 20 words)
+    var words=(S.chars_list||[]).length;
+    if(words<20){
+      var shields=parseInt(localStorage.getItem('hanzo_shields')||'0');
+      localStorage.setItem('hanzo_shields',String(shields+1));
+      if(typeof awardXP==='function')awardXP(50,'Joined via referral 🎁');
+      if(typeof awardGems==='function')awardGems(20,'Referral bonus 🎁');
+      setTimeout(function(){showMsg('🎁 Welcome bonus: +1 Shield, +50 XP, +20💎','var(--gold)');},1200);
+    }
+    localStorage.setItem('hanzo_referral_rewarded','1');
+  },800);
+})();
+
+// ============================================================
+// 🎙️  MIC BUTTON — show clear message on unsupported browsers
+// ============================================================
+(function(){
+  var pronBtn=document.getElementById('fc-pron-btn');
+  if(!pronBtn)return;
+  if(typeof _speechSupported!=='undefined'&&!_speechSupported){
+    pronBtn.style.display='flex';
+    pronBtn.style.opacity='0.4';
+    pronBtn.title='Pronunciation practice requires Chrome or Edge';
+    pronBtn.onclick=function(e){
+      e.stopPropagation();
+      showMsg(LANG==='ru'?'Для этой функции нужен Chrome или Edge':LANG==='kz'?'Бұл функция Chrome немесе Edge браузерін қажет етеді':'Pronunciation practice requires Chrome or Edge','var(--muted2)');
+    };
+  }
+})();
+
+// ============================================================
+// 🔔  PROFILE: push notification toggle UI injection
+// ============================================================
+(function(){
+  // Inject "Streak Reminder" toggle into profile settings after shields section
+  var shieldsSection=document.querySelector('[id="prof-shields-txt"]');
+  if(!shieldsSection)return;
+  var parent=shieldsSection.closest('[style*="border-bottom"]')||shieldsSection.parentElement;
+  if(!parent||document.getElementById('prof-notif-section'))return;
+  var notifDiv=document.createElement('div');
+  notifDiv.id='prof-notif-section';
+  notifDiv.style.cssText='padding:10px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;';
+  var enabled=localStorage.getItem('hanzo_notif_streak')&&typeof Notification!=='undefined'&&Notification.permission==='granted';
+  notifDiv.innerHTML='<div style="font-size:13px;font-weight:700;">🔔 Streak Reminder</div>'
+    +'<button id="prof-notif-btn" onclick="'+
+      (enabled?'_disableNotif()':'_requestNotifPermission()')+
+    '" style="font-family:var(--mono);font-size:11px;font-weight:700;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--s2);cursor:pointer;color:'+(enabled?'var(--green)':'var(--muted2)')+';">'+(enabled?'🔔 On':'🔕 Off')+'</button>';
+  parent.insertAdjacentElement('afterend',notifDiv);
+})();
+
 </script>
 </body>
 </html>
