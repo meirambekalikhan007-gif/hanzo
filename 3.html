@@ -4153,28 +4153,76 @@ var XP_RATES={
 
 // ==================== SPACED REPETITION ====================
 // ── Text-to-Speech: hear the Chinese word ─────────────────────
+// Cached voice selection — picked once, reused for every call
+var _zhVoiceCache = null;
+var _zhVoiceChecked = false;
+
+function _pickZhVoice(voices) {
+  // Priority: prefer high-quality female Mandarin voices by name
+  // (avoid low-quality Android synth male voices)
+  var PREFERRED = [
+    'tingting',           // macOS — female, natural
+    'meijia',             // macOS — female, natural
+    'microsoft huihui',   // Windows — female
+    'microsoft yaoyao',   // Windows — female
+    'google 普通话',       // Android Chrome Google TTS — best on Android
+    'google chinese',     // alternate label
+    '普通话',              // generic Mandarin label
+  ];
+  var zhVoices = voices.filter(function(v) {
+    return v.lang && (v.lang === 'zh-CN' || v.lang === 'zh_CN' ||
+                      v.lang === 'zh-TW' || v.lang.indexOf('zh') === 0);
+  });
+  if (!zhVoices.length) return null;
+  // Match preferred voices (case-insensitive substring)
+  for (var i = 0; i < PREFERRED.length; i++) {
+    var p = PREFERRED[i];
+    var found = null;
+    for (var j = 0; j < zhVoices.length; j++) {
+      if (zhVoices[j].name && zhVoices[j].name.toLowerCase().indexOf(p) !== -1) {
+        found = zhVoices[j]; break;
+      }
+    }
+    if (found) return found;
+  }
+  // Prefer zh-CN over other zh variants
+  for (var k = 0; k < zhVoices.length; k++) {
+    if (zhVoices[k].lang === 'zh-CN' || zhVoices[k].lang === 'zh_CN') return zhVoices[k];
+  }
+  return zhVoices[0];
+}
+
 function speakChinese(text, rate) {
   if (!window.speechSynthesis) { showMsg(t('tts_no_support'), 'var(--muted)'); return; }
   window.speechSynthesis.cancel();
   var u = new SpeechSynthesisUtterance(text);
-  u.lang = 'zh-CN'; u.rate = rate || 0.75; u.pitch = 1;
-  // Voices load async in Chrome — try immediately, retry after load
-  function _doSpeak() {
-    var voices = window.speechSynthesis.getVoices();
-    var zhVoice = voices.find(function(v){ return v.lang && v.lang.indexOf('zh') === 0; });
-    if (zhVoice) u.voice = zhVoice;
+  u.lang = 'zh-CN';
+  u.rate = rate || 0.78;
+  u.pitch = 1.05; // slightly higher pitch — sounds more natural/feminine
+
+  function _doSpeak(voices) {
+    if (!_zhVoiceChecked) {
+      _zhVoiceCache = _pickZhVoice(voices || window.speechSynthesis.getVoices());
+      _zhVoiceChecked = true;
+    }
+    if (_zhVoiceCache) u.voice = _zhVoiceCache;
     window.speechSynthesis.speak(u);
   }
-  if (window.speechSynthesis.getVoices().length > 0) {
-    _doSpeak();
+
+  var voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    _doSpeak(voices);
   } else {
-    // Voices not loaded yet — wait for them then speak
+    // Voices load async (especially first call on Chrome/Android)
+    var _spoken = false;
     window.speechSynthesis.onvoiceschanged = function() {
       window.speechSynthesis.onvoiceschanged = null;
-      _doSpeak();
+      if (!_spoken) { _spoken = true; _doSpeak(window.speechSynthesis.getVoices()); }
     };
-    // Fallback: speak without specific voice after 500ms
-    setTimeout(function() { if (!u.voice) window.speechSynthesis.speak(u); }, 500);
+    // Hard fallback — speak with lang hint only (browser picks best available)
+    setTimeout(function() {
+      if (!_spoken) { _spoken = true; window.speechSynthesis.speak(u); }
+    }, 600);
   }
 }
 
@@ -11107,16 +11155,30 @@ function closeWordOrder(){
 
 // ==================== SOUND SYSTEM — 6-TIER DOPAMINE ENGINE ====================
 var _audioCtx=null;
+var _audioReady=false; // true once context confirmed running
 var _correctStreak=0;
 
 function _ctx(){
   if(!_audioCtx){try{_audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}
-  if(_audioCtx&&_audioCtx.state==='suspended'){_audioCtx.resume().catch(function(){});}
   return _audioCtx;
 }
-function _unlockAudio(){var ctx=_ctx();if(ctx&&ctx.state!=='running'){ctx.resume().catch(function(){});}}
-document.addEventListener('touchstart',_unlockAudio,{once:true,passive:true});
-document.addEventListener('click',_unlockAudio,{once:true});
+
+// Called on every user interaction until the context is confirmed running.
+// Mobile browsers (iOS Safari, Android Chrome) require a real user-gesture
+// to transition AudioContext from 'suspended' → 'running'.
+function _unlockAudio(){
+  if(_audioReady)return;
+  var ctx=_ctx();
+  if(!ctx)return;
+  if(ctx.state==='running'){_audioReady=true;return;}
+  ctx.resume().then(function(){
+    if(ctx.state==='running')_audioReady=true;
+  }).catch(function(){});
+}
+// Keep listeners persistent (not {once:true}) so every tap has a chance to unlock
+document.addEventListener('touchstart',_unlockAudio,{passive:true});
+document.addEventListener('touchend',  _unlockAudio,{passive:true});
+document.addEventListener('click',     _unlockAudio);
 
 function _osc(ctx,type,freq,gainVal,start,dur,freqEnd){
   var o=ctx.createOscillator();var g=ctx.createGain();
@@ -11143,6 +11205,11 @@ function _tick(ctx,t){_osc(ctx,'sine',900,0.05,t,0.04);}
 function playSound(type){
   if(S&&S.mute)return;
   var ctx=_ctx();if(!ctx)return;
+  // If context is still suspended (mobile autoplay policy), resume then retry once
+  if(ctx.state==='suspended'){
+    ctx.resume().then(function(){ playSound(type); }).catch(function(){});
+    return;
+  }
   var t=ctx.currentTime;
   if(type==='correct'){
     var s=_correctStreak;
