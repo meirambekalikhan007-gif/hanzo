@@ -1084,7 +1084,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 #page-profile.on{display:block;animation:pageEnter .28s cubic-bezier(.2,.8,.2,1) both;}
 .profile-header-card{background:linear-gradient(160deg,rgba(232,96,122,.15) 0%,rgba(154,107,196,.08) 60%,transparent 100%);border:1px solid rgba(232,96,122,.25);border-radius:var(--r20);padding:28px 20px 20px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;}
 .profile-header-card::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(232,96,122,.12) 0%,transparent 70%);pointer-events:none;}
-.profile-avatar-lg{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--red),#c2410c);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:#fff;margin:0 auto 14px;border:4px solid rgba(232,96,122,.35);box-shadow:0 8px 24px rgba(232,96,122,.3),0 0 0 1px rgba(232,96,122,.1);}
+.profile-avatar-lg{width:88px;height:88px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:#fff;margin:0 auto 14px;border:4px solid rgba(232,96,122,.35);box-shadow:0 8px 24px rgba(232,96,122,.3);}
 .profile-username{font-size:22px;font-weight:900;margin-bottom:3px;letter-spacing:-.3px;}
 .profile-handle{font-family:var(--mono);font-size:11px;color:var(--muted2);}
 .profile-stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px;}
@@ -1542,7 +1542,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <div class="wod-card" onclick="_wodTap()" id="wod-card">
     <div class="wod-top">
       <span class="wod-label" data-i18n="wod_label">✨ Word of the Day</span>
-      <span class="wod-tap" id="wod-source" data-i18n="g_tap_reveal">tap to reveal</span>
+      <span class="wod-tap" id="wod-source">tap for new word</span>
     </div>
     <div class="wod-main">
       <div class="wod-hanzi" id="wod-char">学</div>
@@ -1621,8 +1621,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
       🗺️ Lessons
     </button>
   </div>
-  <!-- SUB-TABS: Grammar Lessons | Phrases -->
-  <div class="learn-tabs-bar" id="lessons-subtabs" style="margin-bottom:14px;">
+  <!-- SUB-TABS hidden — only one tab remains, no need to show it -->
+  <div id="lessons-subtabs" style="display:none;">
     <button class="ltab on" onclick="setLessonsTab('grammar',this)" id="lstab-grammar" data-i18n="nav_lessons">Lessons</button>
   </div>
 
@@ -3821,20 +3821,13 @@ function newWordOfDay(){
 
 var _wodFlipped = false;
 function _wodTap() {
-  var meaningEl = el('wod-meaning');
-  var pinyinEl = el('wod-pinyin');
-  if (!_wodFlipped) {
-    // First tap: reveal meaning with animation
-    _wodFlipped = true;
-    if (meaningEl) { meaningEl.style.opacity = '0'; setTimeout(function(){ if(meaningEl) { meaningEl.style.opacity='1'; meaningEl.style.transition='opacity .3s'; } }, 50); }
-    if (pinyinEl) { pinyinEl.style.opacity = '0'; setTimeout(function(){ if(pinyinEl) { pinyinEl.style.opacity='1'; pinyinEl.style.transition='opacity .3s'; } }, 50); }
-    var tapEl = el('wod-source');
-    if (tapEl) tapEl.textContent = t('wod_tap_new');
-  } else {
-    // Second tap: new word
-    _wodFlipped = false;
-    newWordOfDay();
-  }
+  // Single tap = load next word with a quick pop animation
+  _wodFlipped = false;
+  var card = el('wod-card');
+  if (card) { card.style.transform = 'scale(.96)'; setTimeout(function(){ card.style.transform = ''; }, 120); }
+  newWordOfDay();
+  // Speak the new word
+  setTimeout(function(){ if(_wodCurrent && _wodCurrent.char && !S.mute && typeof speakChinese==='function') speakChinese(_wodCurrent.char); }, 150);
 }
 
 // ==================== CHARACTERS ====================
@@ -6488,7 +6481,25 @@ function lsStartQuiz(tid,ui){
   if(el('ls-q-unit'))el('ls-q-unit').textContent=getUnitName(unit);
   if(el('ls-q-xp'))el('ls-q-xp').textContent='0 XP';
   if(el('ls-q-prog'))el('ls-q-prog').style.width='0%';
-  var backBtn=el('ls-back-units');if(backBtn)backBtn.onclick=function(){lsOpenTopic(tid);};
+  var backBtn=el('ls-back-units');if(backBtn)backBtn.onclick=function(){
+    // Show quit confirmation overlay
+    var quitOverlay=document.createElement('div');
+    quitOverlay.style.cssText=_overlayCSS('z-index:9800;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.72);');
+    quitOverlay.innerHTML='<div style="background:var(--bg);border-radius:var(--r16);padding:28px 24px;width:88%;max-width:320px;text-align:center;">'
+      +'<div style="font-size:36px;margin-bottom:12px;">⚠️</div>'
+      +'<div style="font-size:17px;font-weight:800;margin-bottom:8px;">'+(LANG==='ru'?'Выйти из урока?':LANG==='kz'?'Сабақтан шығу?':'Quit this lesson?')+'</div>'
+      +'<div style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:24px;line-height:1.6;">'+(LANG==='ru'?'Ваш прогресс в этой сессии будет потерян':LANG==='kz'?'Осы сессиядағы прогресс жоғалады':'Your progress in this session will be lost')+'</div>'
+      +'<div style="display:flex;gap:10px;">'
+      +'<button onclick="this.closest(\'[style*=z-index\\:9800]\').remove()" style="flex:1;padding:13px;background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);font-size:14px;font-weight:700;cursor:pointer;color:var(--text);">'+(LANG==='ru'?'Продолжить':LANG==='kz'?'Жалғастыру':'Keep going')+'</button>'
+      +'<button id="ls-quit-confirm-btn" style="flex:1;padding:13px;background:var(--red);border:none;border-radius:var(--r12);font-size:14px;font-weight:800;cursor:pointer;color:#fff;">'+(LANG==='ru'?'Выйти':LANG==='kz'?'Шығу':'Quit')+'</button>'
+      +'</div></div>';
+    document.body.appendChild(quitOverlay);
+    quitOverlay.addEventListener('click',function(e){if(e.target===quitOverlay)quitOverlay.remove();});
+    document.getElementById('ls-quit-confirm-btn').onclick=function(){
+      quitOverlay.remove();
+      lsOpenTopic(tid);
+    };
+  };
   lsShow('quiz');
   lsShowQ();
 }
@@ -12266,7 +12277,7 @@ if(S.lang){setLang(S.lang);}else{setLang('en');}
 }
 .ep-avatar-ring::before{
   content:'';position:absolute;inset:-3px;border-radius:50%;
-  background:conic-gradient(var(--red) 0%, var(--gold) 50%, var(--red) 100%);
+  background:var(--red);
   animation:epSpin 4s linear infinite;
 }
 @keyframes epSpin{to{transform:rotate(360deg);}}
@@ -12827,8 +12838,9 @@ doLogin = async function() {
   renderHome();
   if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
   if (typeof updateAllAvatars === 'function') updateAllAvatars();
-  if (typeof _renderProfilePage === 'function' && typeof currentPage !== 'undefined' && currentPage === 'profile') {
-    _renderProfilePage();
+  if (typeof currentPage !== 'undefined') {
+    if (currentPage === 'profile' && typeof _renderProfilePage === 'function') _renderProfilePage();
+    if (currentPage === 'feed' && typeof _loadFeed === 'function') { _feedCache = {}; _loadFeed(); }
   }
 };
 
@@ -13355,10 +13367,22 @@ async function _searchFriend(val) {
     if (currentPage === 'profile' && typeof _renderProfilePage === 'function') {
       _renderProfilePage();
     }
-    if (currentPage === 'feed') {
+    if (currentPage === 'feed' && typeof _loadFeed === 'function') {
       _feedCache = {};
-      if (typeof _loadFeed === 'function') _loadFeed();
+      _loadFeed();
     }
+  }
+  // Always prime the feed cache in background so it's instant when user navigates there
+  if (typeof _loadFeed === 'function' && currentPage !== 'feed') {
+    setTimeout(function() {
+      if (typeof _buildFeedQuery === 'function') {
+        _buildFeedQuery().then(function(res) {
+          if (res && res.data) {
+            _feedCache['explore'] = res.data;
+          }
+        }).catch(function(){});
+      }
+    }, 1500);
   }
 })();
 
@@ -13962,9 +13986,22 @@ if (_origGoPage) {
     _origGoPage(page, btn);
     if (page === 'feed') {
       _markFeedSeen();
-      if (_friendsCache === null) {
+      if (!currentUser) {
+        // Auth not resolved yet — retry up to 3s until currentUser is set
+        var _feedRetries = 0;
+        var _feedRetryTimer = setInterval(function() {
+          _feedRetries++;
+          if (currentPage !== 'feed') { clearInterval(_feedRetryTimer); return; }
+          if (currentUser || _feedRetries >= 6) {
+            clearInterval(_feedRetryTimer);
+            _feedCache = {};
+            if (_friendsCache === null) _loadFriendsData().then(_loadFeed); else _loadFeed();
+          }
+        }, 500);
+      } else if (_friendsCache === null) {
         _loadFriendsData().then(_loadFeed);
       } else {
+        _feedCache = {};
         _loadFeed();
       }
     }
