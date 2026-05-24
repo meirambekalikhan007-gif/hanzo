@@ -1080,7 +1080,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 .hearts-modal-card{background:var(--s1);border:1.5px solid var(--redbrd);border-radius:var(--r20);padding:28px 24px;text-align:center;max-width:320px;width:100%;position:relative;}
 
 /* ===== AI TUTOR PAGE ===== */
-#page-ai{display:none;max-width:600px;margin:0 auto;height:100dvh;flex-direction:column;}
+#page-ai{display:none;position:fixed;inset:0;z-index:100;padding:0!important;margin:0!important;}
 #page-ai.on{display:flex;}
 .ai-topbar{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
 .ai-mode-tabs{flex-shrink:0;display:flex;gap:6px;padding:10px 16px;border-bottom:1px solid var(--border);}
@@ -2442,35 +2442,12 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 
 <!-- ========== AI TUTOR PAGE ========== -->
 <div id="page-ai" class="page">
-  <!-- Top bar -->
-  <div class="ai-topbar">
-    <div style="width:36px;height:36px;border-radius:50%;background:rgba(232,96,122,.15);border:1.5px solid rgba(232,96,122,.3);display:flex;align-items:center;justify-content:center;font-family:var(--cn);font-size:18px;font-weight:900;color:var(--red);">漢</div>
-    <div style="flex:1;">
-      <div style="font-weight:800;font-size:15px;">AI Tutor</div>
-      <div id="ai-status-line" style="font-family:var(--mono);font-size:10px;color:var(--muted2);">💬 Conversation · beginner</div>
-    </div>
-    <select id="ai-level-sel" onchange="_aiSetLevel(this.value)" style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r8);color:var(--muted2);font-size:11px;padding:4px 8px;font-family:var(--mono);cursor:pointer;">
-      <option value="beginner">Beginner</option>
-      <option value="intermediate">Intermediate</option>
-      <option value="advanced">Advanced</option>
-    </select>
-  </div>
-
-  <!-- Mode tabs -->
-  <div class="ai-mode-tabs">
-    <button class="ai-mode-btn on" id="ai-tab-conversation" onclick="_aiSetMode('conversation',this)">💬 Chat</button>
-    <button class="ai-mode-btn" id="ai-tab-pronunciation" onclick="_aiSetMode('pronunciation',this)">🎙️ Pronunciation</button>
-    <button class="ai-mode-btn" id="ai-tab-quiz" onclick="_aiSetMode('quiz',this)">⚡ Quiz Me</button>
-  </div>
-
-  <!-- Messages -->
-  <div class="ai-msgs" id="ai-msgs"></div>
-
-  <!-- Input -->
-  <div class="ai-inputbar">
-    <input class="ai-input" id="ai-input" type="text" placeholder="Type in English or 中文…" onkeydown="_aiKeydown(event)" />
-    <button class="ai-send" id="ai-send-btn" onclick="_aiSend()" disabled>↑</button>
-  </div>
+  <iframe
+    src="https://hanzo-nextjs.vercel.app/ai"
+    style="width:100%;height:100%;border:none;flex:1;"
+    allow="microphone"
+    id="ai-iframe"
+  ></iframe>
 </div>
 
 <!-- ========== PROFILE PAGE (Feature 11) ========== -->
