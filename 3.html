@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
@@ -42,17 +42,17 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 body::after{content:'';pointer-events:none;position:fixed;top:-30vh;left:50%;transform:translateX(-50%);width:80vw;height:60vh;background:radial-gradient(ellipse,rgba(232,96,122,.03) 0%,transparent 70%);pointer-events:none;z-index:0;}
 
 /* NAV */
-nav{position:sticky;top:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
-.nav-inner{max-width:600px;margin:0 auto;padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;}
+nav{position:sticky;top:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding-top:env(safe-area-inset-top);}
+.nav-inner{max-width:600px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right)) 0 max(16px,env(safe-area-inset-left));height:54px;display:flex;align-items:center;justify-content:space-between;}
 .nav-logo{display:flex;align-items:center;gap:8px;}
 .nav-logo-cn{font-family:var(--cn);font-size:22px;font-weight:900;color:var(--red);letter-spacing:-1px;line-height:1;}
 .nav-logo-badge{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:2px;text-transform:uppercase;background:var(--redbg);border:1px solid var(--redbrd);color:var(--red);padding:2px 7px;border-radius:20px;}
 .nav-right{display:flex;gap:6px;align-items:center;}
-.icon-btn{width:34px;height:34px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r8);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;color:var(--muted3);}
+.icon-btn{width:44px;height:44px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r8);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;color:var(--muted3);}
 .icon-btn:hover{border-color:var(--border2);color:var(--text);}
 
 /* BOTTOM NAV */
-.bnav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(7,7,10,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;padding:6px 0 max(6px,env(safe-area-inset-bottom));}
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(7,7,10,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;padding:6px max(0px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(0px,env(safe-area-inset-left));}
 .bni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:6px 4px;position:relative;}
 .bni:active .bni-icon{transform:scale(.88);}
 .bni.on .bni-icon{animation:springIn .3s cubic-bezier(.34,1.56,.64,1);}
@@ -139,7 +139,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filte
   100%{background-position:0% 50%;}
 }
 
-.page{display:none;max-width:600px;margin:0 auto;padding:16px 16px 90px;position:relative;z-index:1;}
+.page{display:none;max-width:600px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right)) 90px max(16px,env(safe-area-inset-left));position:relative;z-index:1;}
 .page.on{display:block;animation:pageEnter .28s cubic-bezier(.2,.8,.2,1) both;}
 .spring-btn{transition:transform .15s cubic-bezier(.34,1.56,.64,1),background .2s,box-shadow .2s;}
 .spring-btn:active{transform:scale(.94);}
@@ -164,7 +164,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filte
 .btn-sm{padding:9px 16px;font-size:12px;width:auto;border-radius:var(--r8);}
 
 /* INPUTS */
-input,textarea,select{background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-family:var(--font);font-size:14px;padding:12px 14px;border-radius:var(--r12);outline:none;width:100%;transition:border-color .15s;}
+input,textarea,select{background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-family:var(--font);font-size:16px;padding:12px 14px;border-radius:var(--r12);outline:none;width:100%;transition:border-color .15s;}
 input:focus,textarea:focus,select:focus{border-color:var(--red);background:var(--s1);}
 select option{background:var(--s2);}
 textarea{resize:none;}
@@ -391,7 +391,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .char-ex{font-family:var(--cn);font-size:10px;color:var(--muted2);line-height:1.4;}
 .char-meta{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
 .char-badge{font-family:var(--mono);font-size:8px;padding:2px 6px;border-radius:20px;}
-.char-del{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:2px;transition:color .15s;}
+.char-del{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:8px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;transition:color .15s;}
 .char-del:hover{color:var(--red);}
 .char-status-sel{background:var(--s2);border:1px solid var(--border);color:var(--muted2);font-family:var(--mono);font-size:8px;padding:2px 4px;border-radius:6px;cursor:pointer;width:auto;}
 
@@ -412,7 +412,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .sent-cn{font-family:var(--cn);font-size:17px;font-weight:500;margin-bottom:4px;line-height:1.5;}
 .sent-en{font-size:12px;color:var(--muted2);margin-bottom:3px;}
 .sent-date{font-family:var(--mono);font-size:9px;color:var(--muted);}
-.sent-del{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;transition:color .15s;}
+.sent-del{position:absolute;top:4px;right:4px;background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:8px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;transition:color .15s;}
 .sent-del:hover{color:var(--red);}
 
 /* ===================== WORD BANK ===================== */
@@ -544,7 +544,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .auth-card-sub{font-size:12px;color:var(--muted2);margin-bottom:20px;}
 .auth-field{margin-bottom:12px;}
 .auth-field label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted2);display:block;margin-bottom:5px;}
-.auth-field input{width:100%;background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-family:var(--font);font-size:14px;padding:13px 14px;border-radius:var(--r12);outline:none;transition:border-color .15s;}
+.auth-field input{width:100%;background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-family:var(--font);font-size:16px;padding:13px 14px;border-radius:var(--r12);outline:none;transition:border-color .15s;}
 .auth-field input:focus{border-color:var(--red);background:var(--s1);}
 .auth-err{background:var(--redbg);border:1px solid var(--redbrd);color:var(--red);border-radius:var(--r8);padding:10px 12px;font-size:12px;margin-bottom:12px;display:none;}
 .auth-switch{text-align:center;margin-top:16px;font-size:12px;color:var(--muted2);}
@@ -553,7 +553,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border);}
 .auth-divider-txt{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;}
 /* USER AVATAR in nav */
-.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--red);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;flex-shrink:0;transition:all .15s;}
+.user-avatar{width:44px;height:44px;border-radius:50%;background:var(--red);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;flex-shrink:0;transition:all .15s;}
 .user-avatar:hover{transform:scale(1.05);}
 /* PROFILE DROPDOWN */
 .profile-dropdown{position:fixed;top:58px;right:16px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);padding:4px;z-index:300;min-width:200px;box-shadow:0 8px 32px rgba(0,0,0,.3);display:none;}
@@ -740,7 +740,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .add-friend-form{
   display:flex;gap:8px;margin-bottom:12px;align-items:center;
 }
-.add-friend-form input{flex:1;font-family:var(--mono);font-size:13px;letter-spacing:1px;min-width:0;}
+.add-friend-form input{flex:1;font-family:var(--mono);font-size:16px;letter-spacing:1px;min-width:0;}
 .add-friend-form button{flex-shrink:0;width:auto;padding:10px 16px;white-space:nowrap;}
 
 /* FRIEND EMPTY STATE */
@@ -1054,7 +1054,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 .page-enter-active{opacity:1;transform:translateX(0);}
 
 /* ===== NOTIFICATION BELL (Feature 5) ===== */
-#notif-bell{position:relative;width:34px;height:34px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r8);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;color:var(--muted3);}
+#notif-bell{position:relative;width:44px;height:44px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r8);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;color:var(--muted3);}
 #notif-bell:hover{border-color:var(--border2);color:var(--text);}
 #notif-count{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-family:var(--mono);font-size:9px;font-weight:900;padding:1px 5px;border-radius:20px;min-width:16px;text-align:center;line-height:1.4;}
 #notif-panel{position:fixed;top:58px;right:8px;width:320px;max-width:calc(100vw - 16px);background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);z-index:500;box-shadow:0 8px 32px rgba(0,0,0,.4);display:none;max-height:70vh;overflow:hidden;flex-direction:column;}
@@ -1251,6 +1251,11 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div class="auth-field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="btn" onclick="doLogin()" style="margin-top:4px;">Log In →</button>
     <div class="auth-switch">No account? <span onclick="showSignup()" id="auth-create-link">Create one</span></div>
+    <div style="text-align:center;margin-top:14px;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.6;">
+      By using Hanzo you agree to our
+      <a href="https://hanzo-app.vercel.app/privacy" target="_blank" rel="noopener" style="color:var(--muted2);text-decoration:underline;">Privacy Policy</a>
+      and <a href="https://hanzo-app.vercel.app/terms" target="_blank" rel="noopener" style="color:var(--muted2);text-decoration:underline;">Terms of Use</a>
+    </div>
   </div>
 
   <!-- SIGNUP FORM -->
@@ -1271,6 +1276,11 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div class="auth-field"><label>Password</label><input type="password" id="signup-pass" placeholder="Min 6 characters" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSignup()"></div>
     <button class="btn" onclick="doSignup()" style="margin-top:4px;">Create Account →</button>
     <div class="auth-switch">Already have an account? <span onclick="showLogin()">Sign in</span></div>
+    <div style="text-align:center;margin-top:14px;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.6;">
+      By creating an account you agree to our
+      <a href="https://hanzo-app.vercel.app/privacy" target="_blank" rel="noopener" style="color:var(--muted2);text-decoration:underline;">Privacy Policy</a>
+      and <a href="https://hanzo-app.vercel.app/terms" target="_blank" rel="noopener" style="color:var(--muted2);text-decoration:underline;">Terms of Use</a>
+    </div>
   </div>
 </div>
 
@@ -1337,7 +1347,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div style="font-size:12px;color:var(--muted2);margin-bottom:20px;line-height:1.6;" data-i18n="hearts_desc">Take a break or watch an ad to get a free heart.<br>Hearts refill 1 every 30 minutes.</div>
     <div style="font-family:var(--mono);font-size:11px;color:var(--gold);margin-bottom:16px;" id="hearts-refill-timer">Next heart in: 30:00</div>
     <div style="display:flex;flex-direction:column;gap:8px;">
-      <button onclick="_watchAd()" style="background:var(--green);border:none;color:#000;font-weight:800;font-size:14px;padding:14px;border-radius:var(--r12);cursor:pointer;width:100%;" data-i18n="hearts_watch_ad">📺 Watch Ad (+1 heart)</button>
+      <button onclick="_watchAd()" style="background:var(--green);border:none;color:#000;font-weight:800;font-size:14px;padding:14px;border-radius:var(--r12);cursor:pointer;width:100%;" data-i18n="hearts_free_heart">🎁 Get Free Heart (30 min cooldown)</button>
       <button onclick="document.getElementById('hearts-modal').classList.remove('show');" style="background:var(--s2);border:1.5px solid var(--border);color:var(--muted3);font-weight:700;font-size:13px;padding:12px;border-radius:var(--r12);cursor:pointer;width:100%;" data-i18n="hearts_close">Close</button>
     </div>
   </div>
@@ -1588,7 +1598,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <!-- WIN LOG -->
   <div class="sh"><span class="sh-title" data-i18n="h_win_title">Daily Win</span><span class="sh-sub" data-i18n="h_win_one">One win per day</span></div>
   <div class="card" style="margin-bottom:10px;">
-    <textarea id="win-ta" data-i18n-ph="h_win_ph" placeholder="What did you learn today?" style="min-height:64px;margin-bottom:10px;font-size:13px;"></textarea>
+    <textarea id="win-ta" data-i18n-ph="h_win_ph" placeholder="What did you learn today?" style="min-height:64px;margin-bottom:10px;font-size:16px;"></textarea>
     <button class="btn" onclick="saveWin()" data-i18n="h_win_save">Save Win ✓</button>
   </div>
   <div id="wins-list"></div>
@@ -2260,7 +2270,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div id="feed-composer" style="display:none;background:var(--s2);border:1px solid var(--border);border-radius:var(--r16);padding:14px;margin-bottom:14px;">
       <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
         <div id="feed-composer-av" style="width:40px;height:40px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0;">A</div>
-        <textarea id="feed-composer-text" placeholder="Share your progress, a word you love, or how studying is going..." style="flex:1;background:var(--s3);border:1px solid var(--border);border-radius:var(--r12);padding:10px 12px;font-family:var(--font);font-size:13px;color:var(--text);resize:none;height:76px;outline:none;line-height:1.55;"></textarea>
+        <textarea id="feed-composer-text" placeholder="Share your progress, a word you love, or how studying is going..." style="flex:1;background:var(--s3);border:1px solid var(--border);border-radius:var(--r12);padding:10px 12px;font-family:var(--font);font-size:16px;color:var(--text);resize:none;height:76px;outline:none;line-height:1.55;"></textarea>
       </div>
       <!-- Image preview area -->
       <div id="feed-img-preview" style="display:none;margin-bottom:12px;position:relative;">
@@ -3833,7 +3843,7 @@ function _wodTap() {
 // ==================== CHARACTERS ====================
 var cnFilter='All';
 function addChar(){
-  var char=el('ch-char').value.trim();if(!char){alert('Enter a character');return;}
+  var char=el('ch-char').value.trim();if(!char){showMsg('Enter a character','var(--red)');return;}
   if(!S.chars_list)S.chars_list=[];
   S.chars_list.push({id:Date.now(),char:char,pinyin:el('ch-pinyin').value.trim(),meaning:el('ch-meaning').value.trim(),hsk:el('ch-hsk').value,status:el('ch-status').value,example:el('ch-example').value.trim(),date:getLocalDate()});
   save();
@@ -3863,8 +3873,13 @@ function deleteChar(id,btn){
     },2500);
     return;
   }
+  // Delete from Supabase if we have a real UUID for this word
+  var _delWord = (S.chars_list||[]).find(function(c){return c.id===id;});
   S.chars_list=(S.chars_list||[]).filter(function(c){return c.id!==id;});
   save();renderChars();updateCnStats();
+  if(_delWord && _delWord.id && typeof _delWord.id==='string' && _delWord.id.includes('-') && currentUser && currentUser.id){
+    _db.from('user_words').delete().eq('id',_delWord.id).eq('user_id',currentUser.id).then(function(){});
+  }
 }
 function updateCharStatus(id,status){var c=(S.chars_list||[]).find(function(c){return c.id===id;});if(c){c.status=status;save();}}
 function setCnFilter(f){cnFilter=f;renderCnFilter();renderChars();}
@@ -3966,7 +3981,14 @@ function addSentence(){
   S.sentences.push({id:Date.now(),cn:cn,en:el('sent-en').value.trim(),date:TODAY});
   save();el('sent-cn').value='';el('sent-en').value='';renderSentences();
 }
-function deleteSentence(id){S.sentences=(S.sentences||[]).filter(function(s){return s.id!==id;});save();renderSentences();}
+function deleteSentence(id){
+  var _delSent=(S.sentences||[]).find(function(s){return s.id===id;});
+  S.sentences=(S.sentences||[]).filter(function(s){return s.id!==id;});
+  save();renderSentences();
+  if(_delSent&&_delSent.id&&typeof _delSent.id==='string'&&_delSent.id.includes('-')&&currentUser&&currentUser.id){
+    _db.from('sentences').delete().eq('id',_delSent.id).eq('user_id',currentUser.id).then(function(){});
+  }
+}
 function renderSentences(){
   var list=(S.sentences||[]).slice().reverse().slice(0,50);
   var container=el('sentences-list');
@@ -7776,8 +7798,12 @@ function addPhrase(sent){
 function isPhraseAdded(cn){return(S.phrases_list||[]).some(function(p){return p.cn===cn;});}
 
 function deletePhraseItem(id){
+  var _delPhrase=(S.phrases_list||[]).find(function(p){return p.id===id;});
   S.phrases_list=(S.phrases_list||[]).filter(function(p){return p.id!==id;});
   save();renderMyPhrases();
+  if(_delPhrase&&_delPhrase.id&&typeof _delPhrase.id==='string'&&_delPhrase.id.includes('-')&&currentUser&&currentUser.id){
+    _db.from('user_phrases').delete().eq('id',_delPhrase.id).eq('user_id',currentUser.id).then(function(){});
+  }
 }
 
 function updatePhraseStatus(id,status){
@@ -10680,7 +10706,7 @@ var _cropOrigFile = null;
 
 function openCrop(dataUrl){
   var ov = document.getElementById('img-crop-overlay');
-  if(!ov){ alert('Crop not available'); return; }
+  if(!ov){ showMsg('Crop not available','var(--muted)'); return; }
   ov.style.display = 'flex';
   ov.style.pointerEvents = 'all';
 
@@ -12416,7 +12442,7 @@ if(S.lang){setLang(S.lang);}else{setLang('en');}
 .ep-field-icon{font-size:20px;flex-shrink:0;}
 .ep-field-body{flex:1;min-width:0;}
 .ep-field-label{font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
-.ep-field input{border:none;background:transparent;color:var(--text);font-size:15px;font-weight:600;outline:none;width:100%;}
+.ep-field input{border:none;background:transparent;color:var(--text);font-size:16px;font-weight:600;outline:none;width:100%;}
 .ep-field-value{font-size:15px;color:var(--muted2);}
 .ep-color-btn{
   width:32px;height:32px;border-radius:50%;cursor:pointer;
@@ -12639,6 +12665,25 @@ if(S.lang){setLang(S.lang);}else{setLang('en');}
 const _SUPA_URL = 'https://renizlngdwamwqspxzso.supabase.co';
 const _SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlbml6bG5nZHdhbXdxc3B4enNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NjAwMTYsImV4cCI6MjA5MzQzNjAxNn0.3SNM5yY5fdzMJq9MelB1dkseWbyd9SLFmG_iGSYAQQE';
 const _db = supabase.createClient(_SUPA_URL, _SUPA_KEY);
+
+// ── Auth session expiry / sign-out listener ───────────────────
+// If the JWT expires or the user is signed out from another device,
+// quietly redirect to the login screen rather than silently failing.
+_db.auth.onAuthStateChange(function(event, session) {
+  if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+    if (event === 'SIGNED_OUT' && currentUser) {
+      // Session expired — clean up and show login
+      currentUser = null; S = {};
+      if (typeof _feedPollInterval !== 'undefined') clearInterval(_feedPollInterval);
+      if (window._heartRefillInterval) clearInterval(window._heartRefillInterval);
+      if (window._heartCheckInterval) clearInterval(window._heartCheckInterval);
+      var as = el('auth-screen');
+      if (as) { as.style.display = 'flex'; as.style.pointerEvents = 'all'; }
+      if (typeof showLogin === 'function') showLogin();
+      showMsg('Session expired — please log in again', 'var(--muted2)');
+    }
+  }
+});
 
 // ── Helper: load all user data from Supabase into S ──────────
 async function _loadSupaData(uid) {
@@ -12918,7 +12963,17 @@ doLogin = async function() {
   var profRes = await _db.from('profiles').select('name').eq('id', uid).single();
   var name = (profRes.data && profRes.data.name) || email.split('@')[0];
 
+  // Show syncing overlay while fetching user data from Supabase
+  var _syncOv = document.createElement('div');
+  _syncOv.id = 'login-sync-overlay';
+  _syncOv.style.cssText = 'position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
+  _syncOv.innerHTML = '<div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;"></div>'
+    + '<div style="font-family:var(--mono);font-size:12px;color:var(--muted2);letter-spacing:1px;">Syncing your data…</div>';
+  document.body.appendChild(_syncOv);
+
   await _loadSupaData(uid);
+  if (_syncOv.parentNode) _syncOv.parentNode.removeChild(_syncOv);
+
   // Snapshot Supabase data before loginUser wipes S via loadUserData()
   var _loginSnap = {
     chars_list:    S.chars_list,
@@ -12993,6 +13048,12 @@ doSignup = async function() {
 
 // ── Override doLogout ─────────────────────────────────────────
 doLogout = async function() {
+  // Stop all background intervals so they don't fire against a null user
+  if (typeof _feedPollInterval !== 'undefined') clearInterval(_feedPollInterval);
+  if (window._heartRefillInterval) clearInterval(window._heartRefillInterval);
+  if (window._heartCheckInterval) clearInterval(window._heartCheckInterval);
+  clearTimeout(_syncTimer);
+
   await _db.auth.signOut();
   currentUser = null; S = {};
   try { closeDropdown(); } catch(e) {}
@@ -13019,87 +13080,103 @@ async function _syncNow() {
   var uid = currentUser.id;
   var today = getLocalDate();
 
-  // Sync words
-  var words = S.chars_list || [];
-  for (var i = 0; i < words.length; i++) {
-    var w = words[i];
-    var row = {
-      user_id: uid, char: w.char, pinyin: w.pinyin || '', meaning: w.meaning || '',
-      hsk: w.hsk || 'HSK1', cat: w.cat || 'General', status: w.status || 'new',
-      sm2_ef: w.sm2_ef || 2.5, sm2_rep: w.sm2_rep || 0, sm2_iv: w.sm2_iv || 1,
-      srs_next: w.srs_next || today,
-    };
-    if (w.id && typeof w.id === 'string' && w.id.includes('-')) row.id = w.id;
-    var upserted = await _db.from('user_words').upsert(row, { onConflict: 'id' }).select('id').single();
-    if (upserted.data && upserted.data.id && w.id !== upserted.data.id) {
-      w.id = upserted.data.id;
+  try {
+    // ── Words: single bulk upsert (was N+1 per word) ─────────────
+    var words = S.chars_list || [];
+    if (words.length > 0) {
+      var wordRows = words.map(function(w) {
+        var row = {
+          user_id: uid, char: w.char, pinyin: w.pinyin || '', meaning: w.meaning || '',
+          hsk: w.hsk || 'HSK1', cat: w.cat || 'General', status: w.status || 'new',
+          sm2_ef: w.sm2_ef || 2.5, sm2_rep: w.sm2_rep || 0, sm2_iv: w.sm2_iv || 1,
+          srs_next: w.srs_next || today,
+        };
+        if (w.id && typeof w.id === 'string' && w.id.includes('-')) row.id = w.id;
+        return row;
+      });
+      var wordRes = await _db.from('user_words').upsert(wordRows, { onConflict: 'id' }).select('id,char');
+      // Back-fill UUIDs for locally-created words that were just assigned server IDs
+      if (wordRes.data) {
+        wordRes.data.forEach(function(serverRow) {
+          var local = words.find(function(w) { return w.char === serverRow.char && (!w.id || !w.id.includes('-')); });
+          if (local && serverRow.id) local.id = serverRow.id;
+        });
+      }
     }
-  }
 
-  // Sync study sessions
-  var activity = S.study_activity || {};
-  var dates = Object.keys(activity);
-  for (var j = 0; j < dates.length; j++) {
-    var d = dates[j];
-    if ((activity[d] || 0) > 0) {
+    // ── Study sessions: only sync today's entry (not all history) ─
+    var activity = S.study_activity || {};
+    if ((activity[today] || 0) > 0) {
       await _db.from('study_sessions').upsert(
-        { user_id: uid, date: d, correct_count: activity[d] },
+        { user_id: uid, date: today, correct_count: activity[today] },
         { onConflict: 'user_id,date' }
       );
     }
-  }
 
-  // Sync XP — delete old snapshot then insert fresh (avoids duplicate-sum bug)
-  if (S.xp_earned) {
-    await _db.from('xp_log').delete().eq('user_id', uid).eq('source', 'total_snapshot');
-    await _db.from('xp_log').insert({ user_id: uid, amount: S.xp_earned, source: 'total_snapshot' });
-  }
-
-  // Sync phrases
-  var phrases = S.phrases_list || [];
-  for (var k = 0; k < phrases.length; k++) {
-    var p = phrases[k];
-    var prow = {
-      user_id: uid,
-      phrase_cn: p.cn || '',
-      phrase_py: p.py || '',
-      phrase_en: p.en || '',
-      status: p.status || 'new',
-    };
-    if (p.id && typeof p.id === 'string' && p.id.includes('-')) prow.id = p.id;
-    var ups = await _db.from('user_phrases').upsert(prow, { onConflict: 'id' }).select('id').single();
-    if (ups.data && ups.data.id && p.id !== ups.data.id) {
-      p.id = ups.data.id;
+    // ── XP snapshot ───────────────────────────────────────────────
+    if (S.xp_earned) {
+      await _db.from('xp_log').delete().eq('user_id', uid).eq('source', 'total_snapshot');
+      await _db.from('xp_log').insert({ user_id: uid, amount: S.xp_earned, source: 'total_snapshot' });
     }
-  }
 
-  // Sync sentences
-  var sentences = S.sentences || [];
-  for (var s = 0; s < sentences.length; s++) {
-    var sent = sentences[s];
-    if (!sent || !sent.cn) continue;
-    var srow = { user_id: uid, sentence_cn: sent.cn, sentence_py: sent.py || '', sentence_en: sent.en || '' };
-    if (sent.id && typeof sent.id === 'string' && sent.id.includes('-')) srow.id = sent.id;
-    var sups = await _db.from('sentences').upsert(srow, { onConflict: 'id' }).select('id').single();
-    if (sups.data && sups.data.id && sent.id !== sups.data.id) sent.id = sups.data.id;
-  }
+    // ── Phrases: single bulk upsert ───────────────────────────────
+    var phrases = S.phrases_list || [];
+    if (phrases.length > 0) {
+      var phraseRows = phrases.map(function(p) {
+        var row = {
+          user_id: uid,
+          phrase_cn: p.cn || '', phrase_py: p.py || '', phrase_en: p.en || '',
+          status: p.status || 'new',
+        };
+        if (p.id && typeof p.id === 'string' && p.id.includes('-')) row.id = p.id;
+        return row;
+      });
+      var phRes = await _db.from('user_phrases').upsert(phraseRows, { onConflict: 'id' }).select('id,phrase_cn');
+      if (phRes.data) {
+        phRes.data.forEach(function(sr) {
+          var lp = phrases.find(function(p) { return p.cn === sr.phrase_cn && (!p.id || !p.id.includes('-')); });
+          if (lp && sr.id) lp.id = sr.id;
+        });
+      }
+    }
 
-  // Sync profile (name, username, lang, daily_goal, invite code + leaderboard stats)
-  var profileUpdate = {
-    id: uid,
-    name: (typeof S.name === 'string' ? S.name : (currentUser && currentUser.name) || ''),
-    username: (currentUser && currentUser.username) || S.username || null,
-    lang: S.lang || 'en',
-    daily_goal: S.daily_goal || 10,
-    invite_code: getMyInviteCode(),
-    xp_total: S.xp_earned || 0,
-    weekly_xp: getWeeklyXP ? getWeeklyXP() : 0,
-    weekly_xp_week: getWeekStart ? getWeekStart() : '',
-    streak: (calcStreak ? calcStreak().current : 0),
-    words_count: (S.chars_list || []).length,
-    avatar_color: S.avatarColor || null,
-  };
-  await _db.from('profiles').upsert(profileUpdate, { onConflict: 'id' });
+    // ── Sentences: single bulk upsert ────────────────────────────
+    var sentences = (S.sentences || []).filter(function(s) { return s && s.cn; });
+    if (sentences.length > 0) {
+      var sentRows = sentences.map(function(sent) {
+        var row = { user_id: uid, sentence_cn: sent.cn, sentence_py: sent.py || '', sentence_en: sent.en || '' };
+        if (sent.id && typeof sent.id === 'string' && sent.id.includes('-')) row.id = sent.id;
+        return row;
+      });
+      var sRes = await _db.from('sentences').upsert(sentRows, { onConflict: 'id' }).select('id,sentence_cn');
+      if (sRes.data) {
+        sRes.data.forEach(function(sr) {
+          var ls = sentences.find(function(s) { return s.cn === sr.sentence_cn && (!s.id || !s.id.includes('-')); });
+          if (ls && sr.id) ls.id = sr.id;
+        });
+      }
+    }
+
+    // ── Profile ───────────────────────────────────────────────────
+    await _db.from('profiles').upsert({
+      id: uid,
+      name: (typeof S.name === 'string' ? S.name : (currentUser && currentUser.name) || ''),
+      username: (currentUser && currentUser.username) || S.username || null,
+      lang: S.lang || 'en',
+      daily_goal: S.daily_goal || 10,
+      invite_code: getMyInviteCode(),
+      xp_total: S.xp_earned || 0,
+      weekly_xp: getWeeklyXP ? getWeeklyXP() : 0,
+      weekly_xp_week: getWeekStart ? getWeekStart() : '',
+      streak: (calcStreak ? calcStreak().current : 0),
+      words_count: (S.chars_list || []).length,
+      avatar_color: S.avatarColor || null,
+    }, { onConflict: 'id' });
+
+  } catch(syncErr) {
+    // Non-fatal — local data is safe; retry next save()
+    console.warn('[Hanzo] Supabase sync error:', syncErr && syncErr.message);
+  }
 }
 
 // ── Real friends: load from Supabase ─────────────────────────
@@ -13440,7 +13517,13 @@ async function _searchFriend(val) {
   // _loadSupaData sets S.chars_list, S.name, S.xp_earned etc. but loginUser()
   // then resets S via S=loadUserData(email). Snapshot the Supabase data first,
   // then re-apply it after loginUser so stats are never blank on first load.
+  var _autoSyncOv = document.createElement('div');
+  _autoSyncOv.style.cssText = 'position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
+  _autoSyncOv.innerHTML = '<div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;"></div>'
+    + '<div style="font-family:var(--mono);font-size:12px;color:var(--muted2);letter-spacing:1px;">Syncing your data…</div>';
+  document.body.appendChild(_autoSyncOv);
   await _loadSupaData(uid);
+  if (_autoSyncOv.parentNode) _autoSyncOv.parentNode.removeChild(_autoSyncOv);
   var _snap = {
     chars_list:    S.chars_list,
     phrases_list:  S.phrases_list,
@@ -13469,6 +13552,12 @@ async function _searchFriend(val) {
   if (_snap.lang)         S.lang         = _snap.lang;
   if (_snap.avatarColor)  S.avatarColor  = _snap.avatarColor;
   save(); // persist the merged local+Supabase data
+
+  // Re-check onboarding now that Supabase S.onboarding is correctly applied.
+  // loginUser() already called checkOnboarding() at 600ms but S was still blank then.
+  // For returning users, S.onboarding is now set so this is a no-op.
+  // For brand new users (no onboarding in Supabase), this triggers the flow.
+  if (typeof checkOnboarding === 'function') checkOnboarding();
 
   // Re-render home with complete data (loginUser already rendered it with blank S)
   renderHome();
@@ -13630,7 +13719,7 @@ function _markFeedSeen() {
 }
 
 // Poll for new posts every 45s while app is open
-setInterval(function() {
+var _feedPollInterval = setInterval(function() {
   if (!currentUser || !currentUser.id) return;
   if (typeof _feedCache === 'undefined') return;
   _buildFeedQuery().then(function(res) {
@@ -13823,7 +13912,7 @@ function _buildCommentsSection(container, post) {
   var inputRow = document.createElement('div');
   inputRow.style.cssText = 'display:flex;gap:8px;align-items:center;padding:10px 14px;'+(comments.length?'border-top:1px solid var(--border);':'');
   inputRow.innerHTML = '<div style="width:28px;height:28px;border-radius:50%;background:'+mc+';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0;">'+nm.charAt(0).toUpperCase()+'</div>'
-    +'<input id="cmt-inp-'+post.id+'" placeholder="Add a comment…" style="flex:1;background:var(--s3);border:1px solid var(--border);border-radius:20px;padding:8px 12px;font-family:var(--font);font-size:13px;color:var(--text);outline:none;" onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();_addComment(\''+post.id+'\',this.closest(\'[data-post-id]\'));}">'
+    +'<input id="cmt-inp-'+post.id+'" placeholder="Add a comment…" style="flex:1;background:var(--s3);border:1px solid var(--border);border-radius:20px;padding:8px 12px;font-family:var(--font);font-size:16px;color:var(--text);outline:none;" onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();_addComment(\''+post.id+'\',this.closest(\'[data-post-id]\'));}">'
     +'<button onclick="_addComment(\''+post.id+'\',this.closest(\'[data-post-id]\'))" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:12px;padding:8px 14px;border-radius:20px;cursor:pointer;flex-shrink:0;">Send</button>';
   container.appendChild(inputRow);
 }
@@ -13947,7 +14036,7 @@ function _onComposerImageSelect(event) {
   var file = event.target.files && event.target.files[0];
   if (!file) return;
   if (file.size > 10 * 1024 * 1024) {
-    alert('Image too large. Please choose a smaller photo.');
+    showMsg('Image too large — please choose a smaller photo','var(--red)');
     event.target.value = '';
     return;
   }
@@ -14638,22 +14727,28 @@ function _renderHeartsDisplay() {
   }
 }
 
+// Hearts cooldown: users can claim 1 free heart every 30 minutes (honest, no fake ads)
+var _HEART_COOLDOWN_MS = 30 * 60 * 1000; // 30 min
+var _HEART_COOLDOWN_KEY = 'hanzo_free_heart_ts';
+
 function _watchAd() {
-  var btn = document.querySelector('#hearts-modal .btn-green, #hearts-modal button:first-of-type');
-  var loadingDiv = document.createElement('div');
-  loadingDiv.style.cssText = 'text-align:center;padding:10px;font-family:var(--mono);font-size:11px;color:var(--muted2);';
-  loadingDiv.textContent = 'Loading ad...';
-  var card = document.querySelector('.hearts-modal-card');
-  if (card) card.appendChild(loadingDiv);
-  setTimeout(function() {
-    var hearts = Math.min(_MAX_HEARTS, parseInt(localStorage.getItem('hanzo_hearts') || '0') + 1);
-    localStorage.setItem('hanzo_hearts', String(hearts));
-    if (card && loadingDiv.parentNode) card.removeChild(loadingDiv);
-    var modal = el('hearts-modal');
-    if (modal) modal.classList.remove('show');
-    _renderHeartsDisplay();
-    showMsg('♥ +1 Heart restored!', 'var(--red)');
-  }, 3000);
+  var lastClaim = parseInt(localStorage.getItem(_HEART_COOLDOWN_KEY) || '0');
+  var now = Date.now();
+  var elapsed = now - lastClaim;
+  if (elapsed < _HEART_COOLDOWN_MS) {
+    var minsLeft = Math.ceil((_HEART_COOLDOWN_MS - elapsed) / 60000);
+    showMsg('Next free heart available in ' + minsLeft + ' min ⏳', 'var(--muted2)');
+    return;
+  }
+  // Grant the heart
+  localStorage.setItem(_HEART_COOLDOWN_KEY, String(now));
+  var hearts = Math.min(_MAX_HEARTS, parseInt(localStorage.getItem('hanzo_hearts') || '0') + 1);
+  localStorage.setItem('hanzo_hearts', String(hearts));
+  var modal = el('hearts-modal');
+  if (modal) modal.classList.remove('show');
+  _renderHeartsDisplay();
+  showMsg('♥ +1 Free heart claimed!', 'var(--red)');
+  if (typeof playSound === 'function') playSound('correct');
 }
 
 // ============================================================
@@ -14962,7 +15057,7 @@ if (_origLoginUser) {
       }
     }, 800);
     // Heart refill interval
-    setInterval(function() {
+    window._heartRefillInterval = setInterval(function() {
       _checkHeartRefill();
       _renderHeartsDisplay();
     }, 60000);
@@ -15007,7 +15102,7 @@ goPage = function(p, btn) {
 };
 
 // Update hearts display on heartbeat
-setInterval(function() {
+window._heartCheckInterval = setInterval(function() {
   if (typeof currentPage !== 'undefined' && currentPage === 'games') {
     _checkHeartRefill();
     _renderHeartsDisplay();
