@@ -13565,7 +13565,7 @@ async function _searchFriend(val) {
 
   await _loadFriendsData();
 
-  // Re-render profile or feed if user is already on those pages
+  // Re-render whichever page is currently open with the freshly-loaded friends data
   if (typeof currentPage !== 'undefined') {
     if (currentPage === 'profile' && typeof _renderProfilePage === 'function') {
       _renderProfilePage();
@@ -13574,7 +13574,12 @@ async function _searchFriend(val) {
       _feedCache = {};
       _loadFeed();
     }
+    if (currentPage === 'friends' && typeof renderFriendsPage === 'function') {
+      renderFriendsPage();
+    }
   }
+  // Always refresh home leaderboard after friends load — it uses S.friends
+  if (typeof renderHomeLB === 'function') renderHomeLB();
   // Always prime the feed cache in background so it's instant when user navigates there
   if (typeof _loadFeed === 'function' && currentPage !== 'feed') {
     setTimeout(function() {
@@ -13668,7 +13673,7 @@ async function _loadFeed() {
     cached.forEach(function(post) { _renderPost(post, postsEl); });
     // Silently refresh in background
     _buildFeedQuery().then(function(res) {
-      var fresh = res.data;
+      var fresh = res && res.data;
       if (!fresh) return;
       _feedCache[_feedTab] = fresh;
       _checkFeedForNew(fresh);
@@ -13680,7 +13685,7 @@ async function _loadFeed() {
         if (!fresh.length) { _renderFeedEmpty(postsEl); return; }
         fresh.forEach(function(post) { _renderPost(post, postsEl); });
       }
-    });
+    }).catch(function(){});
     return;
   }
 
@@ -13689,7 +13694,14 @@ async function _loadFeed() {
   if (loadingEl) loadingEl.style.display = 'none';
   _showFeedSkeletons(postsEl, 3);
 
-  var { data: posts } = await _buildFeedQuery();
+  var posts;
+  try {
+    var res = await _buildFeedQuery();
+    posts = res && res.data;
+  } catch(feedErr) {
+    posts = null;
+    console.warn('[Hanzo] feed load error:', feedErr && feedErr.message);
+  }
   postsEl.innerHTML = '';
   _feedCache[_feedTab] = posts || [];
   _renderStories(posts || []);
@@ -14198,11 +14210,11 @@ if (_origGoPage) {
           if (currentUser || _feedRetries >= 6) {
             clearInterval(_feedRetryTimer);
             _feedCache = {};
-            if (_friendsCache === null) _loadFriendsData().then(_loadFeed); else _loadFeed();
+            if (_friendsCache === null) _loadFriendsData().then(_loadFeed).catch(function(){ _loadFeed(); }); else _loadFeed();
           }
         }, 500);
       } else if (_friendsCache === null) {
-        _loadFriendsData().then(_loadFeed);
+        _loadFriendsData().then(_loadFeed).catch(function(){ _loadFeed(); });
       } else {
         _feedCache = {};
         _loadFeed();
