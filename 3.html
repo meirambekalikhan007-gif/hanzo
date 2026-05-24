@@ -6482,23 +6482,25 @@ function lsStartQuiz(tid,ui){
   if(el('ls-q-xp'))el('ls-q-xp').textContent='0 XP';
   if(el('ls-q-prog'))el('ls-q-prog').style.width='0%';
   var backBtn=el('ls-back-units');if(backBtn)backBtn.onclick=function(){
+    // Remove any stale overlay first
+    var old=document.getElementById('ls-quit-overlay');if(old)old.remove();
     // Show quit confirmation overlay
     var quitOverlay=document.createElement('div');
+    quitOverlay.id='ls-quit-overlay';
     quitOverlay.style.cssText=_overlayCSS('z-index:9800;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.72);');
     quitOverlay.innerHTML='<div style="background:var(--bg);border-radius:var(--r16);padding:28px 24px;width:88%;max-width:320px;text-align:center;">'
       +'<div style="font-size:36px;margin-bottom:12px;">⚠️</div>'
       +'<div style="font-size:17px;font-weight:800;margin-bottom:8px;">'+(LANG==='ru'?'Выйти из урока?':LANG==='kz'?'Сабақтан шығу?':'Quit this lesson?')+'</div>'
       +'<div style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:24px;line-height:1.6;">'+(LANG==='ru'?'Ваш прогресс в этой сессии будет потерян':LANG==='kz'?'Осы сессиядағы прогресс жоғалады':'Your progress in this session will be lost')+'</div>'
       +'<div style="display:flex;gap:10px;">'
-      +'<button onclick="this.closest(\'[style*=z-index\\:9800]\').remove()" style="flex:1;padding:13px;background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);font-size:14px;font-weight:700;cursor:pointer;color:var(--text);">'+(LANG==='ru'?'Продолжить':LANG==='kz'?'Жалғастыру':'Keep going')+'</button>'
+      +'<button id="ls-keep-going-btn" style="flex:1;padding:13px;background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);font-size:14px;font-weight:700;cursor:pointer;color:var(--text);">'+(LANG==='ru'?'Продолжить':LANG==='kz'?'Жалғастыру':'Keep going')+'</button>'
       +'<button id="ls-quit-confirm-btn" style="flex:1;padding:13px;background:var(--red);border:none;border-radius:var(--r12);font-size:14px;font-weight:800;cursor:pointer;color:#fff;">'+(LANG==='ru'?'Выйти':LANG==='kz'?'Шығу':'Quit')+'</button>'
       +'</div></div>';
     document.body.appendChild(quitOverlay);
+    // Wire buttons via JS references — no fragile inline onclick
+    document.getElementById('ls-keep-going-btn').onclick=function(){ document.getElementById('ls-quit-overlay').remove(); };
+    document.getElementById('ls-quit-confirm-btn').onclick=function(){ document.getElementById('ls-quit-overlay').remove(); lsOpenTopic(tid); };
     quitOverlay.addEventListener('click',function(e){if(e.target===quitOverlay)quitOverlay.remove();});
-    document.getElementById('ls-quit-confirm-btn').onclick=function(){
-      quitOverlay.remove();
-      lsOpenTopic(tid);
-    };
   };
   lsShow('quiz');
   lsShowQ();
