@@ -10340,6 +10340,12 @@ function showEditProfile(){
   if(emailEl)emailEl.textContent=currentUser&&currentUser.email?currentUser.email:'';
   epSelectedColor=S.avatarColor||'#e8607a';
 
+  // Set ring color immediately to match selected color
+  setTimeout(function(){
+    var ring=document.querySelector('.ep-avatar-ring');
+    if(ring)ring.style.setProperty('--ring-color',epSelectedColor);
+  },20);
+
   // Avatar
   var disp=el('ep-avatar-display');
   var letter=el('ep-avatar-letter');
@@ -10373,7 +10379,9 @@ function showEditProfile(){
         row.querySelectorAll('.ep-color-btn').forEach(function(s){s.style.borderColor='transparent';});
         sw.style.borderColor='var(--text)';
         if(disp)disp.style.background=col;
-        // Update avatar ring color
+        // Update avatar ring color live
+        var ring=document.querySelector('.ep-avatar-ring');
+        if(ring)ring.style.setProperty('--ring-color',col);
         var letter2=el('ep-avatar-letter');if(letter2)letter2.style.color='#fff';
       };
       row.appendChild(sw);
@@ -10496,6 +10504,8 @@ function saveProfile(){
   // Update all UI
   updateNavUser(); // calls updateAllAvatars internally
   updateDsSidebar();
+  // Re-render profile page immediately so big avatar updates too
+  if (typeof _renderProfilePage === 'function') setTimeout(_renderProfilePage, 50);
 
   // Close overlay FIRST, then show message
   closeEditProfile();
@@ -10503,31 +10513,60 @@ function saveProfile(){
 }
 
 function updateAllAvatars(){
-  // Re-render home LB to show updated photo
-  renderHomeLB();
-  // Update top nav avatar
+  var _name = getUserName();
+  var _color = S.avatarColor || (typeof getAvatarColor === 'function' ? getAvatarColor(_name) : '#e8607a');
+  var _initials = _name.split(' ').filter(Boolean).map(function(n){return n[0];}).join('').toUpperCase().slice(0,2)||'?';
+
+  // ── Top nav avatar button ──
   var btn = el('user-avatar-btn');
   if(btn){
     if(S.avatarBase64){
       btn.innerHTML = '<img src="'+S.avatarBase64+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
     } else {
-      var name = getUserName();
-      var initials = name.split(' ').filter(Boolean).map(function(n){return n[0];}).join('').toUpperCase().slice(0,2)||'?';
-      btn.textContent = initials;
-      btn.style.background = S.avatarColor||'var(--red)';
+      btn.textContent = _initials;
+      btn.style.background = _color;
     }
   }
-  // Update desktop sidebar avatar
+
+  // ── Desktop sidebar avatar ──
   var dsAv = el('ds-avatar');
   if(dsAv){
     if(S.avatarBase64){
       dsAv.innerHTML='<img src="'+S.avatarBase64+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
     } else {
-      var n2 = getUserName();
-      dsAv.textContent = n2?n2.charAt(0).toUpperCase():'?';
-      dsAv.style.background = S.avatarColor||'var(--red)';
+      dsAv.textContent = _initials.charAt(0);
+      dsAv.style.background = _color;
     }
   }
+
+  // ── Big profile page avatar ──
+  var avLg = el('profile-av-lg');
+  if(avLg){
+    if(S.avatarBase64){
+      avLg.textContent = '';
+      avLg.style.background = 'none';
+      avLg.style.overflow = 'hidden';
+      var _lgImg = avLg.querySelector('img');
+      if(!_lgImg){ _lgImg = document.createElement('img'); _lgImg.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:50%;'; avLg.appendChild(_lgImg); }
+      _lgImg.src = S.avatarBase64;
+    } else {
+      var _lgOldImg = avLg.querySelector('img'); if(_lgOldImg) _lgOldImg.remove();
+      avLg.textContent = _initials.charAt(0);
+      avLg.style.background = _color;
+    }
+    // Update ring border to match color
+    avLg.style.borderColor = _color + '88';
+    avLg.style.boxShadow = '0 8px 24px ' + _color + '55';
+  }
+
+  // ── Edit profile ring (if open) ──
+  var epDisp = el('ep-avatar-display');
+  if(epDisp && !S.avatarBase64) epDisp.style.background = _color;
+  var epRing = document.querySelector('.ep-avatar-ring');
+  if(epRing) epRing.style.setProperty('--ring-color', _color);
+
+  // Re-render home LB to show updated photo
+  renderHomeLB();
 }
 
 // updateAllAvatars called inside loginUser directly
@@ -12277,7 +12316,7 @@ if(S.lang){setLang(S.lang);}else{setLang('en');}
 }
 .ep-avatar-ring::before{
   content:'';position:absolute;inset:-3px;border-radius:50%;
-  background:var(--red);
+  background:var(--ring-color, var(--red));
   animation:epSpin 4s linear infinite;
 }
 @keyframes epSpin{to{transform:rotate(360deg);}}
@@ -12577,10 +12616,11 @@ async function _loadSupaData(uid) {
     });
   }
   if (profile) {
-    if (profile.name)       { S.name = profile.name; if (currentUser) currentUser.name = profile.name; }
-    if (profile.username)   { S.username = profile.username; if (currentUser) currentUser.username = profile.username; }
-    if (profile.lang)       S.lang       = profile.lang;
-    if (profile.daily_goal) S.daily_goal = profile.daily_goal;
+    if (profile.name)         { S.name = profile.name; if (currentUser) currentUser.name = profile.name; }
+    if (profile.username)     { S.username = profile.username; if (currentUser) currentUser.username = profile.username; }
+    if (profile.lang)         S.lang         = profile.lang;
+    if (profile.daily_goal)   S.daily_goal   = profile.daily_goal;
+    if (profile.avatar_color) S.avatarColor  = profile.avatar_color;
   }
 }
 
@@ -12821,6 +12861,7 @@ doLogin = async function() {
     username:      S.username,
     daily_goal:    S.daily_goal,
     lang:          S.lang,
+    avatarColor:   S.avatarColor,
   };
   loginUser({ name: name, email: email, id: uid });
   // Re-apply Supabase data that loginUser's S=loadUserData() just wiped
@@ -12834,6 +12875,7 @@ doLogin = async function() {
   if (_loginSnap.username)   { S.username = _loginSnap.username; if (currentUser) currentUser.username = _loginSnap.username; }
   if (_loginSnap.daily_goal) S.daily_goal = _loginSnap.daily_goal;
   if (_loginSnap.lang)       { S.lang = _loginSnap.lang; setLang(_loginSnap.lang); }
+  if (_loginSnap.avatarColor) S.avatarColor = _loginSnap.avatarColor;
   save();
   renderHome();
   if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
@@ -12986,6 +13028,7 @@ async function _syncNow() {
     weekly_xp_week: getWeekStart ? getWeekStart() : '',
     streak: (calcStreak ? calcStreak().current : 0),
     words_count: (S.chars_list || []).length,
+    avatar_color: S.avatarColor || null,
   };
   await _db.from('profiles').upsert(profileUpdate, { onConflict: 'id' });
 }
@@ -13339,6 +13382,7 @@ async function _searchFriend(val) {
     username:      S.username,
     daily_goal:    S.daily_goal,
     lang:          S.lang,
+    avatarColor:   S.avatarColor,
   };
 
   loginUser({ name: name, email: user.email, id: uid, username: username });
@@ -13348,12 +13392,13 @@ async function _searchFriend(val) {
   if (_snap.phrases_list  && _snap.phrases_list.length)  S.phrases_list  = _snap.phrases_list;
   if (_snap.study_activity && Object.keys(_snap.study_activity).length)
     S.study_activity = Object.assign(S.study_activity || {}, _snap.study_activity);
-  if (_snap.xp_earned)   S.xp_earned   = _snap.xp_earned;
-  if (_snap.sentences    && _snap.sentences.length)      S.sentences     = _snap.sentences;
-  if (_snap.name)        { S.name = _snap.name; if (currentUser) currentUser.name = _snap.name; }
-  if (_snap.username)    { S.username = _snap.username; if (currentUser) currentUser.username = _snap.username; }
-  if (_snap.daily_goal)  S.daily_goal  = _snap.daily_goal;
-  if (_snap.lang)        S.lang        = _snap.lang;
+  if (_snap.xp_earned)    S.xp_earned    = _snap.xp_earned;
+  if (_snap.sentences     && _snap.sentences.length)     S.sentences     = _snap.sentences;
+  if (_snap.name)         { S.name = _snap.name; if (currentUser) currentUser.name = _snap.name; }
+  if (_snap.username)     { S.username = _snap.username; if (currentUser) currentUser.username = _snap.username; }
+  if (_snap.daily_goal)   S.daily_goal   = _snap.daily_goal;
+  if (_snap.lang)         S.lang         = _snap.lang;
+  if (_snap.avatarColor)  S.avatarColor  = _snap.avatarColor;
   save(); // persist the merged local+Supabase data
 
   // Re-render home with complete data (loginUser already rendered it with blank S)
@@ -13895,7 +13940,7 @@ async function _submitPost() {
     user_id: currentUser.id,
     username: (typeof S !== 'undefined' && S.username) || null,
     display_name: nm,
-    avatar_color: typeof getAvatarColor === 'function' ? getAvatarColor(nm) : '#e8607a',
+    avatar_color: S.avatarColor || (typeof getAvatarColor === 'function' ? getAvatarColor(nm) : '#e8607a'),
     type: 'manual',
     content: content,
     likes: [],
@@ -13947,7 +13992,7 @@ async function _autoPost(type, content) {
     user_id: currentUser.id,
     username: (currentUser.username || S.username || null),
     display_name: nm,
-    avatar_color: getAvatarColor ? getAvatarColor(nm) : '#e8607a',
+    avatar_color: S.avatarColor || (getAvatarColor ? getAvatarColor(nm) : '#e8607a'),
     type: type,
     content: content,
     likes: [],
@@ -14580,7 +14625,8 @@ function _renderProfilePage() {
       var _oldImg = avEl.querySelector('img');
       if (_oldImg) _oldImg.remove();
       avEl.textContent = (name || 'U').charAt(0).toUpperCase();
-      if (typeof getAvatarColor === 'function') avEl.style.background = getAvatarColor(name);
+      // Use user-selected color first, fall back to hash-based color
+      avEl.style.background = S.avatarColor || (typeof getAvatarColor === 'function' ? getAvatarColor(name) : 'var(--red)');
     }
   }
 
