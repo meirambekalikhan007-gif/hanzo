@@ -8540,11 +8540,14 @@ if(S.phrases_list&&S.phrases_list.length){
   if(S.lang){setLang(S.lang);}else{setLang('en');}
   // Re-render home after data is ready to fix streak display
   setTimeout(function(){if(currentPage==='home'){renderStreak();renderXPBar();renderStreakBanner();}},500);
-  // Re-render profile/feed after Supabase data merge completes (~800ms)
+  // Re-render profile/feed after Supabase data merge completes
   setTimeout(function(){
     if(currentPage==='profile'&&typeof _renderProfilePage==='function')_renderProfilePage();
     if(currentPage==='feed'&&typeof _loadFeed==='function'){_feedCache={};_loadFeed();}
   },900);
+  setTimeout(function(){
+    if(currentPage==='profile'&&typeof _renderProfilePage==='function')_renderProfilePage();
+  },2200);
 }
 
 function updateNavUser(){
@@ -12796,7 +12799,37 @@ doLogin = async function() {
   var name = (profRes.data && profRes.data.name) || email.split('@')[0];
 
   await _loadSupaData(uid);
+  // Snapshot Supabase data before loginUser wipes S via loadUserData()
+  var _loginSnap = {
+    chars_list:    S.chars_list,
+    phrases_list:  S.phrases_list,
+    study_activity:S.study_activity,
+    xp_earned:     S.xp_earned,
+    sentences:     S.sentences,
+    name:          S.name,
+    username:      S.username,
+    daily_goal:    S.daily_goal,
+    lang:          S.lang,
+  };
   loginUser({ name: name, email: email, id: uid });
+  // Re-apply Supabase data that loginUser's S=loadUserData() just wiped
+  if (_loginSnap.chars_list    && _loginSnap.chars_list.length)    S.chars_list    = _loginSnap.chars_list;
+  if (_loginSnap.phrases_list  && _loginSnap.phrases_list.length)  S.phrases_list  = _loginSnap.phrases_list;
+  if (_loginSnap.study_activity && Object.keys(_loginSnap.study_activity).length)
+    S.study_activity = Object.assign(S.study_activity || {}, _loginSnap.study_activity);
+  if (_loginSnap.xp_earned)  S.xp_earned  = _loginSnap.xp_earned;
+  if (_loginSnap.sentences   && _loginSnap.sentences.length)   S.sentences   = _loginSnap.sentences;
+  if (_loginSnap.name)       { S.name = _loginSnap.name; if (currentUser) currentUser.name = _loginSnap.name; }
+  if (_loginSnap.username)   { S.username = _loginSnap.username; if (currentUser) currentUser.username = _loginSnap.username; }
+  if (_loginSnap.daily_goal) S.daily_goal = _loginSnap.daily_goal;
+  if (_loginSnap.lang)       { S.lang = _loginSnap.lang; setLang(_loginSnap.lang); }
+  save();
+  renderHome();
+  if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
+  if (typeof updateAllAvatars === 'function') updateAllAvatars();
+  if (typeof _renderProfilePage === 'function' && typeof currentPage !== 'undefined' && currentPage === 'profile') {
+    _renderProfilePage();
+  }
 };
 
 // ── Override doSignup ─────────────────────────────────────────
@@ -13937,8 +13970,9 @@ if (_origGoPage) {
     }
     if (page === 'profile') {
       _renderProfilePage();
-      // Re-render again after a tick in case Supabase data is still loading
-      setTimeout(_renderProfilePage, 600);
+      // Re-render at 800ms and 2000ms — catches both fast and slow Supabase responses
+      setTimeout(_renderProfilePage, 800);
+      setTimeout(_renderProfilePage, 2000);
     }
     if (page === 'friends') { _renderLeagueCard(); _renderReferralCard(); }
   };
@@ -14488,11 +14522,29 @@ function _renderProfilePage() {
   var name = typeof getUserName === 'function' ? getUserName() : (S.name || cu.name || '');
   var username = cu.username || S.username || '';
 
-  // Avatar
+  // Avatar — show photo if uploaded, otherwise initials
   var avEl = el('profile-av-lg');
   if (avEl) {
-    avEl.textContent = (name || 'U').charAt(0).toUpperCase();
-    if (typeof getAvatarColor === 'function') avEl.style.background = getAvatarColor(name);
+    if (S.avatarBase64) {
+      avEl.textContent = '';
+      avEl.style.background = 'none';
+      avEl.style.padding = '0';
+      avEl.style.overflow = 'hidden';
+      // Reuse existing img or create one
+      var _avImg = avEl.querySelector('img');
+      if (!_avImg) {
+        _avImg = document.createElement('img');
+        _avImg.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;';
+        avEl.appendChild(_avImg);
+      }
+      _avImg.src = S.avatarBase64;
+    } else {
+      // Remove any old image
+      var _oldImg = avEl.querySelector('img');
+      if (_oldImg) _oldImg.remove();
+      avEl.textContent = (name || 'U').charAt(0).toUpperCase();
+      if (typeof getAvatarColor === 'function') avEl.style.background = getAvatarColor(name);
+    }
   }
 
   if (el('profile-display-name')) el('profile-display-name').textContent = name || 'User';
