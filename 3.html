@@ -4409,6 +4409,10 @@ function triggerFlashcardVerify(word){
   var fc=el('g-flashcard');if(!fc){quizIdx++;quizFlipped=false;showFlashcard();return;}
   // Remove any existing verify panel
   var existing=fc.querySelector('.fc-verify-panel');if(existing)existing.remove();
+  // Hide the card back so the answer isn't visible while the question is shown
+  var fcBack=el('fc-back');if(fcBack)fcBack.classList.remove('show');
+  var fcCard=el('flashcard');if(fcCard)fcCard.style.display='none';
+  var fcSpeakRow=el('fc-speak-row');if(fcSpeakRow)fcSpeakRow.style.display='none';
   var verify=document.createElement('div');
   verify.className='fc-verify-panel';
   verify.style.cssText='background:var(--goldbg);border:1.5px solid var(--goldbrd);border-radius:var(--r16);padding:16px;margin-bottom:10px;animation:fadeUp .3s ease;';
@@ -4428,7 +4432,10 @@ function triggerFlashcardVerify(word){
 }
 function fcVerifyAnswer(chosenId,correctId,verifyEl){
   if(verifyEl)verifyEl.remove();
-  else{var v=el('g-flashcard').querySelector('.fc-verify-panel');if(v)v.remove();}
+  else{var v=el('g-flashcard') && el('g-flashcard').querySelector('.fc-verify-panel');if(v)v.remove();}
+  // Restore card visibility before showing next flashcard
+  var fcCard=el('flashcard');if(fcCard)fcCard.style.display='';
+  var fcSpeakRow=el('fc-speak-row');if(fcSpeakRow)fcSpeakRow.style.display='';
   var isCorrect=chosenId===correctId;
   if(!isCorrect){
     var word=quizCards[quizIdx-1]||quizCards[quizIdx];
