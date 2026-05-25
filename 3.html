@@ -1080,8 +1080,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 .hearts-modal-card{background:var(--s1);border:1.5px solid var(--redbrd);border-radius:var(--r20);padding:28px 24px;text-align:center;max-width:320px;width:100%;position:relative;}
 
 /* ===== AI TUTOR PAGE ===== */
-#page-ai{display:none;position:fixed;inset:0;z-index:100;padding:0!important;margin:0!important;}
-#page-ai.on{display:flex;}
+/* AI page removed from vxv6 — AI lives only in hanzo-nextjs */
 .ai-topbar{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
 .ai-mode-tabs{flex-shrink:0;display:flex;gap:6px;padding:10px 16px;border-bottom:1px solid var(--border);}
 .ai-mode-btn{flex:1;padding:7px 4px;border-radius:var(--r10);border:1.5px solid var(--border);background:transparent;color:var(--muted2);font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;}
@@ -1400,10 +1399,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <button class="bni" onclick="goPage('friends',this)" data-page="friends">
     <span class="bni-icon">👥</span>
     <span class="bni-label" data-i18n="nav_friends">Friends</span>
-  </button>
-  <button class="bni" id="nav-ai-btn" onclick="goPage('ai',this)" data-page="ai">
-    <span class="bni-icon" style="font-family:var(--cn);font-size:18px;font-weight:900;color:inherit;">漢</span>
-    <span class="bni-label">AI</span>
   </button>
   <button class="bni" id="nav-profile-btn" onclick="goPage('profile',this)" data-page="profile">
     <span class="bni-icon" id="nav-profile-icon">👤</span>
@@ -2439,16 +2434,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   </div><!-- end bank-phrases-section -->
   </div><!-- end bank-section-phrases -->
 </div><!-- end page-bank -->
-
-<!-- ========== AI TUTOR PAGE ========== -->
-<div id="page-ai" class="page">
-  <iframe
-    src="https://hanzo-nextjs.vercel.app/ai"
-    style="width:100%;height:100%;border:none;flex:1;"
-    allow="microphone"
-    id="ai-iframe"
-  ></iframe>
-</div>
 
 <!-- ========== PROFILE PAGE (Feature 11) ========== -->
 <div id="page-profile" class="page">
@@ -7249,6 +7234,8 @@ function lsShowQ(){
   // STAGE 1: RECOGNIZE — see Chinese, pick English meaning
   // ─────────────────────────────────────────────────────────────
   if(stage==='recognize'){
+    // Guard: skip recognize if item has no opts/ans defined
+    if(!item.opts||!item.opts.length||!('ans' in item)){lsStage[stageKey]='recall';lsAnswered=false;lsShowQ();return;}
     var sentTr1=item.en||'';
     if(LANG==='ru'&&item.ru)sentTr1=item.ru;
     if(LANG==='kz'&&item.kz)sentTr1=item.kz;
@@ -7646,7 +7633,7 @@ function lsShowQ(){
 
 function lsAnswer(choiceIdx,item,choicesDiv,fbDiv,contBtn){
   if(lsAnswered)return;lsAnswered=true;
-  var isCorrect=(choiceIdx===item.ans);
+  var isCorrect=(Number(choiceIdx)===Number(item.ans));
   var btns=choicesDiv.querySelectorAll('.q-choice');
   btns.forEach(function(b){b.onclick=null;b.style.cursor='default';});
   btns.forEach(function(b,idx){
