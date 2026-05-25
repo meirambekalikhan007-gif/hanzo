@@ -7771,10 +7771,9 @@ function addFromBank(w){
   if(isInList(w.char))return;
   if(!S.chars_list)S.chars_list=[];
   S.chars_list.push({id:Date.now(),char:w.char,pinyin:w.pinyin,meaning:w.meaning,hsk:w.hsk,status:'new',example:w.example,date:getLocalDate()});
-  // Show feedback instantly — defer heavy re-render + save to next tick
+  save();
+  renderWordBank();updateModeCounts();
   showMsg('+1 word added ✓','var(--green)');
-  awardXP(XP_RATES.add_word,'Added word');
-  setTimeout(function(){save();renderWordBank();updateModeCounts();},0);
 }
 
 function wbNext(){var f=getFilteredWB();if(wbPage<Math.max(0,Math.ceil(f.length/WB_PER_PAGE)-1)){wbPage++;renderWordBank();}}
@@ -8478,8 +8477,7 @@ function awardXP(amount,source){
   }
   // Update XP bar
   if(currentPage==='home')renderXPBar();
-  // Defer save — never block the UI thread for persistence
-  setTimeout(function(){save();},0);
+  save();
 }
 
 
