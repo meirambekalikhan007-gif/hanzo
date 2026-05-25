@@ -267,13 +267,16 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .mode-selector-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);padding:14px;margin-bottom:14px;}
 .mode-selector-title{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted2);margin-bottom:10px;}
 .mode-pills{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
-.mode-pill{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s;}
-.mode-pill:hover:not(.on){border-color:var(--border2);transform:translateY(-1px);}
-.mode-pill.on{background:var(--redbg);border-color:var(--redbrd);}
-.mode-pill-icon{font-size:18px;margin-bottom:3px;}
-.mode-pill-name{font-size:10px;font-weight:700;color:var(--muted3);}
+.mode-pill{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r16);padding:12px 6px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.mode-pill::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(232,96,122,.06),transparent 70%);opacity:0;transition:opacity .2s;}
+.mode-pill:hover:not(.on){border-color:var(--border2);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.12);}
+.mode-pill:hover::before{opacity:1;}
+.mode-pill.on{background:var(--redbg);border-color:var(--redbrd);box-shadow:0 4px 16px rgba(232,96,122,.12);}
+.mode-pill.on::before{opacity:1;}
+.mode-pill-icon{font-size:20px;margin-bottom:4px;}
+.mode-pill-name{font-size:10px;font-weight:800;color:var(--muted3);letter-spacing:.2px;}
 .mode-pill.on .mode-pill-name{color:var(--red);}
-.mode-pill-count{font-family:var(--mono);font-size:16px;font-weight:800;color:var(--text);line-height:1;margin:3px 0 1px;}
+.mode-pill-count{font-family:var(--mono);font-size:20px;font-weight:900;color:var(--text);line-height:1;margin:4px 0 2px;}
 .mode-pill.on .mode-pill-count{color:var(--red);}
 .mode-pill-desc{font-family:var(--mono);font-size:7px;color:var(--muted);letter-spacing:.2px;}
 
@@ -282,10 +285,10 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .gtab:hover{border-color:var(--border2);color:var(--muted3);}
 .gtab.on{background:var(--redbg);border-color:var(--redbrd);color:var(--red);}
 
-.game-panel{background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);padding:16px;animation:fadeUp .3s ease;}
+.game-panel{background:var(--s1);border:1px solid var(--border);border-radius:var(--r20);padding:18px;animation:fadeUp .3s ease;}
 
 /* FLASHCARD */
-.flashcard{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r20);padding:28px 20px;text-align:center;cursor:pointer;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .15s cubic-bezier(.34,1.56,.64,1),border-color .2s,box-shadow .2s;position:relative;overflow:hidden;margin-bottom:14px;user-select:none;transform-style:preserve-3d;will-change:transform;}
+.flashcard{background:linear-gradient(145deg,var(--s2),var(--s3));border:1.5px solid var(--border);border-radius:var(--r20);padding:32px 20px;text-align:center;cursor:pointer;min-height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .15s cubic-bezier(.34,1.56,.64,1),border-color .2s,box-shadow .2s;position:relative;overflow:hidden;margin-bottom:14px;user-select:none;transform-style:preserve-3d;will-change:transform;box-shadow:0 2px 12px rgba(0,0,0,.15);}
 .flashcard:active{transform:scale(.97);}
 .flashcard:hover{border-color:var(--border2);box-shadow:0 4px 24px rgba(0,0,0,.12);}
 .flashcard.flipping{animation:flipIn .35s cubic-bezier(.2,.8,.2,1) both;}
@@ -331,11 +334,12 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 /* MATCH */
 .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .match-col{display:flex;flex-direction:column;gap:7px;}
-.match-item{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);padding:13px 10px;text-align:center;cursor:pointer;transition:all .2s;font-size:13px;font-weight:600;}
-.match-item:hover:not(.matched){background:var(--s3);border-color:var(--border2);}
-.match-item.selected{border-color:var(--blue);background:var(--bluebg);color:var(--blue);}
-.match-item.matched{border-color:var(--green);background:var(--greenbg);color:var(--green);cursor:default;animation:pop .3s ease;}
-.match-item.wrong-flash{border-color:var(--red);background:var(--redbg);animation:shake .35s ease;}
+.match-item{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r14);padding:16px 10px;text-align:center;cursor:pointer;transition:all .2s;font-size:13px;font-weight:700;min-height:58px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.1);}
+.match-item:hover:not(.matched){background:var(--s3);border-color:var(--border2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.15);}
+.match-item:active:not(.matched){transform:scale(.96);}
+.match-item.selected{border-color:var(--blue);background:var(--bluebg);color:var(--blue);box-shadow:0 0 0 3px rgba(96,165,250,.2);transform:scale(1.03);}
+.match-item.matched{border-color:var(--green);background:var(--greenbg);color:var(--green);cursor:default;animation:pop .35s cubic-bezier(.2,1.6,.4,1);box-shadow:0 0 0 3px rgba(74,222,128,.15);}
+.match-item.wrong-flash{border-color:var(--red);background:var(--redbg);animation:shake .35s ease;color:var(--red);}
 .match-char{font-family:var(--cn);font-size:26px;font-weight:900;}
 
 /* PINYIN HUNT */
@@ -359,9 +363,9 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .ch-char{font-family:var(--cn);font-size:40px;font-weight:900;line-height:1.2;}
 
 .quiz-score{text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted2);margin-top:10px;}
-.game-prog{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.game-prog-txt{font-family:var(--mono);font-size:10px;color:var(--muted);}
-.game-score-txt{font-family:var(--mono);font-size:10px;color:var(--green);font-weight:600;}
+.game-prog{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r10);padding:8px 12px;}
+.game-prog-txt{font-family:var(--mono);font-size:10px;color:var(--muted2);font-weight:600;}
+.game-score-txt{font-family:var(--mono);font-size:11px;color:var(--green);font-weight:800;}
 
 /* ===================== WORDS ===================== */
 .learn-tabs-bar{display:flex;background:var(--s2);border-radius:var(--r12);padding:3px;gap:3px;margin-bottom:16px;}
@@ -412,9 +416,9 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .sent-del:hover{color:var(--red);}
 
 /* ===================== WORD BANK ===================== */
-.wb-row{background:var(--s1);border:1px solid var(--border);border-radius:var(--r12);padding:12px;display:flex;gap:12px;align-items:center;margin-bottom:6px;transition:border-color .15s;}
-.wb-row:hover{border-color:var(--border2);}
-.wb-row.already{opacity:.35;}
+.wb-row{background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);padding:14px 12px;display:flex;gap:12px;align-items:center;margin-bottom:8px;transition:all .2s;position:relative;overflow:hidden;}
+.wb-row:hover:not(.already){border-color:var(--border2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.12);}
+.wb-row.already{opacity:.3;}
 .wb-char{font-family:var(--cn);font-size:30px;font-weight:900;min-width:44px;text-align:center;color:var(--red);}
 .wb-info{flex:1;min-width:0;}
 .wb-pinyin{font-family:var(--mono);font-size:10px;color:var(--gold);margin-bottom:2px;}
@@ -426,9 +430,10 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .wb-badge.hsk2{background:rgba(56,182,255,.12);color:var(--blue);}
 .wb-badge.hsk3{background:rgba(255,202,68,.12);color:var(--gold);}
 .wb-badge.hsk4,.wb-badge.hsk5,.wb-badge.hsk6{background:rgba(181,123,238,.12);color:var(--purple);}
-.wb-add-btn{background:var(--s2);border:1.5px solid var(--border);color:var(--muted2);font-family:var(--mono);font-size:9px;padding:7px 11px;border-radius:var(--r8);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0;font-weight:600;}
-.wb-add-btn:hover:not(:disabled){background:var(--redbg);border-color:var(--redbrd);color:var(--red);}
-.wb-add-btn.added{background:var(--greenbg);border-color:var(--greenbrd);color:var(--green);cursor:default;}
+.wb-add-btn{background:var(--s2);border:1.5px solid var(--border);color:var(--muted2);font-family:var(--mono);font-size:10px;padding:9px 13px;border-radius:var(--r10);cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0;font-weight:800;letter-spacing:.2px;}
+.wb-add-btn:hover:not(:disabled){background:var(--redbg);border-color:var(--redbrd);color:var(--red);transform:scale(1.05);}
+.wb-add-btn:active:not(:disabled){transform:scale(.96);}
+.wb-add-btn.added{background:var(--greenbg);border-color:var(--greenbrd);color:var(--green);cursor:default;font-size:13px;}
 .wb-pages{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px;}
 .wb-pages button{background:var(--s2);border:1px solid var(--border);color:var(--muted2);font-family:var(--mono);font-size:10px;padding:8px 16px;border-radius:var(--r8);cursor:pointer;transition:all .15s;}
 .wb-pages button:hover{border-color:var(--border2);color:var(--text);}
@@ -1777,11 +1782,11 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   </div>
 
   <!-- EMPTY STATE: shown when user has no words -->
-  <div id="games-empty-state" style="display:none;background:var(--s2);border:1px solid var(--border);border-radius:var(--r16);padding:28px 20px;margin-bottom:14px;text-align:center;">
-    <div style="font-size:44px;margin-bottom:12px;">📚</div>
-    <div style="font-weight:800;font-size:15px;margin-bottom:6px;" data-i18n="g_no_words_mode">No words to practice yet</div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:18px;line-height:1.6;" data-i18n="g_empty_state_desc">Go to Bank and add some words to start playing</div>
-    <button onclick="_goVocab('words',document.querySelector('.bni[data-page=\'bank\']'))" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:13px;padding:12px 24px;border-radius:20px;cursor:pointer;box-shadow:0 4px 14px rgba(232,96,122,.3);" data-i18n="g_browse_bank">🏦 Browse Word Bank</button>
+  <div id="games-empty-state" style="display:none;background:linear-gradient(145deg,var(--s1),var(--s2));border:1px solid var(--border);border-radius:var(--r20);padding:32px 20px;margin-bottom:14px;text-align:center;">
+    <div style="font-size:52px;margin-bottom:14px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.3));">📚</div>
+    <div style="font-weight:900;font-size:16px;margin-bottom:6px;" data-i18n="g_no_words_mode">No words to practice yet</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:20px;line-height:1.7;" data-i18n="g_empty_state_desc">Head to the Bank and add words to<br>start your learning journey</div>
+    <button onclick="_goVocab('words',document.querySelector('.bni[data-page=\'bank\']'))" style="background:linear-gradient(135deg,var(--red),#c94060);border:none;color:#fff;font-weight:900;font-size:13px;padding:13px 28px;border-radius:24px;cursor:pointer;box-shadow:0 6px 20px rgba(232,96,122,.35);transition:transform .15s;" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform='scale(1)'" data-i18n="g_browse_bank">🏦 Browse Word Bank</button>
   </div>
 
   <!-- WORDS / PHRASES / LISTENING TOGGLE -->
@@ -2318,9 +2323,21 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 
 <!-- ========== WORD BANK PAGE ========== -->
 <div class="page" id="page-bank">
-  <div class="sh" style="margin-top:4px;">
-    <span class="sh-title" data-i18n="nav_bank">Bank</span>
-    <span class="sh-sub" id="wb-count">Loading…</span>
+  <!-- BANK STATS HEADER -->
+  <div id="bank-stats-header" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);padding:14px 16px;margin-bottom:14px;margin-top:4px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px;">Word Bank</div>
+        <div style="font-size:17px;font-weight:900;" id="wb-count">Loading…</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px;">Progress</div>
+        <div style="font-size:17px;font-weight:900;color:var(--green);" id="wb-pct">0%</div>
+      </div>
+    </div>
+    <div style="background:var(--s3);border-radius:6px;height:6px;overflow:hidden;">
+      <div id="wb-prog-bar" style="height:100%;background:linear-gradient(90deg,var(--green),#22d3a5);border-radius:6px;width:0%;transition:width .6s cubic-bezier(.2,.8,.2,1);"></div>
+    </div>
   </div>
 
   <!-- BANK / MY WORDS / PHRASES TOGGLE -->
@@ -7777,6 +7794,7 @@ function addFromBank(w){
     if(btn.dataset.char===w.char){btn.disabled=true;btn.className='wb-add-btn added';btn.textContent=t('bank_added');}
   });
   showMsg('+1 word added ✓','var(--green)');
+  awardXP(XP_RATES.add_word || 2, 'Added word 📖');
   updateModeCounts();
   // Phase 2: full re-render + persist after the tap lands
   setTimeout(function(){save();renderWordBank();},0);
@@ -7830,7 +7848,10 @@ function renderWordBank(){
   var totalPages=Math.max(1,Math.ceil(filtered.length/WB_PER_PAGE));
   var items=filtered.slice(wbPage*WB_PER_PAGE,(wbPage+1)*WB_PER_PAGE);
   var hskCls={HSK1:'hsk1',HSK2:'hsk2',HSK3:'hsk3',HSK4:'hsk4',HSK5:'hsk5',HSK6:'hsk6'};
-  if(el('wb-count'))el('wb-count').textContent=remaining+' '+t('bank_to_learn')+' · '+totalAdded+' '+t('bank_added_lbl');
+  if(el('wb-count'))el('wb-count').textContent=remaining+' to learn · '+totalAdded+' added';
+  var pct=totalAll>0?Math.round(totalAdded/totalAll*100):0;
+  if(el('wb-pct'))el('wb-pct').textContent=pct+'%';
+  if(el('wb-prog-bar'))el('wb-prog-bar').style.width=pct+'%';
   if(el('wb-page-lbl'))el('wb-page-lbl').textContent=(wbPage+1)+' / '+totalPages;
   var ws=el('wb-search');if(ws)ws.placeholder=t('bank_search_ph');
   updateBankHideBtn();
@@ -7846,15 +7867,19 @@ function renderWordBank(){
     row.className='wb-row'+(inList?' already':'');
     row.style.opacity=inList?'0.4':'1';
     var catLabel=t(WB_CAT_KEYS[w.cat]||'')||w.cat;
-    row.innerHTML='<div class="wb-char">'+w.char+'</div>'
-      +'<div class="wb-info">'
-      +'<div class="wb-pinyin">'+w.pinyin+'</div>'
-      +'<div class="wb-meaning">'+getWordMeaning(w)+'</div>'
-      +'<div class="wb-example">'+w.example+'</div>'
-      +'<div class="wb-badges"><span class="wb-badge '+(hskCls[w.hsk]||'')+'">'+w.hsk+'</span><span class="wb-badge">'+catLabel+'</span></div>'
+    var hskColors={HSK1:'#4ade80',HSK2:'#60a5fa',HSK3:'#f59e0b',HSK4:'#c084fc',HSK5:'#f87171',HSK6:'#fb923c'};
+    var hColor=hskColors[w.hsk]||'#888';
+    row.innerHTML='<div style="font-family:var(--cn);font-size:36px;font-weight:900;min-width:52px;text-align:center;color:var(--red);line-height:1;">'+w.char+'</div>'
+      +'<div style="flex:1;min-width:0;">'
+      +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:1px;">'
+      +'<span style="font-family:var(--mono);font-size:11px;color:var(--gold);font-weight:700;">'+w.pinyin+'</span>'
+      +'<span style="font-family:var(--mono);font-size:7px;padding:1px 5px;border-radius:8px;background:'+hColor+'22;color:'+hColor+';font-weight:700;">'+w.hsk+'</span>'
       +'</div>'
-      +'<button class="wb-add-btn'+(inList?' added':'')+'" '+(inList?'disabled':'')+' data-char="'+w.char+'" style="flex-shrink:0;">'
-      +(inList?t('bank_added'):t('bank_add'))
+      +'<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;">'+getWordMeaning(w)+'</div>'
+      +(w.example?'<div style="font-family:var(--cn);font-size:10px;color:var(--muted2);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+w.example+'</div>':'')
+      +'</div>'
+      +'<button class="wb-add-btn'+(inList?' added':'')+'" '+(inList?'disabled':'')+' data-char="'+w.char+'" style="flex-shrink:0;min-width:56px;">'
+      +(inList?'✓':'+ Add')
       +'</button>';
     var addBtn=row.querySelector('.wb-add-btn');
     if(addBtn&&!inList){(function(word){addBtn.onclick=function(){addFromBank(word);};})(w);}
@@ -9438,7 +9463,7 @@ function startDailyReview(){
   var todayWords=(S.chars_list||[]).filter(function(w){return w.date===today;});
   if(todayWords.length<3){showMsg(t('dr_need_3_words'),'var(--gold)');return;}
   dailyReviewCards=todayWords.slice().sort(function(){return Math.random()-.5;}).slice(0,Math.min(5,todayWords.length));
-  drIdx=0;drCorrect=0;drAnswered=false;
+  drIdx=0;drCorrect=0;drAnswered=false;drTotal=0;
   showDailyReview();
 }
 
@@ -12873,16 +12898,33 @@ function renderCharsV() {
   var STATUS_C = { new:'#60a5fa', learning:'#f59e0b', mastered:'#4ade80' };
   var HSK_C = { HSK1:'#4ade80',HSK2:'#60a5fa',HSK3:'#f59e0b',HSK4:'#c084fc',HSK5:'#f87171',HSK6:'#fb923c' };
   container.innerHTML = list.map(function(w) {
-    return '<div style="background:var(--s2);border:1px solid var(--border);border-left:3px solid '+(STATUS_C[w.status]||'var(--border)')+';border-radius:var(--r12);padding:10px 12px;">'
-      +'<div style="font-size:28px;font-weight:900;color:var(--red);font-family:var(--cn);margin-bottom:2px;">'+w.char+'</div>'
-      +'<div style="font-family:var(--mono);font-size:10px;color:var(--gold);margin-bottom:2px;">'+(w.pinyin||'')+'</div>'
-      +'<div style="font-size:12px;font-weight:600;margin-bottom:6px;">'+(w.meaning||'')+'</div>'
-      +'<div style="display:flex;align-items:center;justify-content:space-between;">'
-      +'<span style="font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:8px;background:'+(HSK_C[w.hsk]||'#888')+'22;color:'+(HSK_C[w.hsk]||'#888')+';">'+(w.hsk||'')+'</span>'
-      +'<button onclick="removeWord(\''+w.id+'\')" style="background:none;border:none;color:var(--muted2);font-size:16px;cursor:pointer;padding:2px 4px;">×</button>'
+    var sc = STATUS_C[w.status]||'var(--border)';
+    var hc = HSK_C[w.hsk]||'#888';
+    var statusLabel = w.status==='mastered'?'✓ Mastered':w.status==='learning'?'◎ Learning':'○ New';
+    return '<div style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);padding:14px;position:relative;overflow:hidden;">'
+      +'<div style="position:absolute;top:0;left:0;width:3px;height:100%;background:'+sc+';border-radius:3px 0 0 3px;"></div>'
+      +'<div style="padding-left:4px;">'
+      +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;">'
+      +'<div style="font-size:34px;font-weight:900;color:var(--red);font-family:var(--cn);line-height:1;">'+w.char+'</div>'
+      +'<button onclick="removeWord(\''+w.id+'\')" style="background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--muted2);font-size:12px;cursor:pointer;padding:4px 7px;border-radius:8px;line-height:1;transition:all .15s;" onmouseenter="this.style.borderColor=\'var(--redbrd)\';this.style.color=\'var(--red)\'" onmouseleave="this.style.borderColor=\'var(--border)\';this.style.color=\'var(--muted2)\'">✕</button>'
+      +'</div>'
+      +'<div style="font-family:var(--mono);font-size:11px;color:var(--gold);font-weight:700;margin-bottom:3px;">'+(w.pinyin||'')+'</div>'
+      +'<div style="font-size:13px;font-weight:700;margin-bottom:8px;">'+(w.meaning||'')+'</div>'
+      +(w.example?'<div style="font-family:var(--cn);font-size:10px;color:var(--muted2);margin-bottom:8px;">'+w.example+'</div>':'')
+      +'<div style="display:flex;align-items:center;gap:6px;">'
+      +'<span style="font-family:var(--mono);font-size:8px;padding:3px 7px;border-radius:8px;background:'+hc+'18;color:'+hc+';font-weight:700;">'+(w.hsk||'')+'</span>'
+      +'<span style="font-family:var(--mono);font-size:8px;color:'+sc+';font-weight:700;">'+statusLabel+'</span>'
+      +'</div>'
       +'</div>'
       +'</div>';
   }).join('');
+}
+
+function removeWord(id) {
+  S.chars_list = (S.chars_list||[]).filter(function(c){ return c.id != id; });
+  save();
+  renderCharsV();
+  showMsg('Word removed', 'var(--red)');
 }
 
 function addCharV() {
@@ -12893,8 +12935,8 @@ function addCharV() {
   if (!S.chars_list) S.chars_list = [];
   var id = Date.now();
   S.chars_list.push({ id: id, char: char, pinyin: pinyin, meaning: meaning, hsk:'HSK1', cat:'General', status:'new', sm2_ef:2.5, sm2_rep:0, sm2_iv:1, srs_next: getLocalDate() });
+  awardXP(XP_RATES.add_word || 2, 'Added word ✏️');
   save();
-  awardXP(2, 'Added word');
   el('ch-char-v').value = ''; el('ch-pinyin-v').value = ''; el('ch-meaning-v').value = '';
   renderCharsV();
   friendsNotify(t('w_added_xp'));
