@@ -320,7 +320,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .mc-choice{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);padding:14px 10px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;transition:transform .12s cubic-bezier(.34,1.56,.64,1),background .15s,border-color .15s;}
 .mc-choice:active{transform:scale(.95);}
 .mc-choice:hover:not(.disabled){background:var(--s3);border-color:var(--border2);transform:translateY(-1px);}
-.mc-choice.correct{background:var(--greenbg);border-color:var(--greenbrd);color:var(--green);}
+.mc-choice.correct{background:var(--greenbg);border-color:var(--greenbrd);color:var(--green);animation:correctBurst .35s ease,correctGlow .5s ease;}
 .mc-choice.wrong{background:var(--redbg);border-color:var(--redbrd);color:var(--red);animation:shake .35s ease;}
 .mc-choice.reveal-correct{background:var(--greenbg);border-color:var(--greenbrd);color:var(--green);}
 .mc-choice.disabled{cursor:default;transform:none;}
@@ -352,7 +352,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .ch-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px;}
 .ch-choice{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r16);padding:20px 12px;text-align:center;cursor:pointer;transition:all .2s;}
 .ch-choice:hover:not(.disabled){background:var(--s3);border-color:var(--border2);transform:translateY(-2px);}
-.ch-choice.correct{background:var(--greenbg);border-color:var(--greenbrd);}
+.ch-choice.correct{background:var(--greenbg);border-color:var(--greenbrd);animation:correctBurst .35s ease,correctGlow .5s ease;}
 .ch-choice.wrong{background:var(--redbg);border-color:var(--redbrd);animation:shake .35s ease;}
 .ch-choice.reveal-correct{background:var(--greenbg);border-color:var(--greenbrd);}
 .ch-choice.disabled{cursor:default;transform:none;}
@@ -1826,6 +1826,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div class="game-prog"><span class="game-prog-txt" id="mc-prog">—</span><span class="game-score-txt" id="mc-score-top"></span></div>
     <div style="margin-bottom:18px;">
       <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+        <div style="width:34px;flex-shrink:0;"></div>
         <div class="mc-char-big" id="mc-char" style="margin-bottom:0;">—</div>
         <button onclick="var c=el('mc-char');if(c&&c.textContent.length<=4)speakChinese(c.textContent);" style="background:var(--s3);border:1px solid var(--border);border-radius:50%;width:34px;height:34px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;" title="Listen">🔊</button>
       </div>
@@ -11289,17 +11290,17 @@ var _gameCombo=0; // fires across ALL games, not just lessons
 function onCorrectAnswer(fromLesson){
   _gameCombo++;
   playSound('correct');
+  if(navigator.vibrate)navigator.vibrate(fromLesson?[30]:[15]);
   showComboFloat(_gameCombo);
-  // Track study activity for daily goal
-  if(!S.study_activity)S.study_activity={};
-  var td=getLocalDate();
-  S.study_activity[td]=(S.study_activity[td]||0)+1;
-  save();
-  // Big burst popup at milestone combos
+  // Big burst popup at milestone combos — BEFORE save() so it's instant
   if(_gameCombo===3||_gameCombo===5||_gameCombo===10||(_gameCombo>10&&_gameCombo%5===0)){
     playSound('combo');
     showComboPopup(_gameCombo);
   }
+  // Track study activity in memory (save() is called by the caller)
+  if(!S.study_activity)S.study_activity={};
+  var td=getLocalDate();
+  S.study_activity[td]=(S.study_activity[td]||0)+1;
   // Celebrate streak milestone
   var _str = typeof calcStreak === 'function' ? calcStreak() : null;
   if (_str && _str.current > 0) {
