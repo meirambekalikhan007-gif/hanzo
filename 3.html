@@ -31,7 +31,7 @@
   --font:'Plus Jakarta Sans',sans-serif;
   --mono:'JetBrains Mono',monospace;
   --cn:'Noto Sans SC',sans-serif;
-  --r8:8px;--r12:12px;--r16:16px;--r20:20px;--r24:24px;
+  --r8:8px;--r10:10px;--r12:12px;--r16:16px;--r20:20px;--r24:24px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;}
@@ -153,11 +153,9 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filte
 
 /* BUTTONS */
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;background:var(--red);border:none;color:#fff;font-family:var(--font);font-size:14px;font-weight:700;border-radius:var(--r12);cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1),background .2s,box-shadow .2s,opacity .2s;letter-spacing:.2px;position:relative;overflow:hidden;}
-.btn:active{transform:scale(.96);}
-.btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(232,96,122,.35);}
+.btn:active{transform:scale(.95) translateY(1px);}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 4px 16px rgba(232,96,122,.35);}
 .btn:disabled{opacity:.45;transform:none;box-shadow:none;cursor:not-allowed;}
-.btn:hover{filter:brightness(1.1);transform:translateY(-1px);}
-.btn:active{transform:translateY(1px);}
 .btn-outline{background:transparent;border:1.5px solid var(--border2);color:var(--muted3);}
 .btn-outline:hover{border-color:var(--border3);color:var(--text);filter:none;}
 .btn-green{background:var(--green);color:#000;}
@@ -188,7 +186,6 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .prog-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.34,1.56,.64,1);}
 
 /* ANIMATIONS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pop{0%,100%{transform:scale(1)}40%{transform:scale(1.18)}70%{transform:scale(.95)}}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 @keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(255,77,109,0)}50%{box-shadow:0 0 20px 4px rgba(255,77,109,.3)}}
@@ -320,9 +317,8 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .mc-pinyin-lbl{font-family:var(--mono);font-size:14px;color:var(--gold);text-align:center;margin-bottom:4px;}
 .mc-prompt{font-size:12px;color:var(--muted2);text-align:center;margin-bottom:18px;}
 .mc-choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
-.mc-choice{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);padding:14px 10px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;transition:transform .12s cubic-bezier(.34,1.56,.64,1),background .15s,border-color .15s;active:scale(.96);}
+.mc-choice{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);padding:14px 10px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;transition:transform .12s cubic-bezier(.34,1.56,.64,1),background .15s,border-color .15s;}
 .mc-choice:active{transform:scale(.95);}
-.mc-choice:hover{border-color:var(--border2);transform:translateY(-1px);}
 .mc-choice:hover:not(.disabled){background:var(--s3);border-color:var(--border2);transform:translateY(-1px);}
 .mc-choice.correct{background:var(--greenbg);border-color:var(--greenbrd);color:var(--green);}
 .mc-choice.wrong{background:var(--redbg);border-color:var(--redbrd);color:var(--red);animation:shake .35s ease;}
@@ -836,7 +832,6 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 
 /* SKELETON LOADING */
 .skeleton{background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
-@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 
 /* HAPTIC FEEDBACK CLASS */
 .tap-feedback{transition:transform .1s;}
@@ -886,13 +881,6 @@ input:focus, textarea:focus{
   70%{box-shadow:0 0 0 12px rgba(26,184,122,0);}
   100%{box-shadow:0 0 0 0 rgba(26,184,122,0);}
 }
-@keyframes xpFloat{
-  0%{opacity:0;transform:translateY(0) scale(.8);}
-  20%{opacity:1;transform:translateY(-8px) scale(1.1);}
-  80%{opacity:1;transform:translateY(-30px) scale(1);}
-  100%{opacity:0;transform:translateY(-50px) scale(.9);}
-}
-
 .q-choice.correct{animation:correctBurst .4s ease,correctGlow .5s ease;}
 .q-choice.wrong{animation:wrongShake .4s ease;}
 .q-sentence{animation:slideInUp .3s ease;}
@@ -2366,7 +2354,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 
   <!-- FILTERS ROW -->
   <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
-    <select id="wb-hsk" onchange="wbHskFilter=this.value;wbPage=0;renderWordBank();" class="wb-select" id="wb-hsk-sel">
+    <select id="wb-hsk" onchange="wbHskFilter=this.value;wbPage=0;renderWordBank();" class="wb-select">
       <option value="All" data-i18n="bank_hsk_all">All HSK</option>
       <option value="HSK1">HSK 1</option><option value="HSK2">HSK 2</option>
       <option value="HSK3">HSK 3</option><option value="HSK4">HSK 4</option>
@@ -3877,7 +3865,7 @@ function addChar(){
   S.chars_list.push({id:Date.now(),char:char,pinyin:el('ch-pinyin').value.trim(),meaning:el('ch-meaning').value.trim(),hsk:el('ch-hsk').value,status:el('ch-status').value,example:el('ch-example').value.trim(),date:getLocalDate()});
   save();
   ['ch-char','ch-pinyin','ch-meaning','ch-example'].forEach(function(id){el(id).value='';});
-  S['streak_'+TODAY]=true;save();
+  S['streak_'+getLocalDate()]=true;save();
   renderChars();updateCnStats();renderWeekProg();
   showMsg('+1 word added ✓','var(--green)');
   el('ch-char').focus();
@@ -4042,7 +4030,7 @@ var phCards=[],phIdx=0,phCorrect=0,phTotal=0;
 var lpCards=[],lpIdx=0,lpCorrect=0,lpTotal=0,lpAnswered=false;
 
 function getGameWords(){
-  var list=S.chars_list||[];
+  var list=gameMode==='phrases'?(S.phrases_list||[]):(S.chars_list||[]);
   if(studyMode==='new')return list.filter(function(w){return w.status==='new';});
   if(studyMode==='practice')return list.filter(function(w){return w.status==='new'||w.status==='learning';});
   return list;
@@ -4486,7 +4474,7 @@ function showMCCard(){
     if(el('mc-char'))el('mc-char').textContent='🎉';if(el('mc-pinyin'))el('mc-pinyin').textContent=t('g_done');
     if(el('mc-choices'))el('mc-choices').innerHTML='';if(el('mc-result'))el('mc-result').textContent='';
     var next=el('mc-next');if(next)next.classList.remove('show');
-    if(el('mc-score'))el('mc-score').textContent=t('g_final')+': '+mcCorrect+'/'+mcTotal+' — '+Math.round(mcCorrect/mcTotal*100)+'%';
+    if(el('mc-score'))el('mc-score').textContent=t('g_final')+': '+mcCorrect+'/'+mcTotal+' — '+Math.round(mcCorrect/(mcTotal||1)*100)+'%';
     if(el('mc-prog'))el('mc-prog').textContent=t('g_complete');
     if(mcCorrect>=mcTotal*.8)launchConfetti();
     return;
@@ -6241,7 +6229,7 @@ function applyLangToPageContent(){
     // Re-render current lesson question with new language
     if(el('ls-quiz-view')&&el('ls-quiz-view').style.display!=='none'){
       var qb=el('ls-quiz-body');
-      if(qb&&qb.children.length>0){lsAnswered=false;lsShowQ();}
+      if(qb&&qb.children.length>0&&typeof lsItems!=='undefined'&&lsItems&&lsItems.length>0){lsAnswered=false;lsShowQ();}
     }
   }
   renderWOD(); // always update WOD translation
@@ -6490,10 +6478,7 @@ function soCheck(){
   var st=el('so-score-top');if(st)st.textContent=soCorrect+'/'+(soIdx+1)+' ✓';
 }
 function soNext(){soIdx++;showSOQuestion();}
-
-
-var soQueue=[],soIdx=0,soCorrect=0,soTotal=0;
-var soAnswer=[],soTilePool=[];
+// Note: soQueue/soIdx/soCorrect/soTotal declared above at game vars section
 
 
 
@@ -6612,7 +6597,7 @@ function lsStartQuiz(tid,ui){
   lsShowQ();
 }
 function lsUpdateProg(){
-  if(el('ls-q-prog'))el('ls-q-prog').style.width=Math.round(lsIdx/lsItems.length*100)+'%';
+  if(el('ls-q-prog'))el('ls-q-prog').style.width=Math.round(lsIdx/(lsAllItems.length||lsItems.length||1)*100)+'%';
   if(el('ls-q-xp'))el('ls-q-xp').textContent=(lsCorrect*20)+' XP';
 }
 
@@ -6914,6 +6899,8 @@ var lsMissed=[];
 var lsAllItems=[];
 var lsStage={};
 var lsCombo=0;
+// Lesson session state vars
+var lsItems=[],lsIdx=0,lsCorrect=0,lsAnswered=false,lsActiveTopic='',lsActiveUnit=0;
 
 function lsShowIntro(item,body,stageKey){
   var sentTr=item.en||'';
@@ -7025,11 +7012,6 @@ function generateStory(cn,py,meaning){
   ];
   return s[cn.length%s.length];
 }
-
-var lsMissed=[];
-var lsAllItems=[];
-var lsStage={};
-
 
 function generateStory(cn,py,meaning){
   if(LANG==='ru'){
@@ -9024,7 +9006,7 @@ function renderStreakBanner(){
         +'<div style="font-size:13px;font-weight:800;color:'+(urgent?'#ef4444':'var(--red)')+';margin-bottom:3px;">'+titleText+'</div>'
         +'<div style="font-size:11px;color:var(--muted2);line-height:1.4;">'+subText+'</div>'
       +'</div>'
-      +'<button onclick="event.stopPropagation();goPage(\'games\',document.querySelector(\'.bni[data-page=\\\"games\\\"]\'))" style="background:'+(urgent?'#ef4444':'var(--red)')+';border:none;color:#fff;font-family:var(--mono);font-size:10px;font-weight:900;padding:10px 14px;border-radius:var(--r10);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:transform .15s;letter-spacing:.3px;active:scale(.95);">'+(LANG==='ru'?'Учить 🔥':LANG==='kz'?'Оқу 🔥':'Study 🔥')+'</button>'
+      +'<button onclick="event.stopPropagation();goPage(\'games\',document.querySelector(\'.bni[data-page=\\\"games\\\"]\'))" style="background:'+(urgent?'#ef4444':'var(--red)')+';border:none;color:#fff;font-family:var(--mono);font-size:10px;font-weight:900;padding:10px 14px;border-radius:var(--r10);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:transform .15s;letter-spacing:.3px;">'+(LANG==='ru'?'Учить 🔥':LANG==='kz'?'Оқу 🔥':'Study 🔥')+'</button>'
       +'</div>';
     banner.onclick=function(){goPage('games',document.querySelector('.bni[data-page="games"]'));};
     var homeContent=el('page-home');
@@ -11881,49 +11863,6 @@ function inferTopic(scene){
 }
 
 
-function showRTCard(){
-  if(rtIdx>=rtQueue.length){
-    // Results
-    var pct=Math.round(rtCorrect/rtTotal*100);
-    el('rt-game').style.display='none';
-    el('rt-setup').style.display='none';
-    var scoreEl=el('rt-score');
-    scoreEl.innerHTML='<div style="text-align:center;padding:20px;"><div style="font-size:40px;margin-bottom:10px;">'+(pct===100?'🏆':pct>=70?'🎯':'📚')+'</div>'
-      +'<div style="font-size:22px;font-weight:900;color:'+(pct>=70?'var(--green)':'var(--red)')+';">'+rtCorrect+'/'+rtTotal+'</div>'
-      +'<div style="font-size:13px;color:var(--muted);margin-top:4px;">'+pct+'% correct</div>'
-      +'<div style="display:flex;gap:8px;margin-top:16px;">'
-      +'<button class="btn btn-outline" onclick="el(\'rt-score\').innerHTML=\'\';initRealTalk();" style="flex:1;">← Change</button>'
-      +'<button class="btn" onclick="el(\'rt-score\').innerHTML=\'\';startRealTalk();" style="flex:1;">▶ Replay</button>'
-      +'</div></div>';
-    awardXP(rtCorrect*8,'Real Talk session');
-    return;
-  }
-  var q=rtQueue[rtIdx];
-  el('rt-prog').textContent=(rtIdx+1)+'/'+rtQueue.length;
-  el('rt-score-top').textContent=rtCorrect+' ✓';
-  el('rt-scene-label').textContent=q.scene;
-  el('rt-cn').textContent=q.q.cn;
-  el('rt-py').textContent=q.q.py;
-  var qTrans=LANG==='ru'&&q.q.ru?q.q.ru:LANG==='kz'&&q.q.kz?q.q.kz:q.q.en;
-  el('rt-en').textContent=qTrans;
-  el('rt-feedback').style.display='none';
-  el('rt-next-btn').style.display='none';
-  // Build choices — shuffle correct + 3 wrong
-  var choices=[{cn:q.correct.cn,py:q.correct.py,en:q.correct.en,isCorrect:true}]
-    .concat(q.wrong.map(function(w){return{cn:w.cn,py:w.py,en:w.en,isCorrect:false};}))
-    .sort(function(){return Math.random()-.5;});
-  var choicesEl=el('rt-choices');
-  choicesEl.innerHTML='';
-  choices.forEach(function(c){
-    var btn=document.createElement('button');
-    btn.style.cssText='background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);padding:14px 16px;text-align:left;cursor:pointer;transition:all .15s;width:100%;';
-    btn.innerHTML='<div style="font-family:var(--cn);font-size:18px;font-weight:700;color:var(--text);margin-bottom:3px;">'+c.cn+'</div>'
-      +'<div style="font-family:var(--mono);font-size:10px;color:var(--muted2);">'+c.py+'</div>';
-    (function(choice,b){b.onclick=function(){rtAnswer(choice,b,choicesEl);};})(c,btn);
-    choicesEl.appendChild(btn);
-  });
-}
-
 var currentBankTab='words';
 function setBankTab(tab,btn){
   currentBankTab=tab;
@@ -13405,9 +13344,9 @@ function _renderMyFriends() {
   });
 }
 
-// ── Patch openEditProfile to fill username field ──────────────
-var _origOpenEditProfile = openEditProfile;
-openEditProfile = function() {
+// ── Patch showEditProfile to fill username field ──────────────
+var _origOpenEditProfile = showEditProfile;
+showEditProfile = function() {
   _origOpenEditProfile();
   var uInp = el('ep-username-input');
   if (uInp) {
@@ -15010,9 +14949,8 @@ function _renderProfilePage() {
   var gems = S.gems || 0;
   if (el('prof-gems')) el('prof-gems').textContent = gems;
 
-  // Friends count (rough estimate from friends data)
-  var friendCount = 0;
-  try { friendCount = (JSON.parse(localStorage.getItem('hanzo_friends_cache') || '[]')).length; } catch(e) {}
+  // Friends count from in-memory cache
+  var friendCount = (_friendsCache||[]).filter(function(f){return f.isReal;}).length;
   if (el('prof-friends')) el('prof-friends').textContent = friendCount;
 
   // Sound toggle
@@ -15103,8 +15041,7 @@ function _renderAchievements() {
   var xp = (typeof getTotalXP === 'function' ? getTotalXP() : 0) || 0;
   var words = ((typeof S !== 'undefined' && S.chars_list && S.chars_list.length) || 0);
   var streak = (typeof calcStreak === 'function' ? (calcStreak().current || 0) : 0);
-  var friends = 0;
-  try { friends = (JSON.parse(localStorage.getItem('hanzo_friends_cache') || '[]')).length; } catch(e) {}
+  var friends = (_friendsCache||[]).filter(function(f){return f.isReal;}).length;
 
   var achievements = [
     { icon:'🔥', name:LANG==='ru'?'Огонёк':LANG==='kz'?'Алғашқы от':'First Flame', desc:LANG==='ru'?'3 дня подряд':LANG==='kz'?'3 күн серия':'3-day streak', done: streak >= 3 },
