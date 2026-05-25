@@ -3925,7 +3925,7 @@ function deleteChar(id,btn){
     _db.from('user_words').delete().eq('id',_delWord.id).eq('user_id',currentUser.id).then(function(){});
   }
 }
-function updateCharStatus(id,status){var c=(S.chars_list||[]).find(function(c){return c.id===id;});if(c){c.status=status;save();}}
+function updateCharStatus(id,status){var c=(S.chars_list||[]).find(function(c){return c.id===id;});if(c){c.status=status;}}
 function setCnFilter(f){cnFilter=f;renderCnFilter();renderChars();}
 function renderCnFilter(){
   var hskFilters=['All','HSK1','HSK2','HSK3','HSK4','HSK5','HSK6'];
@@ -4200,6 +4200,7 @@ function flipCard(){
 }
 var XP_RATES={
   add_word:2,
+  add_phrase:5,
   master_word:10,
   learn_word:3,
   master_phrase:15,
@@ -4380,7 +4381,7 @@ function updateWordSRS(id, correct){
     word.srs_next=getLocalDate();
     word.status='learning';
   }
-  save();
+  // save() intentionally omitted — callers batch-save after all state updates
 }
 
 function sortByHSKPriority(words){
@@ -4409,37 +4410,35 @@ function quizResult(r){
   if(r==='mastered'){
     quizCorrect++;
     _fcGotItStreak++;
+    // Update state synchronously (no save — deferred below)
     updateCharStatus(ch.id,'mastered');
     updateWordSRS(ch.id,true);
-    awardXP(XP_RATES.master_word,'Mastered! ✓');
-    awardGems(GEM_RATES.word_mastered,'Word ✓');
-    markStreakDay();
-    onCorrectAnswer();
-    save();
     // Anti-cheat: after 3 consecutive Got it, trigger verification
     if(_fcGotItStreak>=3&&quizCards.length>3){
       _fcGotItStreak=0;
+      quizIdx++;quizFlipped=false;showFlashcard(); // advance FIRST — instant
       triggerFlashcardVerify(ch);
+      setTimeout(function(){awardXP(XP_RATES.master_word,'Mastered! ✓');awardGems(GEM_RATES.word_mastered,'Word ✓');markStreakDay();onCorrectAnswer();save();},0);
       return;
     }
+    quizIdx++;quizFlipped=false;showFlashcard(); // advance FIRST — instant
+    setTimeout(function(){awardXP(XP_RATES.master_word,'Mastered! ✓');awardGems(GEM_RATES.word_mastered,'Word ✓');markStreakDay();onCorrectAnswer();save();},0);
   } else if(r==='ok'){
     quizCorrect++;
     _fcGotItStreak=0;
     updateCharStatus(ch.id,'learning');
     updateWordSRS(ch.id,true);
-    awardXP(XP_RATES.learn_word,'Good job ~');
-    onCorrectAnswer();
-    save();
+    quizIdx++;quizFlipped=false;showFlashcard(); // advance FIRST — instant
+    setTimeout(function(){awardXP(XP_RATES.learn_word,'Good job ~');onCorrectAnswer();save();},0);
   } else {
     _fcGotItStreak=0;
     updateCharStatus(ch.id,'learning');
     updateWordSRS(ch.id,false);
-    onWrongAnswer();
     var wbtn=document.querySelector('.qbw');
     if(wbtn)wbtn.style.animation='wrongShake .4s ease';
-    save();
+    quizIdx++;quizFlipped=false;showFlashcard(); // advance FIRST — instant
+    setTimeout(function(){onWrongAnswer();save();},0);
   }
-  quizIdx++;quizFlipped=false;showFlashcard();
 }
 function triggerFlashcardVerify(word){
   var all=S.chars_list||[];
@@ -4452,8 +4451,6 @@ function triggerFlashcardVerify(word){
   var existing=fc.querySelector('.fc-verify-panel');if(existing)existing.remove();
   // Hide the card back so the answer isn't visible while the question is shown
   var fcBack=el('fc-back');if(fcBack)fcBack.classList.remove('show');
-  var fcCard=el('flashcard');if(fcCard)fcCard.style.display='none';
-  var fcSpeakRow=el('fc-speak-row');if(fcSpeakRow)fcSpeakRow.style.display='none';
   var verify=document.createElement('div');
   verify.className='fc-verify-panel';
   verify.style.cssText='background:var(--goldbg);border:1.5px solid var(--goldbrd);border-radius:var(--r16);padding:16px;margin-bottom:10px;animation:fadeUp .3s ease;';
@@ -4577,8 +4574,7 @@ function handleMatch(elem,type){
   if(matchSelected.type===type){matchSelected.el.classList.remove('selected');matchSelected={el:elem,type:type};document.querySelectorAll('.match-item.selected').forEach(function(e){e.classList.remove('selected');});elem.classList.add('selected');return;}
   if(matchSelected.el.dataset.id===elem.dataset.id){
     matchSelected.el.classList.remove('selected');matchSelected.el.classList.add('matched');elem.classList.add('matched');matchSelected=null;matchCorrect++;
-    onCorrectAnswer();
-    setTimeout(function(){awardXP(5,'Match ✓');save();},0);
+    setTimeout(function(){onCorrectAnswer();awardXP(5,'Match ✓');save();},0);
     if(el('match-score-top'))el('match-score-top').textContent=matchCorrect+'/'+matchPairs.length+' ✓';
     if(matchCorrect===matchPairs.length){
       if(el('match-score'))el('match-score').textContent='🎉 '+t('g_all_matched');
@@ -7724,6 +7720,7 @@ function lsAnswer(choiceIdx,item,choicesDiv,fbDiv,contBtn){
     if(lsCombo===3||lsCombo===5||lsCombo===10){
       setTimeout(function(){awardXP(lsCombo*5,'Combo!');save();},300);
     }
+    setTimeout(function(){save();},0);
   } else {
     lsCombo=0;
     onWrongAnswer();
