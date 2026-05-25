@@ -3535,7 +3535,8 @@ function getStudyDays(){
 }
 // Call this when the user EARNS their streak (lesson pass, word mastered in a game)
 function markStreakDay(){
-  S['streak_'+getLocalDate()]=true;save();
+  S['streak_'+getLocalDate()]=true;
+  // Caller is responsible for save()
 }
 function calcStreak(){
   var days=getStudyDays();
@@ -3559,7 +3560,7 @@ function calcStreak(){
     if(cur>best)best=cur;
     prev=ds;
   });
-  S.streak=streak;save();
+  S.streak=streak;
   return{current:streak,best:Math.max(streak,best),total:days.size};
 }
 // ============ STREAK SYSTEM ============
@@ -4560,14 +4561,14 @@ function handleMatch(elem,type){
   if(matchSelected.el.dataset.id===elem.dataset.id){
     matchSelected.el.classList.remove('selected');matchSelected.el.classList.add('matched');elem.classList.add('matched');matchSelected=null;matchCorrect++;
     onCorrectAnswer();
-    setTimeout(function(){awardXP(5,'Match ✓');},0);
+    setTimeout(function(){awardXP(5,'Match ✓');save();},0);
     if(el('match-score-top'))el('match-score-top').textContent=matchCorrect+'/'+matchPairs.length+' ✓';
     if(matchCorrect===matchPairs.length){
       if(el('match-score'))el('match-score').textContent='🎉 '+t('g_all_matched');
       var _mnb=el('match-next-btn');
       if(_mnb){_mnb.style.display='block';setTimeout(function(){_mnb.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}
       launchConfetti();
-      setTimeout(function(){awardXP(20,'All pairs! 🔗');awardGems(GEM_RATES.game_all_match,'Match');},0);
+      setTimeout(function(){awardXP(20,'All pairs! 🔗');awardGems(GEM_RATES.game_all_match,'Match');save();},0);
     }
   }else{
     var sel=matchSelected;sel.el.classList.add('wrong-flash');elem.classList.add('wrong-flash');
@@ -7124,7 +7125,7 @@ function showComboPopup(count){
     '</div>';
   document.body.appendChild(burst);
   if(navigator.vibrate)navigator.vibrate([50,30,100]);
-  setTimeout(function(){awardXP(bonus,'Combo x'+count);},0);
+  setTimeout(function(){awardXP(bonus,'Combo x'+count);save();},0);
   setTimeout(function(){if(burst.parentNode)burst.remove();},600);
 }
 
@@ -7146,10 +7147,10 @@ function lsShowQ(){
     S['ls_'+lsActiveTopic+'_'+lsActiveUnit]=Math.min(100,Math.max(prev,score));save();
     if(el('ls-q-prog'))el('ls-q-prog').style.width='100%';
     if(el('ls-q-xp'))el('ls-q-xp').textContent=xp+' XP';
-    if(score>=80){awardXP(XP_RATES.lesson_complete,'Unit mastered! 🎓');markStreakDay();}
+    if(score>=80){awardXP(XP_RATES.lesson_complete,'Unit mastered! 🎓');markStreakDay();save();}
     // Gem rewards — tiered by performance
     var gemReward = score===100 ? GEM_RATES.lesson_perfect : score>=80 ? GEM_RATES.lesson_mastered : GEM_RATES.lesson_complete;
-    setTimeout(function(){ awardGems(gemReward, 'Lesson'); }, 900);
+    setTimeout(function(){ awardGems(gemReward, 'Lesson'); save(); }, 900);
 
     var emoji=score===100?'🏆':score>=80?'🎉':score>=60?'💪':'📚';
     var col=score===100?'#ffd700':score>=80?'#10b981':score>=60?'#f59e0b':'#ef4444';
@@ -7704,7 +7705,7 @@ function lsAnswer(choiceIdx,item,choicesDiv,fbDiv,contBtn){
     lsCorrect++;
     lsCombo=(lsCombo||0)+1;
     if(lsCombo===3||lsCombo===5||lsCombo===10){
-      setTimeout(function(){awardXP(lsCombo*5,'Combo!');},300);
+      setTimeout(function(){awardXP(lsCombo*5,'Combo!');save();},300);
     }
   } else {
     lsCombo=0;
@@ -7771,9 +7772,14 @@ function addFromBank(w){
   if(isInList(w.char))return;
   if(!S.chars_list)S.chars_list=[];
   S.chars_list.push({id:Date.now(),char:w.char,pinyin:w.pinyin,meaning:w.meaning,hsk:w.hsk,status:'new',example:w.example,date:getLocalDate()});
-  save();
-  renderWordBank();updateModeCounts();
+  // Phase 1: instant visual feedback — mark every matching button NOW
+  document.querySelectorAll('.wb-add-btn[data-char]').forEach(function(btn){
+    if(btn.dataset.char===w.char){btn.disabled=true;btn.className='wb-add-btn added';btn.textContent=t('bank_added');}
+  });
   showMsg('+1 word added ✓','var(--green)');
+  updateModeCounts();
+  // Phase 2: full re-render + persist after the tap lands
+  setTimeout(function(){save();renderWordBank();},0);
 }
 
 function wbNext(){var f=getFilteredWB();if(wbPage<Math.max(0,Math.ceil(f.length/WB_PER_PAGE)-1)){wbPage++;renderWordBank();}}
@@ -7847,7 +7853,7 @@ function renderWordBank(){
       +'<div class="wb-example">'+w.example+'</div>'
       +'<div class="wb-badges"><span class="wb-badge '+(hskCls[w.hsk]||'')+'">'+w.hsk+'</span><span class="wb-badge">'+catLabel+'</span></div>'
       +'</div>'
-      +'<button class="wb-add-btn'+(inList?' added':'')+'" '+(inList?'disabled':'')+' style="flex-shrink:0;">'
+      +'<button class="wb-add-btn'+(inList?' added':'')+'" '+(inList?'disabled':'')+' data-char="'+w.char+'" style="flex-shrink:0;">'
       +(inList?t('bank_added'):t('bank_add'))
       +'</button>';
     var addBtn=row.querySelector('.wb-add-btn');
@@ -8079,12 +8085,8 @@ function flipPhraseCard(){
   var _pfp=pfCards[pfIdx];
   if(_pfp&&(_pfp.cn||_pfp.phrase_cn))setTimeout(function(){if(!S.mute)speakChinese(_pfp.cn||_pfp.phrase_cn);},160);
   var btnsEl=document.getElementById('pf-btns');if(btnsEl)btnsEl.style.display='flex';
-  // Anti-cheat: 1.5s delay on Got it for phrase flashcard
   var pfGotIt=btnsEl?btnsEl.querySelector('.qbm'):null;
-  if(pfGotIt){
-    pfGotIt.disabled=true;pfGotIt.style.opacity='.4';pfGotIt.textContent='⏳ '+t('g_got_it');
-    setTimeout(function(){if(pfGotIt){pfGotIt.disabled=false;pfGotIt.style.opacity='1';pfGotIt.textContent=t('g_got_it');}},1500);
-  }
+  if(pfGotIt){pfGotIt.disabled=false;pfGotIt.style.opacity='1';pfGotIt.textContent=t('g_got_it');}
 }
 var _pfGotItStreak=0;
 function pfResult(r){
@@ -8241,7 +8243,7 @@ function ptfAnswer(userSaysTrue){
   var p=ptfCards[ptfIdx];
   var isReal=p._isReal;
   var correct=(userSaysTrue===isReal);
-  if(correct){ptfCorrect++;onCorrectAnswer();setTimeout(function(){awardXP(XP_RATES.tf_correct,'True/False ✓');},0);}
+  if(correct){ptfCorrect++;onCorrectAnswer();setTimeout(function(){awardXP(XP_RATES.tf_correct,'True/False ✓');save();},0);}
   else{onWrongAnswer();}
   if(!correct)_ptfWrongStreak++;else _ptfWrongStreak=0;
   var fb=document.getElementById('ptf-feedback');
@@ -8461,23 +8463,16 @@ function getLevelProgress(xp){
 
 function awardXP(amount,source){
   if(!amount||amount<=0)return;
-  // Amount is exact — no hidden multipliers that confuse the user
-  // Bonus XP fires separately via showLuckyBonus() for transparency
   var prevXP=getTotalXP();
   var prevLevel=getLevelData(prevXP);
   if(!S.xp_earned)S.xp_earned=0;
   S.xp_earned+=amount;
   var newXP=getTotalXP();
   var newLevel=getLevelData(newXP);
-  // Show XP popup IMMEDIATELY — before save() so it's instant
   showXPPopup(amount,source);
-  // Check level up
-  if(newLevel.lvl>prevLevel.lvl){
-    setTimeout(function(){showLevelUp(newLevel,prevLevel);},800);
-  }
-  // Update XP bar
+  if(newLevel.lvl>prevLevel.lvl){setTimeout(function(){showLevelUp(newLevel,prevLevel);},800);}
   if(currentPage==='home')renderXPBar();
-  save();
+  // Caller is responsible for save() — avoids 3-5 redundant writes per tap
 }
 
 
@@ -8501,11 +8496,9 @@ function awardGems(amount, source) {
   if (!amount || amount <= 0) return;
   if (!S.gems) S.gems = 0;
   S.gems += amount;
-  save();
-  // Show gem popup
   _showGemPopup(amount, source);
-  // Update profile gem display if visible
   if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
+  // Caller is responsible for save()
 }
 
 function _showGemPopup(amount, source) {
@@ -9357,7 +9350,7 @@ lsShowQ=function(){
   _origLsShowQ();
   if(wasLastQ&&lsIdx>=lsItems.length){
     var score=lsItems.length>0?Math.round(lsCorrect/lsItems.length*100):0;
-    if(score>=80){awardXP(XP_RATES.lesson_complete,'Unit mastered! 🎓');markStreakDay();}
+    if(score>=80){awardXP(XP_RATES.lesson_complete,'Unit mastered! 🎓');markStreakDay();save();}
   }
 };
 
@@ -11140,7 +11133,7 @@ function renderWO(){
       +'</div>';
     awardXP(woScore*15,'Word order bonus');
     var woGems=pct>=75?GEM_RATES.game_all_match:GEM_RATES.game_complete;
-    setTimeout(function(){awardGems(woGems,'Word Order');},600);
+    setTimeout(function(){awardGems(woGems,'Word Order');save();},600);
     if(pct>=75)launchConfetti();
     return;
   }
@@ -15330,8 +15323,8 @@ function _lgShowCard(){
     if(hintEl)hintEl.textContent='';
     if(choicesEl)choicesEl.innerHTML='';
     if(scoreEl)scoreEl.textContent=pct+'% correct ('+_lgCorrect+'/'+_lgTotal+')';
-    if(pct>=80){launchConfetti();awardXP(XP_RATES.lesson_complete,'Listen game!');awardGems(GEM_RATES.game_all_match,'Listen 🎧');}
-    else{awardGems(GEM_RATES.game_complete,'Listen 🎧');}
+    if(pct>=80){launchConfetti();awardXP(XP_RATES.lesson_complete,'Listen game!');awardGems(GEM_RATES.game_all_match,'Listen 🎧');save();}
+    else{awardGems(GEM_RATES.game_complete,'Listen 🎧');save();}
     var playBtn=document.getElementById('ls-g-play-btn');
     if(playBtn)playBtn.style.display='none';
     return;
@@ -15401,7 +15394,7 @@ function _lgAnswer(char,choices,btnEl){
     if(correct){
       resEl.textContent='✓ '+(_lgCurrent.meaning||'');resEl.style.color='var(--green)';
       onCorrectAnswer();
-      setTimeout(function(){awardXP(5,'Listen correct!');},0);
+      setTimeout(function(){awardXP(5,'Listen correct!');save();},0);
     } else {
       resEl.textContent='✗ It was: '+_lgCurrent.char+' ('+(_lgCurrent.meaning||'')+')';resEl.style.color='var(--red)';
       onWrongAnswer();
