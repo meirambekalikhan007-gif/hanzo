@@ -8743,7 +8743,7 @@ function showXPPopup(amount,source){
   var r=_appRect();
   var lx=r.left+r.width*(0.3+Math.random()*0.4);
   var ty=r.top+r.height*0.35;
-  popup.style.cssText='position:fixed;left:'+lx+'px;top:'+ty+'px;pointer-events:none;z-index:9999;font-family:var(--mono);font-weight:800;font-size:'+(amount>=50?'20':'15')+'px;color:'+(amount>=50?'var(--gold)':amount>=20?'var(--green)':'var(--muted3)')+';text-shadow:0 0 20px rgba(212,168,50,.6);animation:xpFloat 1.2s ease-out forwards;';
+  popup.style.cssText='position:fixed;left:'+lx+'px;top:'+ty+'px;pointer-events:none;z-index:9999;font-family:var(--mono);font-weight:800;font-size:'+(amount>=50?'22':amount>=20?'18':'16')+'px;color:'+(amount>=50?'var(--gold)':amount>=20?'#34d399':'#4ade80')+';text-shadow:0 0 16px '+(amount>=50?'rgba(212,168,50,.8)':'rgba(74,222,128,.7)')+';animation:xpFloat 1.2s ease-out forwards;';
   document.body.appendChild(popup);
   setTimeout(function(){if(popup.parentNode)popup.parentNode.removeChild(popup);},1300);
 }
@@ -11327,7 +11327,7 @@ function showComboFloat(n){
   var floater=document.createElement('div');
   var _fr=_appRect();
   var _flx=Math.round(_fr.left+_fr.width/2);
-  var _fly=Math.round(_fr.top+_fr.height-160);
+  var _fly=Math.round(_fr.top+_fr.height*0.38);
   floater.style.cssText='position:fixed;left:'+_flx+'px;top:'+_fly+'px;transform:translateX(-50%) scale(0);'+
     'z-index:9999;pointer-events:none;font-family:"Plus Jakarta Sans",sans-serif;font-weight:900;'+
     'font-size:'+size+'px;color:'+color+';text-shadow:0 0 20px '+color+'88;'+
