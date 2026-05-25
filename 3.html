@@ -331,19 +331,15 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .mc-next{display:none;}
 .mc-next.show{display:block;}
 
-/* MATCH — pill redesign */
-.match-grid{display:flex;flex-direction:column;gap:0;margin-bottom:12px;}
-.match-col{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px 0;}
-.match-divider{display:flex;align-items:center;gap:8px;margin:2px 0;opacity:.4;}
-.match-divider::before,.match-divider::after{content:'';flex:1;height:1px;background:var(--border);}
-.match-divider span{font-family:var(--mono);font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;}
-.match-item{border-radius:999px;padding:9px 20px;border:2px solid var(--border);background:var(--s2);cursor:pointer;transition:border-color .12s,background .12s,transform .12s,box-shadow .12s;font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;user-select:none;-webkit-tap-highlight-color:transparent;box-shadow:0 2px 6px rgba(0,0,0,.08);}
-.match-item:active:not(.matched){transform:scale(.91);}
-.match-item.cn-pill{font-family:var(--cn);font-size:22px;padding:10px 22px;}
-.match-item.selected{border-color:var(--blue);background:rgba(96,165,250,.15);color:var(--blue);transform:scale(1.07);box-shadow:0 0 0 3px rgba(96,165,250,.2);}
-.match-item.matched{border-color:var(--green);background:rgba(74,222,128,.15);color:var(--green);cursor:default;animation:matchPop .32s cubic-bezier(.2,1.6,.4,1) both;pointer-events:none;}
-.match-item.wrong-flash{border-color:var(--red);background:var(--redbg);animation:shake .35s ease;color:var(--red);}
-@keyframes matchPop{0%{transform:scale(.85);opacity:.5;}55%{transform:scale(1.1);}100%{transform:scale(1);opacity:1;}}
+/* MATCH */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.match-col{display:flex;flex-direction:column;gap:7px;}
+.match-item{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);padding:13px 10px;text-align:center;cursor:pointer;transition:all .2s;font-size:13px;font-weight:600;user-select:none;-webkit-tap-highlight-color:transparent;}
+.match-item:active:not(.matched){transform:scale(.96);}
+.match-item.selected{border-color:var(--blue);background:var(--bluebg);color:var(--blue);}
+.match-item.matched{border-color:var(--green);background:var(--greenbg);color:var(--green);cursor:default;animation:pop .3s ease;pointer-events:none;}
+.match-item.wrong-flash{border-color:var(--red);background:var(--redbg);animation:shake .35s ease;}
+.match-char{font-family:var(--cn);font-size:26px;font-weight:900;}
 @keyframes fcCardIn{0%{opacity:0;transform:translateY(12px) scale(.93);}55%{transform:translateY(-3px) scale(1.02);}100%{opacity:1;transform:translateY(0) scale(1);}}
 
 /* PINYIN HUNT */
@@ -420,9 +416,9 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .sent-del:hover{color:var(--red);}
 
 /* ===================== WORD BANK ===================== */
-.wb-row{background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);padding:14px 12px;display:flex;gap:12px;align-items:center;margin-bottom:8px;transition:all .2s;position:relative;overflow:hidden;}
-.wb-row:hover:not(.already){border-color:var(--border2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.12);}
-.wb-row.already{opacity:.3;}
+.wb-row{background:var(--s1);border:1px solid var(--border);border-radius:var(--r12);padding:12px;display:flex;gap:12px;align-items:center;margin-bottom:6px;transition:border-color .15s;}
+.wb-row:hover{border-color:var(--border2);}
+.wb-row.already{opacity:.35;}
 .wb-char{font-family:var(--cn);font-size:30px;font-weight:900;min-width:44px;text-align:center;color:var(--red);}
 .wb-info{flex:1;min-width:0;}
 .wb-pinyin{font-family:var(--mono);font-size:10px;color:var(--gold);margin-bottom:2px;}
@@ -1884,7 +1880,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div class="game-prog"><span class="game-prog-txt" id="match-prog">Match each character</span><span class="game-score-txt" id="match-score-top"></span></div>
     <div class="match-grid">
       <div class="match-col" id="match-chars"></div>
-      <div class="match-divider"><span>↕ match</span></div>
       <div class="match-col" id="match-meanings"></div>
     </div>
     <div class="quiz-score" id="match-score"></div>
@@ -2424,6 +2419,23 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <!-- PHRASES SECTION -->
   <div id="bank-section-phrases" style="display:none;">
   <div id="bank-phrases-section">
+
+    <!-- PHRASE STATS HEADER -->
+    <div id="phrase-stats-header" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);padding:14px 16px;margin-bottom:14px;margin-top:4px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px;">Phrase Bank</div>
+          <div style="font-size:17px;font-weight:900;" id="phrase-count">0 phrases</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px;">Progress</div>
+          <div style="font-size:17px;font-weight:900;color:var(--blue);" id="phrase-pct">0%</div>
+        </div>
+      </div>
+      <div style="background:var(--s3);border-radius:6px;height:6px;overflow:hidden;">
+        <div id="phrase-prog-bar" style="height:100%;background:linear-gradient(90deg,var(--blue),#60a5fa);border-radius:6px;width:0%;transition:width .6s cubic-bezier(.2,.8,.2,1);"></div>
+      </div>
+    </div>
 
     <!-- Sub-tabs: All Added / Browse -->
     <div style="display:flex;background:var(--s2);border-radius:var(--r12);padding:3px;gap:3px;margin-bottom:14px;">
@@ -4568,13 +4580,13 @@ function renderMatch(){
   chars.innerHTML='';meanings.innerHTML='';
   var shuffled=matchPairs.slice().sort(function(){return Math.random()-.5;});
   matchPairs.forEach(function(p){
-    var c=document.createElement('button');c.className='match-item cn-pill';
-    c.textContent=p.char;
+    var c=document.createElement('div');c.className='match-item';
+    c.innerHTML='<div class="match-char">'+p.char+'</div>';
     c.dataset.id=p.id;c.onclick=function(){handleMatch(c,'char');};chars.appendChild(c);
   });
   shuffled.forEach(function(p){
-    var m=document.createElement('button');m.className='match-item';
-    m.textContent=p.meaning;
+    var m=document.createElement('div');m.className='match-item';
+    m.innerHTML='<div style="font-size:13px;font-weight:600;">'+p.meaning+'</div>';
     m.dataset.id=p.id;m.onclick=function(){handleMatch(m,'meaning');};meanings.appendChild(m);
   });
 }
@@ -7876,21 +7888,17 @@ function renderWordBank(){
     var inList=_addedSet.has(w.char);
     var row=document.createElement('div');
     row.className='wb-row'+(inList?' already':'');
-    row.style.opacity=inList?'0.4':'1';
     var catLabel=t(WB_CAT_KEYS[w.cat]||'')||w.cat;
-    var hskColors={HSK1:'#4ade80',HSK2:'#60a5fa',HSK3:'#f59e0b',HSK4:'#c084fc',HSK5:'#f87171',HSK6:'#fb923c'};
-    var hColor=hskColors[w.hsk]||'#888';
-    row.innerHTML='<div style="font-family:var(--cn);font-size:36px;font-weight:900;min-width:52px;text-align:center;color:var(--red);line-height:1;">'+w.char+'</div>'
-      +'<div style="flex:1;min-width:0;">'
-      +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:1px;">'
-      +'<span style="font-family:var(--mono);font-size:11px;color:var(--gold);font-weight:700;">'+w.pinyin+'</span>'
-      +'<span style="font-family:var(--mono);font-size:7px;padding:1px 5px;border-radius:8px;background:'+hColor+'22;color:'+hColor+';font-weight:700;">'+w.hsk+'</span>'
+    var hskCls2={HSK1:'hsk1',HSK2:'hsk2',HSK3:'hsk3',HSK4:'hsk4',HSK5:'hsk5',HSK6:'hsk6'};
+    row.innerHTML='<div class="wb-char">'+w.char+'</div>'
+      +'<div class="wb-info">'
+      +'<div class="wb-pinyin">'+w.pinyin+'</div>'
+      +'<div class="wb-meaning">'+getWordMeaning(w)+'</div>'
+      +(w.example?'<div class="wb-example">'+w.example+'</div>':'')
+      +'<div class="wb-badges"><span class="wb-badge '+(hskCls2[w.hsk]||'')+'">'+w.hsk+'</span><span class="wb-badge">'+catLabel+'</span></div>'
       +'</div>'
-      +'<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;">'+getWordMeaning(w)+'</div>'
-      +(w.example?'<div style="font-family:var(--cn);font-size:10px;color:var(--muted2);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+w.example+'</div>':'')
-      +'</div>'
-      +'<button class="wb-add-btn'+(inList?' added':'')+'" '+(inList?'disabled':'')+' data-char="'+w.char+'" style="flex-shrink:0;min-width:56px;">'
-      +(inList?'✓':'+ Add')
+      +'<button class="wb-add-btn'+(inList?' added':'')+'" '+(inList?'disabled':'')+' data-char="'+w.char+'" style="flex-shrink:0;">'
+      +(inList?'✓':t('bank_add'))
       +'</button>';
     var addBtn=row.querySelector('.wb-add-btn');
     if(addBtn&&!inList){(function(word){addBtn.onclick=function(){addFromBank(word);};})(w);}
@@ -12070,6 +12078,7 @@ function renderBpAllPhrases(){
 }
 
 function renderBankPhraseBrowse(){
+  updatePhraseStats();
   // Category pills
   var catsEl=el('bank-sb-cats');
   if(catsEl){
@@ -12136,14 +12145,25 @@ function renderBankPhraseBrowse(){
         // Update the My Phrases count label if visible without re-render
         var countEl=el('bp-count-label');
         if(countEl)countEl.textContent=(S.phrases_list||[]).length+' phrase'+((S.phrases_list||[]).length===1?'':'s');
+        updatePhraseStats();
       };})(s,addBtn);
     }
     listEl.appendChild(card);
   });
 }
 
+function updatePhraseStats(){
+  var totalAll=Object.values(SENTENCE_BANK).reduce(function(a,b){return a.concat(b);},[]).length;
+  var totalAdded=(S.phrases_list||[]).length;
+  var pct=totalAll>0?Math.round(totalAdded/totalAll*100):0;
+  if(el('phrase-count'))el('phrase-count').textContent=totalAdded+' phrase'+(totalAdded===1?'':'s')+' · '+(totalAll-totalAdded)+' to go';
+  if(el('phrase-pct'))el('phrase-pct').textContent=pct+'%';
+  if(el('phrase-prog-bar'))el('phrase-prog-bar').style.width=pct+'%';
+}
+
 function renderBankPhrases(){
   setBpTab(bpTab,el('bp-tab-'+bpTab));
+  updatePhraseStats();
 }
 function startQuickSession(){
   var list=getGameWords();
