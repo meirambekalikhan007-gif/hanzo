@@ -1059,13 +1059,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 .notif-text{font-size:12px;line-height:1.5;color:var(--muted3);}
 .notif-time{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;}
 
-/* ===== HEARTS SYSTEM (Feature 8) ===== */
-.hearts-display{display:flex;gap:4px;align-items:center;}
-.heart-icon{font-size:16px;transition:all .2s;}
-.heart-icon.lost{filter:grayscale(1);opacity:.3;}
-#hearts-modal{position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:20px;}
-#hearts-modal.show{display:flex;}
-.hearts-modal-card{background:var(--s1);border:1.5px solid var(--redbrd);border-radius:var(--r20);padding:28px 24px;text-align:center;max-width:320px;width:100%;position:relative;}
 
 /* ===== AI TUTOR PAGE ===== */
 /* AI page removed from vxv6 — AI lives only in hanzo-nextjs */
@@ -1356,19 +1349,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <button onclick="document.getElementById('pwa-install-banner').classList.remove('show');localStorage.setItem('hanzo_pwa_prompt_shown','1');" style="background:none;border:none;color:var(--muted2);font-size:18px;cursor:pointer;padding:4px;flex-shrink:0;">×</button>
 </div>
 
-<!-- HEARTS MODAL -->
-<div id="hearts-modal">
-  <div class="hearts-modal-card">
-    <div style="font-size:52px;margin-bottom:12px;">💔</div>
-    <div style="font-size:20px;font-weight:900;margin-bottom:6px;" data-i18n="hearts_empty">No hearts left!</div>
-    <div style="font-size:12px;color:var(--muted2);margin-bottom:20px;line-height:1.6;" data-i18n="hearts_desc">Take a break or watch an ad to get a free heart.<br>Hearts refill 1 every 30 minutes.</div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--gold);margin-bottom:16px;" id="hearts-refill-timer">Next heart in: 30:00</div>
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <button onclick="_watchAd()" style="background:var(--green);border:none;color:#000;font-weight:800;font-size:14px;padding:14px;border-radius:var(--r12);cursor:pointer;width:100%;" data-i18n="hearts_free_heart">🎁 Get Free Heart (30 min cooldown)</button>
-      <button onclick="document.getElementById('hearts-modal').classList.remove('show');" style="background:var(--s2);border:1.5px solid var(--border);color:var(--muted3);font-weight:700;font-size:13px;padding:12px;border-radius:var(--r12);cursor:pointer;width:100%;" data-i18n="hearts_close">Close</button>
-    </div>
-  </div>
-</div>
 
 <!-- BOTTOM NAV — 5 tabs -->
 <div class="bnav">
@@ -1706,12 +1686,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 
   <!-- PRACTICE SECTION (games) -->
   <div id="learn-section-practice">
-  <!-- HEARTS DISPLAY -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;" id="hearts-header">
-    <div class="hearts-display" id="hearts-display"></div>
-    <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);" id="hearts-refill-label"></div>
-  </div>
-
   <!-- TONE GUIDE -->
   <div class="card" style="margin-bottom:12px;">
     <div class="tone-guide-toggle" onclick="toggleToneGuide()">
@@ -12652,8 +12626,6 @@ _db.auth.onAuthStateChange(function(event, session) {
       // Session expired — clean up and show login
       currentUser = null; S = {};
       if (typeof _feedPollInterval !== 'undefined') clearInterval(_feedPollInterval);
-      if (window._heartRefillInterval) clearInterval(window._heartRefillInterval);
-      if (window._heartCheckInterval) clearInterval(window._heartCheckInterval);
       var as = el('auth-screen');
       if (as) { as.style.display = 'flex'; as.style.pointerEvents = 'all'; }
       if (typeof showLogin === 'function') showLogin();
@@ -13027,8 +12999,6 @@ doSignup = async function() {
 doLogout = async function() {
   // Stop all background intervals so they don't fire against a null user
   if (typeof _feedPollInterval !== 'undefined') clearInterval(_feedPollInterval);
-  if (window._heartRefillInterval) clearInterval(window._heartRefillInterval);
-  if (window._heartCheckInterval) clearInterval(window._heartCheckInterval);
   clearTimeout(_syncTimer);
 
   await _db.auth.signOut();
@@ -14781,118 +14751,6 @@ function _setLbTab(tab, btn) {
   if (btn) btn.classList.add('on');
 }
 
-// ============================================================
-// FEATURE 8: HEARTS / LIVES SYSTEM
-// ============================================================
-var _MAX_HEARTS = 5;
-var _HEART_REFILL_MS = 30 * 60 * 1000; // 30 min
-
-function _getHearts() {
-  if (localStorage.getItem('hanzo_premium') === '1') return _MAX_HEARTS;
-  _checkHeartRefill();
-  return parseInt(localStorage.getItem('hanzo_hearts') || String(_MAX_HEARTS));
-}
-
-function _checkHeartRefill() {
-  var hearts = parseInt(localStorage.getItem('hanzo_hearts') || String(_MAX_HEARTS));
-  if (hearts >= _MAX_HEARTS) return;
-  var refillTime = parseInt(localStorage.getItem('hanzo_hearts_refill_time') || '0');
-  var now = Date.now();
-  if (!refillTime) {
-    localStorage.setItem('hanzo_hearts_refill_time', String(now + _HEART_REFILL_MS));
-    return;
-  }
-  if (now >= refillTime) {
-    hearts = Math.min(_MAX_HEARTS, hearts + 1);
-    localStorage.setItem('hanzo_hearts', String(hearts));
-    if (hearts < _MAX_HEARTS) {
-      localStorage.setItem('hanzo_hearts_refill_time', String(now + _HEART_REFILL_MS));
-    } else {
-      localStorage.removeItem('hanzo_hearts_refill_time');
-    }
-  }
-}
-
-function _loseHeart() {
-  if (localStorage.getItem('hanzo_premium') === '1') return;
-  var hearts = _getHearts();
-  if (hearts <= 0) { _showNoHeartsModal(); return; }
-  hearts = Math.max(0, hearts - 1);
-  localStorage.setItem('hanzo_hearts', String(hearts));
-  if (hearts < _MAX_HEARTS && !localStorage.getItem('hanzo_hearts_refill_time')) {
-    localStorage.setItem('hanzo_hearts_refill_time', String(Date.now() + _HEART_REFILL_MS));
-  }
-  _renderHeartsDisplay();
-  if (hearts <= 0) { setTimeout(_showNoHeartsModal, 800); }
-}
-
-function _showNoHeartsModal() {
-  var modal = el('hearts-modal');
-  if (modal) modal.classList.add('show');
-  _startHeartsRefillTimer();
-}
-
-function _startHeartsRefillTimer() {
-  var label = el('hearts-refill-timer');
-  if (!label) return;
-  var refillTime = parseInt(localStorage.getItem('hanzo_hearts_refill_time') || '0');
-  if (!refillTime) { label.textContent = t('hearts_full'); return; }
-  var interval = setInterval(function() {
-    var left = refillTime - Date.now();
-    if (left <= 0) { clearInterval(interval); _checkHeartRefill(); _renderHeartsDisplay(); label.textContent = t('hearts_refilled'); return; }
-    var m = Math.floor(left / 60000);
-    var s = Math.floor((left % 60000) / 1000);
-    label.textContent = t('hearts_next_in') + ': ' + m + ':' + String(s).padStart(2, '0');
-  }, 1000);
-}
-
-function _renderHeartsDisplay() {
-  var container = el('hearts-display');
-  var label = el('hearts-refill-label');
-  if (!container) return;
-  if (localStorage.getItem('hanzo_premium') === '1') { container.innerHTML = '<span style="font-family:var(--mono);font-size:10px;color:var(--gold);">♥ Unlimited</span>'; return; }
-  var hearts = _getHearts();
-  var html = '';
-  for (var i = 0; i < _MAX_HEARTS; i++) {
-    html += '<span class="heart-icon' + (i >= hearts ? ' lost' : '') + '">♥</span>';
-  }
-  container.innerHTML = html;
-  if (label) {
-    var refillTime = parseInt(localStorage.getItem('hanzo_hearts_refill_time') || '0');
-    if (hearts < _MAX_HEARTS && refillTime) {
-      var left = Math.max(0, refillTime - Date.now());
-      var m = Math.floor(left / 60000);
-      var s = Math.floor((left % 60000) / 1000);
-      label.textContent = t('hearts_refill_in') + ' ' + m + ':' + String(s).padStart(2, '0');
-    } else {
-      label.textContent = '';
-    }
-  }
-}
-
-// Hearts cooldown: users can claim 1 free heart every 30 minutes (honest, no fake ads)
-var _HEART_COOLDOWN_MS = 30 * 60 * 1000; // 30 min
-var _HEART_COOLDOWN_KEY = 'hanzo_free_heart_ts';
-
-function _watchAd() {
-  var lastClaim = parseInt(localStorage.getItem(_HEART_COOLDOWN_KEY) || '0');
-  var now = Date.now();
-  var elapsed = now - lastClaim;
-  if (elapsed < _HEART_COOLDOWN_MS) {
-    var minsLeft = Math.ceil((_HEART_COOLDOWN_MS - elapsed) / 60000);
-    showMsg('Next free heart available in ' + minsLeft + ' min ⏳', 'var(--muted2)');
-    return;
-  }
-  // Grant the heart
-  localStorage.setItem(_HEART_COOLDOWN_KEY, String(now));
-  var hearts = Math.min(_MAX_HEARTS, parseInt(localStorage.getItem('hanzo_hearts') || '0') + 1);
-  localStorage.setItem('hanzo_hearts', String(hearts));
-  var modal = el('hearts-modal');
-  if (modal) modal.classList.remove('show');
-  _renderHeartsDisplay();
-  showMsg('♥ +1 Free heart claimed!', 'var(--red)');
-  if (typeof playSound === 'function') playSound('correct');
-}
 
 // ============================================================
 // FEATURE 10: SMOOTH PAGE TRANSITIONS (patch goPage)
@@ -15182,8 +15040,6 @@ if (_origLoginUser) {
     _origLoginUser(user);
     // Init new features
     setTimeout(function() {
-      _checkHeartRefill();
-      _renderHeartsDisplay();
       _updateShieldCard();
       _updateSRSDueBadge();
       _updateNotifBadge();
@@ -15197,11 +15053,6 @@ if (_origLoginUser) {
         // We keep existing onboarding logic but also set our key post-onboarding
       }
     }, 800);
-    // Heart refill interval
-    window._heartRefillInterval = setInterval(function() {
-      _checkHeartRefill();
-      _renderHeartsDisplay();
-    }, 60000);
   };
 }
 
@@ -15242,13 +15093,6 @@ goPage = function(p, btn) {
   if (avBtn) avBtn.style.borderColor = (p === 'profile') ? 'var(--red)' : '';
 };
 
-// Update hearts display on heartbeat
-window._heartCheckInterval = setInterval(function() {
-  if (typeof currentPage !== 'undefined' && currentPage === 'games') {
-    _checkHeartRefill();
-    _renderHeartsDisplay();
-  }
-}, 30000);
 
 // ============================================================
 // 🎧  LISTENING GAME — hear the audio, pick the right character
