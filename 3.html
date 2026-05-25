@@ -4145,10 +4145,7 @@ function flipCard(){
   var btnsDiv=el('fc-btns');
   if(btnsDiv){
     var gotIt=btnsDiv.querySelector('.qbm');
-    if(gotIt){
-      gotIt.disabled=true;gotIt.style.opacity='.4';gotIt.textContent='⏳ Got it';
-      setTimeout(function(){if(gotIt){gotIt.disabled=false;gotIt.style.opacity='1';gotIt.textContent='✓ '+t('g_got_it');}},1500);
-    }
+    if(gotIt){gotIt.disabled=false;gotIt.style.opacity='1';gotIt.textContent=t('g_got_it');}
   }
   var fc=el('flashcard');if(fc){fc.classList.add('anim-pop');setTimeout(function(){fc.classList.remove('anim-pop');},300);}
 }
@@ -4530,9 +4527,17 @@ function handleMatch(elem,type){
   if(matchSelected.el===elem){elem.classList.remove('selected');matchSelected=null;return;}
   if(matchSelected.type===type){matchSelected.el.classList.remove('selected');matchSelected={el:elem,type:type};document.querySelectorAll('.match-item.selected').forEach(function(e){e.classList.remove('selected');});elem.classList.add('selected');return;}
   if(matchSelected.el.dataset.id===elem.dataset.id){
-    matchSelected.el.classList.remove('selected');matchSelected.el.classList.add('matched');elem.classList.add('matched');matchSelected=null;matchCorrect++;awardXP(5,'Match ✓');onCorrectAnswer();
+    matchSelected.el.classList.remove('selected');matchSelected.el.classList.add('matched');elem.classList.add('matched');matchSelected=null;matchCorrect++;
+    onCorrectAnswer();
+    setTimeout(function(){awardXP(5,'Match ✓');},0);
     if(el('match-score-top'))el('match-score-top').textContent=matchCorrect+'/'+matchPairs.length+' ✓';
-    if(matchCorrect===matchPairs.length){if(el('match-score'))el('match-score').textContent='🎉 '+t('g_all_matched');if(el('match-next-btn'))el('match-next-btn').style.display='block';launchConfetti();awardXP(20,'All pairs! 🔗');setTimeout(function(){awardGems(GEM_RATES.game_all_match,'Match');},600);}
+    if(matchCorrect===matchPairs.length){
+      if(el('match-score'))el('match-score').textContent='🎉 '+t('g_all_matched');
+      var _mnb=el('match-next-btn');
+      if(_mnb){_mnb.style.display='block';setTimeout(function(){_mnb.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}
+      launchConfetti();
+      setTimeout(function(){awardXP(20,'All pairs! 🔗');awardGems(GEM_RATES.game_all_match,'Match');},0);
+    }
   }else{
     var sel=matchSelected;sel.el.classList.add('wrong-flash');elem.classList.add('wrong-flash');
     onWrongAnswer();
@@ -6421,12 +6426,37 @@ function renderSOAnswer(){
 function soPickTile(idx,word){
   soTilePool.splice(idx,1);
   soAnswer.push(word);
-  renderSOTiles();renderSOAnswer();
+  _soRenderFast();
 }
 function soReturnTile(idx){
   var word=soAnswer.splice(idx,1)[0];
   soTilePool.push(word);
-  renderSOTiles();renderSOAnswer();
+  _soRenderFast();
+}
+function _soRenderFast(){
+  var pool=el('so-tiles'),zone=el('so-answer-zone');
+  if(!pool||!zone)return;
+  pool.innerHTML='';
+  soTilePool.forEach(function(word,i){
+    var tile=document.createElement('div');
+    tile.className='so-tile';tile.style.transition='none';
+    tile.textContent=word;
+    (function(idx,w){tile.onclick=function(){soPickTile(idx,w);};})(i,word);
+    pool.appendChild(tile);
+  });
+  zone.innerHTML='';
+  if(!soAnswer.length){
+    var hint=document.createElement('div');
+    hint.style.cssText='font-family:var(--mono);font-size:10px;color:var(--muted);padding:6px;align-self:center;';
+    hint.textContent=t('so_tiles');zone.appendChild(hint);return;
+  }
+  soAnswer.forEach(function(word,i){
+    var tile=document.createElement('div');
+    tile.className='so-tile in-answer';tile.style.transition='none';
+    tile.textContent=word;
+    (function(idx){tile.onclick=function(){soReturnTile(idx);};})(i);
+    zone.appendChild(tile);
+  });
 }
 function soClear(){
   var sent=soQueue[soIdx];if(!sent)return;
@@ -6457,6 +6487,7 @@ function soCheck(){
   var zone=el('so-answer-zone');
   if(zone){
     zone.querySelectorAll('.so-tile').forEach(function(tile){
+      tile.style.transition='none';
       tile.classList.remove('in-answer');
       tile.classList.add(isCorrect?'correct-place':'wrong-place');
       if(!isCorrect)tile.style.animation='wrongShake .4s ease';
