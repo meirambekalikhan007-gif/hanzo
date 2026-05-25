@@ -4471,9 +4471,24 @@ function showMCCard(){
     btn.onclick=function(){
       if(mcAnswered)return;mcAnswered=true;mcTotal++;
       var isC=ch.id===correct.id;
+      // 1. Instant UI
       g.querySelectorAll('.mc-choice').forEach(function(b){b.classList.add('disabled');});
-      if(isC){mcCorrect++;btn.classList.add('correct');if(el('mc-result')){el('mc-result').textContent=t('g_correct');el('mc-result').style.color='var(--green)';}updateWordSRS(correct.id,true);updateCharStatus(correct.id,'mastered');awardXP(XP_RATES.master_word,'Choice ✓');markStreakDay();onCorrectAnswer();save();if(el('mc-score-top'))el('mc-score-top').textContent=mcCorrect+'/'+(mcIdx+1)+' ✓';setTimeout(function(){mcNext();},650);}
-      else{btn.classList.add('wrong');if(el('mc-result')){el('mc-result').textContent=t('g_was')+' '+getWordMeaning(correct);el('mc-result').style.color='var(--red)';}g.querySelectorAll('.mc-choice').forEach(function(b){if(b.textContent===getWordMeaning(correct)||b.textContent===correct.char)b.classList.add('reveal-correct');});updateWordSRS(correct.id,false);updateCharStatus(correct.id,'learning');onWrongAnswer();save();if(el('mc-score-top'))el('mc-score-top').textContent=mcCorrect+'/'+(mcIdx+1)+' ✓';var next=el('mc-next');if(next)next.classList.add('show');}
+      if(isC){
+        mcCorrect++;
+        btn.classList.add('correct');
+        if(el('mc-result')){el('mc-result').textContent=t('g_correct');el('mc-result').style.color='var(--green)';}
+      } else {
+        btn.classList.add('wrong');
+        if(el('mc-result')){el('mc-result').textContent=t('g_was')+' '+getWordMeaning(correct);el('mc-result').style.color='var(--red)';}
+        g.querySelectorAll('.mc-choice').forEach(function(b){if(b.textContent===getWordMeaning(correct)||b.textContent===correct.char)b.classList.add('reveal-correct');});
+      }
+      if(el('mc-score-top'))el('mc-score-top').textContent=mcCorrect+'/'+(mcIdx+1)+' ✓';
+      var next=el('mc-next');if(next){next.classList.add('show');setTimeout(function(){next.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}
+      // 2. Defer heavy work
+      setTimeout(function(){
+        if(isC){updateWordSRS(correct.id,true);updateCharStatus(correct.id,'mastered');awardXP(XP_RATES.master_word,'Choice ✓');markStreakDay();onCorrectAnswer();save();}
+        else{updateWordSRS(correct.id,false);updateCharStatus(correct.id,'learning');onWrongAnswer();save();}
+      },0);
     };
     g.appendChild(btn);
   });
@@ -4563,21 +4578,23 @@ function checkPinyin(){
   var checkBtn=inp?inp.parentNode.querySelector('button'):null;
   if(checkBtn)checkBtn.disabled=true;
   var isC=normPy(ch.pinyin||'')===normPy(input);
+  // 1. Instant UI feedback
   if(isC){
     phCorrect++;
     if(el('ph-result')){el('ph-result').textContent=t('g_correct');el('ph-result').style.color='var(--green)';}
     if(el('ph-answer'))el('ph-answer').textContent='';
-    updateWordSRS(ch.id,true);updateCharStatus(ch.id,'mastered');awardXP(XP_RATES.master_word,'Pinyin ✓');markStreakDay();onCorrectAnswer();save();
-    if(el('ph-score'))el('ph-score').textContent=phCorrect+'/'+(phIdx+1)+' correct';
-    setTimeout(function(){phNext();},650);
   } else {
     if(el('ph-result')){el('ph-result').textContent=t('g_not_quite');el('ph-result').style.color='var(--red)';}
     if(el('ph-answer'))el('ph-answer').textContent=t('g_answer')+' '+ch.pinyin;
     var phInput=el('ph-input');if(phInput)phInput.style.animation='wrongShake .4s ease';
-    updateWordSRS(ch.id,false);updateCharStatus(ch.id,'learning');onWrongAnswer();save();
-    if(el('ph-score'))el('ph-score').textContent=phCorrect+'/'+(phIdx+1)+' correct';
-    var nb=el('ph-next');if(nb){nb.style.display='block';}
   }
+  if(el('ph-score'))el('ph-score').textContent=phCorrect+'/'+(phIdx+1)+' correct';
+  var nb=el('ph-next');if(nb){nb.style.display='block';setTimeout(function(){nb.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}
+  // 2. Defer heavy work
+  setTimeout(function(){
+    if(isC){updateWordSRS(ch.id,true);updateCharStatus(ch.id,'mastered');awardXP(XP_RATES.master_word,'Pinyin ✓');markStreakDay();onCorrectAnswer();save();}
+    else{updateWordSRS(ch.id,false);updateCharStatus(ch.id,'learning');onWrongAnswer();save();}
+  },0);
 }
 function phNext(){
   _phAnswered=false;
@@ -4617,9 +4634,24 @@ function showChCard(){
     btn.onclick=function(){
       if(lpAnswered)return;lpAnswered=true;lpTotal++;
       var isC=ch.id===correct.id;
+      // 1. Instant UI
       g.querySelectorAll('.ch-choice').forEach(function(b){b.classList.add('disabled');});
-      if(isC){lpCorrect++;btn.classList.add('correct');if(el('lp-result')){el('lp-result').textContent=t('g_correct');el('lp-result').style.color='var(--green)';}updateWordSRS(correct.id,true);updateCharStatus(correct.id,'mastered');awardXP(XP_RATES.master_word,'Char Hunt ✓');markStreakDay();onCorrectAnswer();save();if(el('lp-score-top'))el('lp-score-top').textContent=lpCorrect+'/'+(lpIdx+1)+' ✓';setTimeout(function(){lpNext();},650);}
-      else{btn.classList.add('wrong');if(el('lp-result')){el('lp-result').textContent=t('g_was')+' '+correct.char;el('lp-result').style.color='var(--red)';}g.querySelectorAll('.ch-choice').forEach(function(b){if(b.querySelector('.ch-char')&&b.querySelector('.ch-char').textContent===correct.char)b.classList.add('reveal-correct');});updateWordSRS(correct.id,false);updateCharStatus(correct.id,'learning');onWrongAnswer();save();if(el('lp-score-top'))el('lp-score-top').textContent=lpCorrect+'/'+(lpIdx+1)+' ✓';var next=el('lp-next');if(next)next.style.display='block';}
+      if(isC){
+        lpCorrect++;
+        btn.classList.add('correct');
+        if(el('lp-result')){el('lp-result').textContent=t('g_correct');el('lp-result').style.color='var(--green)';}
+      } else {
+        btn.classList.add('wrong');
+        if(el('lp-result')){el('lp-result').textContent=t('g_was')+' '+correct.char;el('lp-result').style.color='var(--red)';}
+        g.querySelectorAll('.ch-choice').forEach(function(b){if(b.querySelector('.ch-char')&&b.querySelector('.ch-char').textContent===correct.char)b.classList.add('reveal-correct');});
+      }
+      if(el('lp-score-top'))el('lp-score-top').textContent=lpCorrect+'/'+(lpIdx+1)+' ✓';
+      var next=el('lp-next');if(next){next.style.display='block';setTimeout(function(){next.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}
+      // 2. Defer heavy work
+      setTimeout(function(){
+        if(isC){updateWordSRS(correct.id,true);updateCharStatus(correct.id,'mastered');awardXP(XP_RATES.master_word,'Char Hunt ✓');markStreakDay();onCorrectAnswer();save();}
+        else{updateWordSRS(correct.id,false);updateCharStatus(correct.id,'learning');onWrongAnswer();save();}
+      },0);
     };
     g.appendChild(btn);
   });
@@ -6413,8 +6445,8 @@ function soCheck(){
   var correctStr=sent.cn.trim();
   var userClean=userStr.trim();
   var isCorrect=userClean===correctStr;
-  soTotal++;if(isCorrect){soCorrect++;awardXP(XP_RATES.fill_correct,'Order correct ✓');onCorrectAnswer();}else{onWrongAnswer();}
-  // Color answer zone tiles
+  soTotal++;if(isCorrect)soCorrect++;
+  // 1. Instant UI
   var zone=el('so-answer-zone');
   if(zone){
     zone.querySelectorAll('.so-tile').forEach(function(tile){
@@ -6426,14 +6458,7 @@ function soCheck(){
   }
   var fb=el('so-feedback');
   if(fb){
-    fb.style.display='block';
-    fb.style.cssText=fb.style.cssText||'';
-    fb.style.borderRadius='var(--r12)';
-    fb.style.padding='12px 14px';
-    fb.style.marginBottom='12px';
-    fb.style.fontSize='13px';
-    fb.style.fontWeight='600';
-    fb.style.lineHeight='1.6';
+    fb.style.cssText='display:block;border-radius:var(--r12);padding:12px 14px;margin-bottom:12px;font-size:13px;font-weight:600;line-height:1.6;';
     if(isCorrect){
       fb.style.background='var(--greenbg)';fb.style.border='1px solid var(--greenbrd)';fb.style.color='var(--green)';
       fb.textContent='✓ '+t('correct');
@@ -6442,13 +6467,17 @@ function soCheck(){
       fb.innerHTML=t('wrong')+' <span style="font-family:var(--cn);font-size:17px;font-weight:900;color:var(--text);">'+sent.cn+'</span><br><span style="font-family:var(--mono);font-size:10px;opacity:.7;">'+sent.py+'</span>';
     }
   }
-  // Disable pool
   var pool=el('so-tiles');
   if(pool)pool.querySelectorAll('.so-tile').forEach(function(t2){t2.onclick=null;t2.style.opacity='.25';});
   var cb=el('so-check-btn');if(cb)cb.style.display='none';
   var st=el('so-score-top');if(st)st.textContent=soCorrect+'/'+(soIdx+1)+' ✓';
-  if(isCorrect){setTimeout(function(){soNext();},750);}
-  else{var nb=el('so-next-btn');if(nb){nb.style.display='block';nb.textContent=t('so_next');nb.onclick=soNext;}}
+  var nb=el('so-next-btn');
+  if(nb){nb.style.display='block';nb.textContent=t('so_next');nb.onclick=soNext;setTimeout(function(){nb.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}
+  // 2. Defer heavy work
+  setTimeout(function(){
+    if(isCorrect){awardXP(XP_RATES.fill_correct,'Order correct ✓');onCorrectAnswer();}else{onWrongAnswer();}
+    save();
+  },0);
 }
 function soNext(){soIdx++;showSOQuestion();}
 // Note: soQueue/soIdx/soCorrect/soTotal declared above at game vars section
