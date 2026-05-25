@@ -4484,10 +4484,12 @@ function showMCCard(){
       }
       if(el('mc-score-top'))el('mc-score-top').textContent=mcCorrect+'/'+(mcIdx+1)+' ✓';
       var next=el('mc-next');if(next){next.classList.add('show');setTimeout(function(){next.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}
-      // 2. Defer heavy work
+      // 2. Sound + animations immediately
+      if(isC){onCorrectAnswer();}else{onWrongAnswer();}
+      // 3. Defer heavy data writes
       setTimeout(function(){
-        if(isC){updateWordSRS(correct.id,true);updateCharStatus(correct.id,'mastered');awardXP(XP_RATES.master_word,'Choice ✓');markStreakDay();onCorrectAnswer();save();}
-        else{updateWordSRS(correct.id,false);updateCharStatus(correct.id,'learning');onWrongAnswer();save();}
+        if(isC){updateWordSRS(correct.id,true);updateCharStatus(correct.id,'mastered');awardXP(XP_RATES.master_word,'Choice ✓');markStreakDay();save();}
+        else{updateWordSRS(correct.id,false);updateCharStatus(correct.id,'learning');save();}
       },0);
     };
     g.appendChild(btn);
@@ -4590,10 +4592,12 @@ function checkPinyin(){
   }
   if(el('ph-score'))el('ph-score').textContent=phCorrect+'/'+(phIdx+1)+' correct';
   var nb=el('ph-next');if(nb){nb.style.display='block';setTimeout(function(){nb.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}
-  // 2. Defer heavy work
+  // 2. Sound + animations immediately
+  if(isC){onCorrectAnswer();}else{onWrongAnswer();}
+  // 3. Defer heavy data writes
   setTimeout(function(){
-    if(isC){updateWordSRS(ch.id,true);updateCharStatus(ch.id,'mastered');awardXP(XP_RATES.master_word,'Pinyin ✓');markStreakDay();onCorrectAnswer();save();}
-    else{updateWordSRS(ch.id,false);updateCharStatus(ch.id,'learning');onWrongAnswer();save();}
+    if(isC){updateWordSRS(ch.id,true);updateCharStatus(ch.id,'mastered');awardXP(XP_RATES.master_word,'Pinyin ✓');markStreakDay();save();}
+    else{updateWordSRS(ch.id,false);updateCharStatus(ch.id,'learning');save();}
   },0);
 }
 function phNext(){
@@ -4647,10 +4651,12 @@ function showChCard(){
       }
       if(el('lp-score-top'))el('lp-score-top').textContent=lpCorrect+'/'+(lpIdx+1)+' ✓';
       var next=el('lp-next');if(next){next.style.display='block';setTimeout(function(){next.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}
-      // 2. Defer heavy work
+      // 2. Sound + animations immediately
+      if(isC){onCorrectAnswer();}else{onWrongAnswer();}
+      // 3. Defer heavy data writes
       setTimeout(function(){
-        if(isC){updateWordSRS(correct.id,true);updateCharStatus(correct.id,'mastered');awardXP(XP_RATES.master_word,'Char Hunt ✓');markStreakDay();onCorrectAnswer();save();}
-        else{updateWordSRS(correct.id,false);updateCharStatus(correct.id,'learning');onWrongAnswer();save();}
+        if(isC){updateWordSRS(correct.id,true);updateCharStatus(correct.id,'mastered');awardXP(XP_RATES.master_word,'Char Hunt ✓');markStreakDay();save();}
+        else{updateWordSRS(correct.id,false);updateCharStatus(correct.id,'learning');save();}
       },0);
     };
     g.appendChild(btn);
@@ -6473,10 +6479,12 @@ function soCheck(){
   var st=el('so-score-top');if(st)st.textContent=soCorrect+'/'+(soIdx+1)+' ✓';
   var nb=el('so-next-btn');
   if(nb){nb.style.display='block';nb.textContent=t('so_next');nb.onclick=soNext;setTimeout(function(){nb.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}
-  // 2. Defer heavy work
+  // 2. Sound + animations immediately
+  if(isCorrect){onCorrectAnswer();}else{onWrongAnswer();}
+  // 3. Defer heavy data writes
   setTimeout(function(){
-    if(isCorrect){awardXP(XP_RATES.fill_correct,'Order correct ✓');onCorrectAnswer();}else{onWrongAnswer();}
-    save();
+    if(isCorrect){awardXP(XP_RATES.fill_correct,'Order correct ✓');markStreakDay();save();}
+    else{save();}
   },0);
 }
 function soNext(){soIdx++;showSOQuestion();}
