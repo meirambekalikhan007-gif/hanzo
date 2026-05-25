@@ -331,16 +331,20 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .mc-next{display:none;}
 .mc-next.show{display:block;}
 
-/* MATCH */
-.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-.match-col{display:flex;flex-direction:column;gap:7px;}
-.match-item{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r14);padding:16px 10px;text-align:center;cursor:pointer;transition:all .2s;font-size:13px;font-weight:700;min-height:58px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.1);}
-.match-item:hover:not(.matched){background:var(--s3);border-color:var(--border2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.15);}
-.match-item:active:not(.matched){transform:scale(.96);}
-.match-item.selected{border-color:var(--blue);background:var(--bluebg);color:var(--blue);box-shadow:0 0 0 3px rgba(96,165,250,.2);transform:scale(1.03);}
-.match-item.matched{border-color:var(--green);background:var(--greenbg);color:var(--green);cursor:default;animation:pop .35s cubic-bezier(.2,1.6,.4,1);box-shadow:0 0 0 3px rgba(74,222,128,.15);}
+/* MATCH — pill redesign */
+.match-grid{display:flex;flex-direction:column;gap:0;margin-bottom:12px;}
+.match-col{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px 0;}
+.match-divider{display:flex;align-items:center;gap:8px;margin:2px 0;opacity:.4;}
+.match-divider::before,.match-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.match-divider span{font-family:var(--mono);font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;}
+.match-item{border-radius:999px;padding:9px 20px;border:2px solid var(--border);background:var(--s2);cursor:pointer;transition:border-color .12s,background .12s,transform .12s,box-shadow .12s;font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;user-select:none;-webkit-tap-highlight-color:transparent;box-shadow:0 2px 6px rgba(0,0,0,.08);}
+.match-item:active:not(.matched){transform:scale(.91);}
+.match-item.cn-pill{font-family:var(--cn);font-size:22px;padding:10px 22px;}
+.match-item.selected{border-color:var(--blue);background:rgba(96,165,250,.15);color:var(--blue);transform:scale(1.07);box-shadow:0 0 0 3px rgba(96,165,250,.2);}
+.match-item.matched{border-color:var(--green);background:rgba(74,222,128,.15);color:var(--green);cursor:default;animation:matchPop .32s cubic-bezier(.2,1.6,.4,1) both;pointer-events:none;}
 .match-item.wrong-flash{border-color:var(--red);background:var(--redbg);animation:shake .35s ease;color:var(--red);}
-.match-char{font-family:var(--cn);font-size:26px;font-weight:900;}
+@keyframes matchPop{0%{transform:scale(.85);opacity:.5;}55%{transform:scale(1.1);}100%{transform:scale(1);opacity:1;}}
+@keyframes fcCardIn{0%{opacity:0;transform:translateY(12px) scale(.93);}55%{transform:translateY(-3px) scale(1.02);}100%{opacity:1;transform:translateY(0) scale(1);}}
 
 /* PINYIN HUNT */
 .ph-char{font-family:var(--cn);font-size:80px;font-weight:900;color:var(--red);text-align:center;line-height:1;margin-bottom:6px;}
@@ -1880,6 +1884,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div class="game-prog"><span class="game-prog-txt" id="match-prog">Match each character</span><span class="game-score-txt" id="match-score-top"></span></div>
     <div class="match-grid">
       <div class="match-col" id="match-chars"></div>
+      <div class="match-divider"><span>↕ match</span></div>
       <div class="match-col" id="match-meanings"></div>
     </div>
     <div class="quiz-score" id="match-score"></div>
@@ -4150,6 +4155,8 @@ function showFlashcard(){
   if(el('fc-front'))el('fc-front').textContent=ch.char;
   if(el('fc-hint'))el('fc-hint').textContent=t('g_tap_reveal');
   var back=el('fc-back');if(back)back.classList.remove('show');
+  // Spring pop animation — instant, no freeze
+  var _fc=el('flashcard');if(_fc){_fc.style.animation='none';void _fc.offsetWidth;_fc.style.animation='fcCardIn .28s cubic-bezier(.34,1.56,.64,1) both';}
   if(el('fc-btns'))el('fc-btns').style.display='none';
   var _pb=el('fc-pron-btn');if(_pb)_pb.style.display='none'; // hide mic until flipped
   if(el('fc-pinyin'))el('fc-pinyin').textContent=ch.pinyin||'';
@@ -4407,6 +4414,10 @@ var _fcGotItStreak=0; // consecutive 'mastered' taps
 var _fcVerifyMode=false;
 function quizResult(r){
   var ch=quizCards[quizIdx];
+  // Instant button feedback — flash the pressed button before anything else
+  if(r==='mastered'){var _b=el('fc-btn-got');if(_b){_b.style.background='#10b981';_b.style.transform='scale(.93)';setTimeout(function(){_b.style.background='';_b.style.transform='';},160);}}
+  else if(r==='ok'){var _b2=document.querySelector('.qbo');if(_b2){_b2.style.background='#f59e0b';_b2.style.transform='scale(.93)';setTimeout(function(){_b2.style.background='';_b2.style.transform='';},160);}}
+  else{var _b3=document.querySelector('.qbw');if(_b3){_b3.style.background='#ef4444';_b3.style.transform='scale(.93)';setTimeout(function(){_b3.style.background='';_b3.style.transform='';},160);}}
   if(r==='mastered'){
     quizCorrect++;
     _fcGotItStreak++;
@@ -4557,13 +4568,13 @@ function renderMatch(){
   chars.innerHTML='';meanings.innerHTML='';
   var shuffled=matchPairs.slice().sort(function(){return Math.random()-.5;});
   matchPairs.forEach(function(p){
-    var c=document.createElement('div');c.className='match-item';
-    c.innerHTML='<div class="match-char">'+p.char+'</div>';
+    var c=document.createElement('button');c.className='match-item cn-pill';
+    c.textContent=p.char;
     c.dataset.id=p.id;c.onclick=function(){handleMatch(c,'char');};chars.appendChild(c);
   });
   shuffled.forEach(function(p){
-    var m=document.createElement('div');m.className='match-item';
-    m.innerHTML='<div style="font-size:12px;font-weight:600;">'+p.meaning+'</div>';
+    var m=document.createElement('button');m.className='match-item';
+    m.textContent=p.meaning;
     m.dataset.id=p.id;m.onclick=function(){handleMatch(m,'meaning');};meanings.appendChild(m);
   });
 }
@@ -4571,7 +4582,7 @@ function handleMatch(elem,type){
   if(elem.classList.contains('matched'))return;
   if(!matchSelected){matchSelected={el:elem,type:type};elem.classList.add('selected');return;}
   if(matchSelected.el===elem){elem.classList.remove('selected');matchSelected=null;return;}
-  if(matchSelected.type===type){matchSelected.el.classList.remove('selected');matchSelected={el:elem,type:type};document.querySelectorAll('.match-item.selected').forEach(function(e){e.classList.remove('selected');});elem.classList.add('selected');return;}
+  if(matchSelected.type===type){matchSelected.el.classList.remove('selected');matchSelected={el:elem,type:type};document.querySelectorAll('.match-item.selected').forEach(function(e){if(e!==elem)e.classList.remove('selected');});elem.classList.add('selected');return;}
   if(matchSelected.el.dataset.id===elem.dataset.id){
     matchSelected.el.classList.remove('selected');matchSelected.el.classList.add('matched');elem.classList.add('matched');matchSelected=null;matchCorrect++;
     setTimeout(function(){onCorrectAnswer();awardXP(5,'Match ✓');save();},0);
@@ -7786,15 +7797,18 @@ function addFromBank(w){
   if(isInList(w.char))return;
   if(!S.chars_list)S.chars_list=[];
   S.chars_list.push({id:Date.now(),char:w.char,pinyin:w.pinyin,meaning:w.meaning,hsk:w.hsk,status:'new',example:w.example,date:getLocalDate()});
-  // Phase 1: instant visual feedback — mark every matching button NOW
+  // Phase 1: instantly slide the row out — no waiting
   document.querySelectorAll('.wb-add-btn[data-char]').forEach(function(btn){
-    if(btn.dataset.char===w.char){btn.disabled=true;btn.className='wb-add-btn added';btn.textContent=t('bank_added');}
+    if(btn.dataset.char===w.char){
+      btn.disabled=true;btn.className='wb-add-btn added';btn.textContent='✓';
+      var row=btn.closest('.wb-row');
+      if(row){row.style.transition='transform .2s ease,opacity .2s ease';row.style.transform='translateX(28px)';row.style.opacity='0';}
+    }
   });
-  showMsg('+1 word added ✓','var(--green)');
-  awardXP(XP_RATES.add_word || 2, 'Added word 📖');
+  awardXP(XP_RATES.add_word||2,'Added word 📖');
   updateModeCounts();
-  // Phase 2: full re-render + persist after the tap lands
-  setTimeout(function(){save();renderWordBank();},0);
+  // Phase 2: persist + re-render after slide-out animation completes
+  setTimeout(function(){save();renderWordBank();},220);
 }
 
 function wbNext(){var f=getFilteredWB();if(wbPage<Math.max(0,Math.ceil(f.length/WB_PER_PAGE)-1)){wbPage++;renderWordBank();}}
