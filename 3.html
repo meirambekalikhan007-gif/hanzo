@@ -48,7 +48,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filte
 .nav-logo-cn{font-family:var(--cn);font-size:22px;font-weight:900;color:var(--red);letter-spacing:-1px;line-height:1;}
 .nav-logo-badge{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:2px;text-transform:uppercase;background:var(--redbg);border:1px solid var(--redbrd);color:var(--red);padding:2px 7px;border-radius:20px;}
 .nav-right{display:flex;gap:6px;align-items:center;}
-.icon-btn{width:44px;height:44px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r8);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;color:var(--muted3);}
+.icon-btn{width:34px;height:34px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r8);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;color:var(--muted3);}
 .icon-btn:hover{border-color:var(--border2);color:var(--text);}
 
 /* BOTTOM NAV */
@@ -153,8 +153,10 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filte
 
 /* BUTTONS */
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;background:var(--red);border:none;color:#fff;font-family:var(--font);font-size:14px;font-weight:700;border-radius:var(--r12);cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1),background .2s,box-shadow .2s,opacity .2s;letter-spacing:.2px;position:relative;overflow:hidden;}
-.btn:active{transform:scale(.95) translateY(1px);}
-.btn:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 4px 16px rgba(232,96,122,.35);}
+.btn:active{transform:scale(.96);}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(232,96,122,.35);}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.btn:active{transform:translateY(1px);}
 .btn:disabled{opacity:.45;transform:none;box-shadow:none;cursor:not-allowed;}
 .btn-outline{background:transparent;border:1.5px solid var(--border2);color:var(--muted3);}
 .btn-outline:hover{border-color:var(--border3);color:var(--text);filter:none;}
@@ -162,7 +164,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filte
 .btn-sm{padding:9px 16px;font-size:12px;width:auto;border-radius:var(--r8);}
 
 /* INPUTS */
-input,textarea,select{background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-family:var(--font);font-size:16px;padding:12px 14px;border-radius:var(--r12);outline:none;width:100%;transition:border-color .15s;}
+input,textarea,select{background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-family:var(--font);font-size:14px;padding:12px 14px;border-radius:var(--r12);outline:none;width:100%;transition:border-color .15s;}
 input:focus,textarea:focus,select:focus{border-color:var(--red);background:var(--s1);}
 select option{background:var(--s2);}
 textarea{resize:none;}
@@ -388,7 +390,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .char-ex{font-family:var(--cn);font-size:10px;color:var(--muted2);line-height:1.4;}
 .char-meta{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
 .char-badge{font-family:var(--mono);font-size:8px;padding:2px 6px;border-radius:20px;}
-.char-del{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:8px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;transition:color .15s;}
+.char-del{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:2px;transition:color .15s;}
 .char-del:hover{color:var(--red);}
 .char-status-sel{background:var(--s2);border:1px solid var(--border);color:var(--muted2);font-family:var(--mono);font-size:8px;padding:2px 4px;border-radius:6px;cursor:pointer;width:auto;}
 
@@ -409,7 +411,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .sent-cn{font-family:var(--cn);font-size:17px;font-weight:500;margin-bottom:4px;line-height:1.5;}
 .sent-en{font-size:12px;color:var(--muted2);margin-bottom:3px;}
 .sent-date{font-family:var(--mono);font-size:9px;color:var(--muted);}
-.sent-del{position:absolute;top:4px;right:4px;background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:8px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;transition:color .15s;}
+.sent-del{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;transition:color .15s;}
 .sent-del:hover{color:var(--red);}
 
 /* ===================== WORD BANK ===================== */
@@ -541,7 +543,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .auth-card-sub{font-size:12px;color:var(--muted2);margin-bottom:20px;}
 .auth-field{margin-bottom:12px;}
 .auth-field label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted2);display:block;margin-bottom:5px;}
-.auth-field input{width:100%;background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-family:var(--font);font-size:16px;padding:13px 14px;border-radius:var(--r12);outline:none;transition:border-color .15s;}
+.auth-field input{width:100%;background:var(--s2);border:1.5px solid var(--border);color:var(--text);font-family:var(--font);font-size:14px;padding:13px 14px;border-radius:var(--r12);outline:none;transition:border-color .15s;}
 .auth-field input:focus{border-color:var(--red);background:var(--s1);}
 .auth-err{background:var(--redbg);border:1px solid var(--redbrd);color:var(--red);border-radius:var(--r8);padding:10px 12px;font-size:12px;margin-bottom:12px;display:none;}
 .auth-switch{text-align:center;margin-top:16px;font-size:12px;color:var(--muted2);}
@@ -550,7 +552,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border);}
 .auth-divider-txt{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;}
 /* USER AVATAR in nav */
-.user-avatar{width:44px;height:44px;border-radius:50%;background:var(--red);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;flex-shrink:0;transition:all .15s;}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--red);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;flex-shrink:0;transition:all .15s;}
 .user-avatar:hover{transform:scale(1.05);}
 /* PROFILE DROPDOWN */
 .profile-dropdown{position:fixed;top:58px;right:16px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);padding:4px;z-index:300;min-width:200px;box-shadow:0 8px 32px rgba(0,0,0,.3);display:none;}
@@ -1617,7 +1619,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <!-- WIN LOG -->
   <div class="sh"><span class="sh-title" data-i18n="h_win_title">Daily Win</span><span class="sh-sub" data-i18n="h_win_one">One win per day</span></div>
   <div class="card" style="margin-bottom:10px;">
-    <textarea id="win-ta" data-i18n-ph="h_win_ph" placeholder="What did you learn today?" style="min-height:64px;margin-bottom:10px;font-size:16px;"></textarea>
+    <textarea id="win-ta" data-i18n-ph="h_win_ph" placeholder="What did you learn today?" style="min-height:64px;margin-bottom:10px;font-size:13px;"></textarea>
     <button class="btn" onclick="saveWin()" data-i18n="h_win_save">Save Win ✓</button>
   </div>
   <div id="wins-list"></div>
