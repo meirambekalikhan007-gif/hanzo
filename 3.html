@@ -1792,6 +1792,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <!-- 4-choice grid -->
     <div id="ls-g-choices" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;"></div>
     <div id="ls-g-result" style="text-align:center;min-height:28px;font-family:var(--mono);font-size:13px;font-weight:800;margin-bottom:8px;"></div>
+    <button class="btn" id="ls-g-next" onclick="_lgShowCard()" style="display:none;margin-bottom:10px;">Next →</button>
     <div class="quiz-score" id="ls-g-score"></div>
     <button class="btn btn-outline" onclick="startListenGame()" style="margin-top:10px;font-size:12px;">▶ Restart</button>
   </div>
@@ -7724,18 +7725,15 @@ function toggleHideAdded(){
 function getFilteredWB(){
   var q=(el('wb-search')?.value||'').toLowerCase();
   var hsk=wbHskFilter,cat=wbCatFilter;
+  // Build Set once for O(1) lookups — avoids O(n²) sort
+  var addedSet=new Set((S.chars_list||[]).map(function(c){return c.char;}));
   var all=WORD_BANK.filter(function(w){
     return(hsk==='All'||w.hsk===hsk)&&(cat==='All'||w.cat===cat)
       &&(!q||w.char.includes(q)||w.pinyin.toLowerCase().includes(q)||w.meaning.toLowerCase().includes(q));
   });
-  // Sort: not-added first, already-added at bottom
-  all.sort(function(a,b){
-    var aAdded=isInList(a.char)?1:0;
-    var bAdded=isInList(b.char)?1:0;
-    return aAdded-bAdded;
-  });
-  // Filter out added if hide mode is on
-  if(wbHideAdded)all=all.filter(function(w){return!isInList(w.char);});
+  // Sort: not-added first — O(1) per comparison with Set
+  all.sort(function(a,b){return(addedSet.has(a.char)?1:0)-(addedSet.has(b.char)?1:0);});
+  if(wbHideAdded)all=all.filter(function(w){return!addedSet.has(w.char);});
   return all;
 }
 
@@ -7745,10 +7743,10 @@ function addFromBank(w){
   if(isInList(w.char))return;
   if(!S.chars_list)S.chars_list=[];
   S.chars_list.push({id:Date.now(),char:w.char,pinyin:w.pinyin,meaning:w.meaning,hsk:w.hsk,status:'new',example:w.example,date:getLocalDate()});
-  save();
-  renderWordBank();updateModeCounts();
-  // Flash feedback
+  // Show feedback instantly — defer heavy re-render + save to next tick
   showMsg('+1 word added ✓','var(--green)');
+  awardXP(XP_RATES.add_word,'Added word');
+  setTimeout(function(){save();renderWordBank();updateModeCounts();},0);
 }
 
 function wbNext(){var f=getFilteredWB();if(wbPage<Math.max(0,Math.ceil(f.length/WB_PER_PAGE)-1)){wbPage++;renderWordBank();}}
@@ -7792,7 +7790,9 @@ function renderBankPills(){
 function renderWordBank(){
   var filtered=getFilteredWB();
   var totalAll=WORD_BANK.length;
-  var totalAdded=(S.chars_list||[]).filter(function(cc){return WORD_BANK.some(function(w){return w.char===cc.char;});}).length;
+  var _wbSet=new Set(WORD_BANK.map(function(w){return w.char;}));
+  var _addedSet=new Set((S.chars_list||[]).map(function(c){return c.char;}));
+  var totalAdded=(S.chars_list||[]).filter(function(cc){return _wbSet.has(cc.char);}).length;
   var remaining=totalAll-totalAdded;
   var totalPages=Math.max(1,Math.ceil(filtered.length/WB_PER_PAGE));
   var items=filtered.slice(wbPage*WB_PER_PAGE,(wbPage+1)*WB_PER_PAGE);
@@ -7808,7 +7808,7 @@ function renderWordBank(){
   }
   container.innerHTML='';
   items.forEach(function(w){
-    var inList=isInList(w.char);
+    var inList=_addedSet.has(w.char);
     var row=document.createElement('div');
     row.className='wb-row'+(inList?' already':'');
     row.style.opacity=inList?'0.4':'1';
@@ -8160,8 +8160,14 @@ function startPhraseTF(){
   if(list.length<2){
     var cn=document.getElementById('ptf-cn');
     if(cn)cn.textContent=list.length?'Need 2+ phrases':t('ph_no_phrases');
+    // Hide buttons so they can't be clicked with empty deck
+    var tb=document.getElementById('ptf-true');var fb2=document.getElementById('ptf-false');
+    if(tb)tb.style.display='none';if(fb2)fb2.style.display='none';
     return;
   }
+  // Ensure buttons are visible when game starts
+  var tb=document.getElementById('ptf-true');var fb2=document.getElementById('ptf-false');
+  if(tb)tb.style.display='';if(fb2)fb2.style.display='';
   ptfCards=list.slice().sort(function(){return Math.random()-.5;});
   ptfIdx=0;ptfCorrect=0;ptfTotal=0;ptfAnswered=false;_ptfWrongStreak=0;showPTFCard();
 }
@@ -8202,11 +8208,13 @@ function showPTFCard(){
   ptfCards[ptfIdx]._isReal=isReal;
 }
 function ptfAnswer(userSaysTrue){
-  if(ptfAnswered)return;ptfAnswered=true;ptfTotal++;
+  if(ptfAnswered)return;
+  if(!ptfCards.length||ptfIdx>=ptfCards.length)return; // guard: no deck loaded
+  ptfAnswered=true;ptfTotal++;
   var p=ptfCards[ptfIdx];
   var isReal=p._isReal;
   var correct=(userSaysTrue===isReal);
-  if(correct){ptfCorrect++;awardXP(XP_RATES.tf_correct,'True/False ✓');onCorrectAnswer();}
+  if(correct){ptfCorrect++;onCorrectAnswer();setTimeout(function(){awardXP(XP_RATES.tf_correct,'True/False ✓');},0);}
   else{onWrongAnswer();}
   if(!correct)_ptfWrongStreak++;else _ptfWrongStreak=0;
   var fb=document.getElementById('ptf-feedback');
@@ -8222,7 +8230,6 @@ function ptfAnswer(userSaysTrue){
       _ptfWrongStreak=0;
     }
   }
-  updatePhraseStatus(p.id,correct?'mastered':'learning');save();
   var tb=document.getElementById('ptf-true');var fb2=document.getElementById('ptf-false');
   if(tb){tb.style.opacity='.4';tb.style.cursor='default';}
   if(fb2){fb2.style.opacity='.4';fb2.style.cursor='default';}
@@ -8233,6 +8240,8 @@ function ptfAnswer(userSaysTrue){
   }
   var nb=document.getElementById('ptf-next');if(nb)nb.style.display='block';
   var st=document.getElementById('ptf-score-top');if(st)st.textContent=ptfCorrect+'/'+(ptfIdx+1)+' ✓';
+  // Defer heavy data writes
+  setTimeout(function(){updatePhraseStatus(p.id,correct?'mastered':'learning');save();},0);
 }
 function ptfNext(){ptfIdx++;ptfAnswered=false;showPTFCard();}
 
@@ -8431,10 +8440,9 @@ function awardXP(amount,source){
   var prevLevel=getLevelData(prevXP);
   if(!S.xp_earned)S.xp_earned=0;
   S.xp_earned+=amount;
-  save();
   var newXP=getTotalXP();
   var newLevel=getLevelData(newXP);
-  // Show XP popup
+  // Show XP popup IMMEDIATELY — before save() so it's instant
   showXPPopup(amount,source);
   // Check level up
   if(newLevel.lvl>prevLevel.lvl){
@@ -8442,6 +8450,8 @@ function awardXP(amount,source){
   }
   // Update XP bar
   if(currentPage==='home')renderXPBar();
+  // Defer save — never block the UI thread for persistence
+  setTimeout(function(){save();},0);
 }
 
 
@@ -15177,6 +15187,8 @@ function _lgShowCard(){
   var choicesEl=document.getElementById('ls-g-choices');
   var scoreEl=document.getElementById('ls-g-score');
 
+  var _lgNextBtn=document.getElementById('ls-g-next');if(_lgNextBtn)_lgNextBtn.style.display='none';
+
   if(_lgIdx>=_lgCards.length){
     var pct=_lgTotal?Math.round(_lgCorrect/_lgTotal*100):0;
     if(progEl)progEl.textContent='Done!';
@@ -15255,15 +15267,18 @@ function _lgAnswer(char,choices,btnEl){
   if(resEl){
     if(correct){
       resEl.textContent='✓ '+(_lgCurrent.meaning||'');resEl.style.color='var(--green)';
-      awardXP(5,'Listen correct!');
       onCorrectAnswer();
+      setTimeout(function(){awardXP(5,'Listen correct!');},0);
     } else {
-      resEl.textContent='✗ It was '+_lgCurrent.char+' ('+(_lgCurrent.meaning||'')+')';resEl.style.color='var(--red)';
+      resEl.textContent='✗ It was: '+_lgCurrent.char+' ('+(_lgCurrent.meaning||'')+')';resEl.style.color='var(--red)';
+      onWrongAnswer();
     }
   }
 
   _lgIdx++;
-  setTimeout(_lgShowCard,1400);
+  // Show Next button — never auto-advance so user can read feedback
+  var _lgNextBtn=document.getElementById('ls-g-next');
+  if(_lgNextBtn){_lgNextBtn.style.display='block';setTimeout(function(){_lgNextBtn.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}
 }
 
 // ============================================================
