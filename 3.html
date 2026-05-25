@@ -320,7 +320,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .mc-choice{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);padding:14px 10px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;transition:transform .12s cubic-bezier(.34,1.56,.64,1),background .15s,border-color .15s;}
 .mc-choice:active{transform:scale(.95);}
 .mc-choice:hover:not(.disabled){background:var(--s3);border-color:var(--border2);transform:translateY(-1px);}
-.mc-choice.correct{background:var(--greenbg);border-color:var(--greenbrd);color:var(--green);animation:correctBurst .35s ease,correctGlow .5s ease;}
+.mc-choice.correct{background:var(--greenbg);border-color:var(--greenbrd);color:var(--green);animation:correctBurst .18s ease;}
 .mc-choice.wrong{background:var(--redbg);border-color:var(--redbrd);color:var(--red);animation:shake .35s ease;}
 .mc-choice.reveal-correct{background:var(--greenbg);border-color:var(--greenbrd);color:var(--green);}
 .mc-choice.disabled{cursor:default;transform:none;}
@@ -352,7 +352,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .ch-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px;}
 .ch-choice{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r16);padding:20px 12px;text-align:center;cursor:pointer;transition:all .2s;}
 .ch-choice:hover:not(.disabled){background:var(--s3);border-color:var(--border2);transform:translateY(-2px);}
-.ch-choice.correct{background:var(--greenbg);border-color:var(--greenbrd);animation:correctBurst .35s ease,correctGlow .5s ease;}
+.ch-choice.correct{background:var(--greenbg);border-color:var(--greenbrd);animation:correctBurst .18s ease;}
 .ch-choice.wrong{background:var(--redbg);border-color:var(--redbrd);animation:shake .35s ease;}
 .ch-choice.reveal-correct{background:var(--greenbg);border-color:var(--greenbrd);}
 .ch-choice.disabled{cursor:default;transform:none;}
@@ -7061,10 +7061,9 @@ function showLuckyBonus(){
 function showComboPopup(count){
   var msg=count>=10?'🔥🔥🔥 '+count+' in a row! LEGENDARY!':count>=5?'⚡ '+count+' in a row! AMAZING!':'🔥 '+count+' in a row!';
   var bonus=count*5;
-  // Create full-screen burst overlay
   var burst=document.createElement('div');
-  burst.style.cssText=_overlayCSS('z-index:8000;pointer-events:none;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);animation:comboBurst .7s ease forwards;');
-  burst.innerHTML='<div style="text-align:center;animation:comboScale .5s cubic-bezier(.175,.885,.32,1.275) forwards;">'+
+  burst.style.cssText=_overlayCSS('z-index:8000;pointer-events:none;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);animation:comboBurst .6s ease forwards;');
+  burst.innerHTML='<div style="text-align:center;animation:comboScale .4s cubic-bezier(.175,.885,.32,1.275) forwards;">'+
     '<div style="font-size:clamp(28px,8vw,48px);font-weight:900;color:#fff;'+
     'background:linear-gradient(135deg,#ea580c,#d97706);-webkit-background-clip:text;'+
     '-webkit-text-fill-color:transparent;background-clip:text;'+
@@ -7074,9 +7073,9 @@ function showComboPopup(count){
     'text-shadow:0 2px 12px rgba(0,0,0,.9),0 0 30px rgba(234,88,12,.8);">+'+bonus+' bonus XP ⚡</div>'+
     '</div>';
   document.body.appendChild(burst);
-  awardXP(bonus,'Combo x'+count);
-  setTimeout(function(){if(burst.parentNode)burst.remove();},700);
   if(navigator.vibrate)navigator.vibrate([50,30,100]);
+  setTimeout(function(){awardXP(bonus,'Combo x'+count);},0);
+  setTimeout(function(){if(burst.parentNode)burst.remove();},600);
 }
 
 function lsShowQ(){
