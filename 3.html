@@ -884,6 +884,12 @@ input:focus, textarea:focus{
   70%{box-shadow:0 0 0 12px rgba(26,184,122,0);}
   100%{box-shadow:0 0 0 0 rgba(26,184,122,0);}
 }
+@keyframes xpFloat{
+  0%{opacity:0;transform:translateY(0) scale(.8);}
+  20%{opacity:1;transform:translateY(-8px) scale(1.1);}
+  80%{opacity:1;transform:translateY(-30px) scale(1);}
+  100%{opacity:0;transform:translateY(-50px) scale(.9);}
+}
 .q-choice.correct{animation:correctBurst .4s ease,correctGlow .5s ease;}
 .q-choice.wrong{animation:wrongShake .4s ease;}
 .q-sentence{animation:slideInUp .3s ease;}
@@ -8492,6 +8498,9 @@ save=function(){
         try{localStorage.setItem(getUserDataKey(currentUser.email),JSON.stringify(S));}catch(e2){}
       }
     }
+  } else {
+    // Not logged in — always persist to generic key so data isn't lost
+    _originalSave();
   }
 };
 
