@@ -2316,7 +2316,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 
     <!-- FEED POSTS -->
     <div id="feed-posts"></div>
-    <div id="feed-loading" style="text-align:center;padding:40px;font-family:var(--mono);font-size:11px;color:var(--muted2);">Loading…</div>
+    <div id="feed-loading" style="display:none;text-align:center;padding:40px;font-family:var(--mono);font-size:11px;color:var(--muted2);">Loading…</div>
   </div>
 </div>
 
@@ -12956,6 +12956,8 @@ doLogin = async function() {
     lang:          S.lang,
     avatarColor:   S.avatarColor,
   };
+  // Persist uid into USERS_KEY so page refresh finds the user with id intact
+  (function(){ var _ul=getUsers(),_ui=_ul.findIndex(function(u){return u.email===email;}); if(_ui>=0){_ul[_ui].id=uid;saveUsers(_ul);} else{_ul.push({name:name,email:email,id:uid});saveUsers(_ul);} })();
   loginUser({ name: name, email: email, id: uid });
   // Re-apply Supabase data that loginUser's S=loadUserData() just wiped
   if (_loginSnap.chars_list    && _loginSnap.chars_list.length)    S.chars_list    = _loginSnap.chars_list;
@@ -13012,6 +13014,8 @@ doSignup = async function() {
     xp_total: 0, weekly_xp: 0, streak: 0, words_count: 0,
   }, { onConflict: 'id' });
 
+  // Persist user to USERS_KEY so page refresh finds them with id
+  (function(){ var _ul=getUsers(),_ui=_ul.findIndex(function(u){return u.email===email;}); if(_ui>=0){_ul[_ui].id=uid;_ul[_ui].username=username;saveUsers(_ul);} else{_ul.push({name:name,email:email,id:uid,username:username});saveUsers(_ul);} })();
   loginUser({ name: name, email: email, id: uid, username: username });
 };
 
@@ -13150,7 +13154,7 @@ async function _syncNow() {
 var _friendsCache = null;
 
 async function _loadFriendsData() {
-  if (!currentUser || !currentUser.id) return;
+  if (!currentUser || !currentUser.id) { _friendsCache = _friendsCache || []; S.friends = S.friends || []; return; }
   var uid = currentUser.id;
 
   var fsRes = await _db.from('friendships').select('friend_user_id').eq('user_id', uid);
@@ -13471,93 +13475,146 @@ async function _searchFriend(val) {
 
 // ── On page load: check for existing Supabase session ────────
 (async function() {
-  var sessionRes = await _db.auth.getSession();
-  var session = sessionRes.data && sessionRes.data.session;
-  if (!session) return;
-  var user = session.user;
-  var uid  = user.id;
-  var profRes = await _db.from('profiles').select('name,username').eq('id', uid).single();
-  var name = (profRes.data && profRes.data.name) || user.email.split('@')[0];
-  var username = (profRes.data && profRes.data.username) || null;
+  var _autoSyncOv = null;
+  try {
+    var sessionRes = await _db.auth.getSession();
+    var session = sessionRes.data && sessionRes.data.session;
 
-  // ── IMPORTANT ORDER ──────────────────────────────────────────────────────
-  // _loadSupaData sets S.chars_list, S.name, S.xp_earned etc. but loginUser()
-  // then resets S via S=loadUserData(email). Snapshot the Supabase data first,
-  // then re-apply it after loginUser so stats are never blank on first load.
-  var _autoSyncOv = document.createElement('div');
-  _autoSyncOv.style.cssText = 'position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
-  _autoSyncOv.innerHTML = '<div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;"></div>'
-    + '<div style="font-family:var(--mono);font-size:12px;color:var(--muted2);letter-spacing:1px;">Syncing your data…</div>';
-  document.body.appendChild(_autoSyncOv);
-  await _loadSupaData(uid);
-  if (_autoSyncOv.parentNode) _autoSyncOv.parentNode.removeChild(_autoSyncOv);
-  var _snap = {
-    chars_list:    S.chars_list,
-    phrases_list:  S.phrases_list,
-    study_activity:S.study_activity,
-    xp_earned:     S.xp_earned,
-    sentences:     S.sentences,
-    name:          S.name,
-    username:      S.username,
-    daily_goal:    S.daily_goal,
-    lang:          S.lang,
-    avatarColor:   S.avatarColor,
-  };
-
-  loginUser({ name: name, email: user.email, id: uid, username: username });
-
-  // Re-apply Supabase data that loginUser's S=loadUserData() just wiped
-  if (_snap.chars_list    && _snap.chars_list.length)    S.chars_list    = _snap.chars_list;
-  if (_snap.phrases_list  && _snap.phrases_list.length)  S.phrases_list  = _snap.phrases_list;
-  if (_snap.study_activity && Object.keys(_snap.study_activity).length)
-    S.study_activity = Object.assign(S.study_activity || {}, _snap.study_activity);
-  if (_snap.xp_earned)    S.xp_earned    = _snap.xp_earned;
-  if (_snap.sentences     && _snap.sentences.length)     S.sentences     = _snap.sentences;
-  if (_snap.name)         { S.name = _snap.name; if (currentUser) currentUser.name = _snap.name; }
-  if (_snap.username)     { S.username = _snap.username; if (currentUser) currentUser.username = _snap.username; }
-  if (_snap.daily_goal)   S.daily_goal   = _snap.daily_goal;
-  if (_snap.lang)         S.lang         = _snap.lang;
-  if (_snap.avatarColor)  S.avatarColor  = _snap.avatarColor;
-  save(); // persist the merged local+Supabase data
-
-  // Re-check onboarding now that Supabase S.onboarding is correctly applied.
-  // loginUser() already called checkOnboarding() at 600ms but S was still blank then.
-  // For returning users, S.onboarding is now set so this is a no-op.
-  // For brand new users (no onboarding in Supabase), this triggers the flow.
-  if (typeof checkOnboarding === 'function') checkOnboarding();
-
-  // Re-render home with complete data (loginUser already rendered it with blank S)
-  renderHome();
-  if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
-
-  await _loadFriendsData();
-
-  // Re-render whichever page is currently open with the freshly-loaded friends data
-  if (typeof currentPage !== 'undefined') {
-    if (currentPage === 'profile' && typeof _renderProfilePage === 'function') {
-      _renderProfilePage();
-    }
-    if (currentPage === 'feed' && typeof _loadFeed === 'function') {
-      _feedCache = {};
-      _loadFeed();
-    }
-    if (currentPage === 'friends' && typeof renderFriendsPage === 'function') {
-      renderFriendsPage();
-    }
-  }
-  // Always refresh home leaderboard after friends load — it uses S.friends
-  if (typeof renderHomeLB === 'function') renderHomeLB();
-  // Always prime the feed cache in background so it's instant when user navigates there
-  if (typeof _loadFeed === 'function' && currentPage !== 'feed') {
-    setTimeout(function() {
-      if (typeof _buildFeedQuery === 'function') {
-        _buildFeedQuery().then(function(res) {
-          if (res && res.data) {
-            _feedCache['explore'] = res.data;
-          }
-        }).catch(function(){});
+    // ── Fallback: no Supabase session but local session email exists ──
+    // This happens when the Supabase JWT has expired but the user still has
+    // a local localStorage session. Try to re-authenticate silently via the
+    // stored user id from USERS_KEY (set there since the login/signup fix).
+    if (!session) {
+      var _localEmail = getSession();
+      if (_localEmail) {
+        var _localUsers = getUsers();
+        var _lu = _localUsers.find(function(u){ return u.email === _localEmail; });
+        if (_lu && _lu.id) {
+          // We have a uid — load Supabase data directly without a session
+          // (public-readable tables: profiles, friendships, etc.)
+          try {
+            await _loadSupaData(_lu.id);
+            var _fbSnap = {
+              chars_list: S.chars_list, phrases_list: S.phrases_list,
+              study_activity: S.study_activity, xp_earned: S.xp_earned,
+              sentences: S.sentences, name: S.name, username: S.username,
+              daily_goal: S.daily_goal, lang: S.lang, avatarColor: S.avatarColor,
+            };
+            // Merge into current S (loginUser may have already run from the IIFE at 12084)
+            if (_fbSnap.chars_list    && _fbSnap.chars_list.length)    S.chars_list    = _fbSnap.chars_list;
+            if (_fbSnap.phrases_list  && _fbSnap.phrases_list.length)  S.phrases_list  = _fbSnap.phrases_list;
+            if (_fbSnap.study_activity && Object.keys(_fbSnap.study_activity).length)
+              S.study_activity = Object.assign(S.study_activity || {}, _fbSnap.study_activity);
+            if (_fbSnap.xp_earned)   S.xp_earned   = _fbSnap.xp_earned;
+            if (_fbSnap.sentences    && _fbSnap.sentences.length)    S.sentences    = _fbSnap.sentences;
+            if (_fbSnap.name)        { S.name = _fbSnap.name; if (currentUser) currentUser.name = _fbSnap.name; }
+            if (_fbSnap.username)    { S.username = _fbSnap.username; if (currentUser) currentUser.username = _fbSnap.username; }
+            if (_fbSnap.daily_goal)  S.daily_goal  = _fbSnap.daily_goal;
+            if (_fbSnap.lang)        S.lang        = _fbSnap.lang;
+            if (_fbSnap.avatarColor) S.avatarColor = _fbSnap.avatarColor;
+            if (currentUser) currentUser.id = _lu.id; // ensure id is set
+            save();
+            renderHome();
+            if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
+            await _loadFriendsData();
+            if (currentPage === 'profile' && typeof _renderProfilePage === 'function') _renderProfilePage();
+            if (currentPage === 'feed'    && typeof _loadFeed === 'function') { _feedCache = {}; _loadFeed(); }
+            if (typeof renderHomeLB === 'function') renderHomeLB();
+          } catch(e2) { /* fallback failed silently — user stays on localStorage data */ }
+        }
       }
-    }, 1500);
+      return;
+    }
+
+    var user = session.user;
+    var uid  = user.id;
+    var profRes = await _db.from('profiles').select('name,username').eq('id', uid).single();
+    var name = (profRes.data && profRes.data.name) || user.email.split('@')[0];
+    var username = (profRes.data && profRes.data.username) || null;
+
+    // ── IMPORTANT ORDER ──────────────────────────────────────────────────────
+    // _loadSupaData sets S.chars_list, S.name, S.xp_earned etc. but loginUser()
+    // then resets S via S=loadUserData(email). Snapshot the Supabase data first,
+    // then re-apply it after loginUser so stats are never blank on first load.
+    _autoSyncOv = document.createElement('div');
+    _autoSyncOv.style.cssText = 'position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
+    _autoSyncOv.innerHTML = '<div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;"></div>'
+      + '<div style="font-family:var(--mono);font-size:12px;color:var(--muted2);letter-spacing:1px;">Syncing your data…</div>';
+    document.body.appendChild(_autoSyncOv);
+    await _loadSupaData(uid);
+    if (_autoSyncOv && _autoSyncOv.parentNode) { _autoSyncOv.parentNode.removeChild(_autoSyncOv); _autoSyncOv = null; }
+    var _snap = {
+      chars_list:    S.chars_list,
+      phrases_list:  S.phrases_list,
+      study_activity:S.study_activity,
+      xp_earned:     S.xp_earned,
+      sentences:     S.sentences,
+      name:          S.name,
+      username:      S.username,
+      daily_goal:    S.daily_goal,
+      lang:          S.lang,
+      avatarColor:   S.avatarColor,
+    };
+
+    // Also persist uid to USERS_KEY so future page refreshes work without Supabase session
+    (function(){ var _ul=getUsers(),_ui=_ul.findIndex(function(u){return u.email===user.email;}); if(_ui>=0){_ul[_ui].id=uid;if(username)_ul[_ui].username=username;saveUsers(_ul);} else{_ul.push({name:name,email:user.email,id:uid,username:username||''});saveUsers(_ul);} })();
+
+    loginUser({ name: name, email: user.email, id: uid, username: username });
+
+    // Re-apply Supabase data that loginUser's S=loadUserData() just wiped
+    if (_snap.chars_list    && _snap.chars_list.length)    S.chars_list    = _snap.chars_list;
+    if (_snap.phrases_list  && _snap.phrases_list.length)  S.phrases_list  = _snap.phrases_list;
+    if (_snap.study_activity && Object.keys(_snap.study_activity).length)
+      S.study_activity = Object.assign(S.study_activity || {}, _snap.study_activity);
+    if (_snap.xp_earned)    S.xp_earned    = _snap.xp_earned;
+    if (_snap.sentences     && _snap.sentences.length)     S.sentences     = _snap.sentences;
+    if (_snap.name)         { S.name = _snap.name; if (currentUser) currentUser.name = _snap.name; }
+    if (_snap.username)     { S.username = _snap.username; if (currentUser) currentUser.username = _snap.username; }
+    if (_snap.daily_goal)   S.daily_goal   = _snap.daily_goal;
+    if (_snap.lang)         S.lang         = _snap.lang;
+    if (_snap.avatarColor)  S.avatarColor  = _snap.avatarColor;
+    save(); // persist the merged local+Supabase data
+
+    // Re-check onboarding now that Supabase S.onboarding is correctly applied.
+    if (typeof checkOnboarding === 'function') checkOnboarding();
+
+    // Re-render home with complete data (loginUser already rendered it with blank S)
+    renderHome();
+    if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
+    if (typeof updateAllAvatars === 'function') updateAllAvatars();
+    if (typeof updateNavUser === 'function') updateNavUser();
+
+    await _loadFriendsData();
+
+    // Re-render whichever page is currently open with the freshly-loaded friends data
+    if (typeof currentPage !== 'undefined') {
+      if (currentPage === 'profile' && typeof _renderProfilePage === 'function') {
+        _renderProfilePage();
+      }
+      if (currentPage === 'feed' && typeof _loadFeed === 'function') {
+        _feedCache = {};
+        _loadFeed();
+      }
+      if (currentPage === 'friends' && typeof renderFriendsPage === 'function') {
+        renderFriendsPage();
+      }
+    }
+    // Always refresh home leaderboard after friends load — it uses S.friends
+    if (typeof renderHomeLB === 'function') renderHomeLB();
+    // Always prime the feed cache in background so it's instant when user navigates there
+    if (typeof _loadFeed === 'function' && currentPage !== 'feed') {
+      setTimeout(function() {
+        if (typeof _buildFeedQuery === 'function') {
+          _buildFeedQuery().then(function(res) {
+            if (res && res.data) { _feedCache['explore'] = res.data; }
+          }).catch(function(){});
+        }
+      }, 1500);
+    }
+  } catch(e) {
+    // If anything throws, make sure the overlay doesn't block the UI
+    if (_autoSyncOv && _autoSyncOv.parentNode) { _autoSyncOv.parentNode.removeChild(_autoSyncOv); }
+    console.warn('[Hanzo] Supabase session restore error:', e);
   }
 })();
 
