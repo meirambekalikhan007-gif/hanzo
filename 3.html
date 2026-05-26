@@ -909,7 +909,7 @@ input:focus, textarea:focus{
   margin:8px 0;animation:fadeInScale .4s cubic-bezier(.34,1.56,.64,1);
 }
 
-/* q-continue.show handled by continuePop above */
+.q-continue.show{animation:slideInUp .3s ease;}
 .q-continue.show:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(232,96,122,.3);}
 
 /* Question type badge */
@@ -11249,10 +11249,11 @@ function onCorrectAnswer(fromLesson){
     playSound('combo');
     showComboPopup(_gameCombo);
   }
-  // Track study activity in memory (save() is called by the caller)
+  // Track study activity and save
   if(!S.study_activity)S.study_activity={};
   var td=getLocalDate();
   S.study_activity[td]=(S.study_activity[td]||0)+1;
+  save();
   // Celebrate streak milestone
   var _str = typeof calcStreak === 'function' ? calcStreak() : null;
   if (_str && _str.current > 0) {
