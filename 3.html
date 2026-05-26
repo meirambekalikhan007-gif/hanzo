@@ -11828,6 +11828,49 @@ function inferTopic(scene){
   return'everyday';
 }
 
+// Override showRTCard with full results screen (better version)
+function showRTCard(){
+  if(rtIdx>=rtQueue.length){
+    // Results
+    var pct=Math.round(rtCorrect/rtTotal*100);
+    el('rt-game').style.display='none';
+    el('rt-setup').style.display='none';
+    var scoreEl=el('rt-score');
+    scoreEl.innerHTML='<div style="text-align:center;padding:20px;"><div style="font-size:40px;margin-bottom:10px;">'+(pct===100?'🏆':pct>=70?'🎯':'📚')+'</div>'
+      +'<div style="font-size:22px;font-weight:900;color:'+(pct>=70?'var(--green)':'var(--red)')+';">'+rtCorrect+'/'+rtTotal+'</div>'
+      +'<div style="font-size:13px;color:var(--muted);margin-top:4px;">'+pct+'% correct</div>'
+      +'<div style="display:flex;gap:8px;margin-top:16px;">'
+      +'<button class="btn btn-outline" onclick="el(\'rt-score\').innerHTML=\'\';initRealTalk();" style="flex:1;">← Change</button>'
+      +'<button class="btn" onclick="el(\'rt-score\').innerHTML=\'\';startRealTalk();" style="flex:1;">▶ Replay</button>'
+      +'</div></div>';
+    awardXP(rtCorrect*8,'Real Talk session');
+    return;
+  }
+  var q=rtQueue[rtIdx];
+  el('rt-prog').textContent=(rtIdx+1)+'/'+rtQueue.length;
+  el('rt-score-top').textContent=rtCorrect+' ✓';
+  el('rt-scene-label').textContent=q.scene;
+  el('rt-cn').textContent=q.q.cn;
+  el('rt-py').textContent=q.q.py;
+  var qTrans=LANG==='ru'&&q.q.ru?q.q.ru:LANG==='kz'&&q.q.kz?q.q.kz:q.q.en;
+  el('rt-en').textContent=qTrans;
+  el('rt-feedback').style.display='none';
+  el('rt-next-btn').style.display='none';
+  // Build choices — shuffle correct + 3 wrong
+  var choices=[{cn:q.correct.cn,py:q.correct.py,en:q.correct.en,isCorrect:true}]
+    .concat(q.wrong.map(function(w){return{cn:w.cn,py:w.py,en:w.en,isCorrect:false};}))
+    .sort(function(){return Math.random()-.5;});
+  var choicesEl=el('rt-choices');
+  choicesEl.innerHTML='';
+  choices.forEach(function(c){
+    var btn=document.createElement('button');
+    btn.style.cssText='background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);padding:14px 16px;text-align:left;cursor:pointer;transition:all .15s;width:100%;';
+    btn.innerHTML='<div style="font-family:var(--cn);font-size:18px;font-weight:700;color:var(--text);margin-bottom:3px;">'+c.cn+'</div>'
+      +'<div style="font-family:var(--mono);font-size:10px;color:var(--muted2);">'+c.py+'</div>';
+    (function(choice,b){b.onclick=function(){rtAnswer(choice,b,choicesEl);};})(c,btn);
+    choicesEl.appendChild(btn);
+  });
+}
 
 var currentBankTab='words';
 function setBankTab(tab,btn){
