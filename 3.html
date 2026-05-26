@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
@@ -31,7 +31,7 @@
   --font:'Plus Jakarta Sans',sans-serif;
   --mono:'JetBrains Mono',monospace;
   --cn:'Noto Sans SC',sans-serif;
-  --r8:8px;--r10:10px;--r12:12px;--r16:16px;--r20:20px;--r24:24px;
+  --r8:8px;--r12:12px;--r16:16px;--r20:20px;--r24:24px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;}
@@ -42,8 +42,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 body::after{content:'';pointer-events:none;position:fixed;top:-30vh;left:50%;transform:translateX(-50%);width:80vw;height:60vh;background:radial-gradient(ellipse,rgba(232,96,122,.03) 0%,transparent 70%);pointer-events:none;z-index:0;}
 
 /* NAV */
-nav{position:sticky;top:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding-top:env(safe-area-inset-top);}
-.nav-inner{max-width:600px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right)) 0 max(16px,env(safe-area-inset-left));height:54px;display:flex;align-items:center;justify-content:space-between;}
+nav{position:sticky;top:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:600px;margin:0 auto;padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;}
 .nav-logo{display:flex;align-items:center;gap:8px;}
 .nav-logo-cn{font-family:var(--cn);font-size:22px;font-weight:900;color:var(--red);letter-spacing:-1px;line-height:1;}
 .nav-logo-badge{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:2px;text-transform:uppercase;background:var(--redbg);border:1px solid var(--redbrd);color:var(--red);padding:2px 7px;border-radius:20px;}
@@ -52,7 +52,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filte
 .icon-btn:hover{border-color:var(--border2);color:var(--text);}
 
 /* BOTTOM NAV */
-.bnav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(7,7,10,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;padding:6px max(0px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(0px,env(safe-area-inset-left));}
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(7,7,10,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;padding:6px 0 max(6px,env(safe-area-inset-bottom));}
 .bni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:6px 4px;position:relative;}
 .bni:active .bni-icon{transform:scale(.88);}
 .bni.on .bni-icon{animation:springIn .3s cubic-bezier(.34,1.56,.64,1);}
@@ -139,7 +139,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filte
   100%{background-position:0% 50%;}
 }
 
-.page{display:none;max-width:600px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right)) 90px max(16px,env(safe-area-inset-left));position:relative;z-index:1;}
+.page{display:none;max-width:600px;margin:0 auto;padding:16px 16px 90px;position:relative;z-index:1;}
 .page.on{display:block;animation:pageEnter .28s cubic-bezier(.2,.8,.2,1) both;}
 .spring-btn{transition:transform .15s cubic-bezier(.34,1.56,.64,1),background .2s,box-shadow .2s;}
 .spring-btn:active{transform:scale(.94);}
@@ -155,9 +155,9 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filte
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;background:var(--red);border:none;color:#fff;font-family:var(--font);font-size:14px;font-weight:700;border-radius:var(--r12);cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1),background .2s,box-shadow .2s,opacity .2s;letter-spacing:.2px;position:relative;overflow:hidden;}
 .btn:active{transform:scale(.96);}
 .btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(232,96,122,.35);}
+.btn:disabled{opacity:.45;transform:none;box-shadow:none;cursor:not-allowed;}
 .btn:hover{filter:brightness(1.1);transform:translateY(-1px);}
 .btn:active{transform:translateY(1px);}
-.btn:disabled{opacity:.45;transform:none;box-shadow:none;cursor:not-allowed;}
 .btn-outline{background:transparent;border:1.5px solid var(--border2);color:var(--muted3);}
 .btn-outline:hover{border-color:var(--border3);color:var(--text);filter:none;}
 .btn-green{background:var(--green);color:#000;}
@@ -188,6 +188,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .prog-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.34,1.56,.64,1);}
 
 /* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pop{0%,100%{transform:scale(1)}40%{transform:scale(1.18)}70%{transform:scale(.95)}}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 @keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(255,77,109,0)}50%{box-shadow:0 0 20px 4px rgba(255,77,109,.3)}}
@@ -739,7 +740,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 .add-friend-form{
   display:flex;gap:8px;margin-bottom:12px;align-items:center;
 }
-.add-friend-form input{flex:1;font-family:var(--mono);font-size:16px;letter-spacing:1px;min-width:0;}
+.add-friend-form input{flex:1;font-family:var(--mono);font-size:13px;letter-spacing:1px;min-width:0;}
 .add-friend-form button{flex-shrink:0;width:auto;padding:10px 16px;white-space:nowrap;}
 
 /* FRIEND EMPTY STATE */
@@ -835,6 +836,7 @@ label{font-family:var(--mono);font-size:9px;letter-spacing:.6px;text-transform:u
 
 /* SKELETON LOADING */
 .skeleton{background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 
 /* HAPTIC FEEDBACK CLASS */
 .tap-feedback{transition:transform .1s;}
@@ -890,6 +892,7 @@ input:focus, textarea:focus{
   80%{opacity:1;transform:translateY(-30px) scale(1);}
   100%{opacity:0;transform:translateY(-50px) scale(.9);}
 }
+
 .q-choice.correct{animation:correctBurst .4s ease,correctGlow .5s ease;}
 .q-choice.wrong{animation:wrongShake .4s ease;}
 .q-sentence{animation:slideInUp .3s ease;}
@@ -909,7 +912,8 @@ input:focus, textarea:focus{
   margin:8px 0;animation:fadeInScale .4s cubic-bezier(.34,1.56,.64,1);
 }
 
-/* q-continue.show handled by continuePop above */
+/* Continue button pulse when ready */
+.q-continue.show{animation:slideInUp .3s ease;}
 .q-continue.show:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(232,96,122,.3);}
 
 /* Question type badge */
@@ -1050,7 +1054,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 .page-enter-active{opacity:1;transform:translateX(0);}
 
 /* ===== NOTIFICATION BELL (Feature 5) ===== */
-#notif-bell{position:relative;width:44px;height:44px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r8);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;color:var(--muted3);}
+#notif-bell{position:relative;width:34px;height:34px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r8);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;color:var(--muted3);}
 #notif-bell:hover{border-color:var(--border2);color:var(--text);}
 #notif-count{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-family:var(--mono);font-size:9px;font-weight:900;padding:1px 5px;border-radius:20px;min-width:16px;text-align:center;line-height:1.4;}
 #notif-panel{position:fixed;top:58px;right:8px;width:320px;max-width:calc(100vw - 16px);background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);z-index:500;box-shadow:0 8px 32px rgba(0,0,0,.4);display:none;max-height:70vh;overflow:hidden;flex-direction:column;}
@@ -1066,36 +1070,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 .notif-icon{font-size:18px;flex-shrink:0;}
 .notif-text{font-size:12px;line-height:1.5;color:var(--muted3);}
 .notif-time{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;}
-
-
-/* ===== AI TUTOR PAGE ===== */
-/* AI page removed from vxv6 — AI lives only in hanzo-nextjs */
-.ai-topbar{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
-.ai-mode-tabs{flex-shrink:0;display:flex;gap:6px;padding:10px 16px;border-bottom:1px solid var(--border);}
-.ai-mode-btn{flex:1;padding:7px 4px;border-radius:var(--r10);border:1.5px solid var(--border);background:transparent;color:var(--muted2);font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;}
-.ai-mode-btn.on{background:rgba(232,96,122,.12);border-color:rgba(232,96,122,.3);color:var(--red);}
-.ai-msgs{flex:1;overflow-y:auto;padding:14px 16px 8px;}
-.ai-msg{display:flex;margin-bottom:10px;}
-.ai-msg.user{justify-content:flex-end;}
-.ai-msg.ai{justify-content:flex-start;}
-.ai-bubble{max-width:78%;padding:10px 14px;font-size:14px;line-height:1.55;}
-.ai-msg.user .ai-bubble{background:var(--red);border-radius:18px 18px 4px 18px;color:#fff;font-weight:600;}
-.ai-msg.ai .ai-bubble{background:var(--s2);border:1px solid var(--border);border-radius:18px 18px 18px 4px;color:var(--text);}
-.ai-avatar{width:28px;height:28px;border-radius:50%;background:rgba(232,96,122,.15);border:1px solid rgba(232,96,122,.25);display:flex;align-items:center;justify-content:center;font-family:var(--cn);font-size:13px;font-weight:900;color:var(--red);margin-right:8px;flex-shrink:0;margin-top:2px;}
-.ai-inputbar{flex-shrink:0;padding:10px 16px max(20px,env(safe-area-inset-bottom));border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;}
-.ai-input{flex:1;background:var(--s2);border:1.5px solid var(--border);border-radius:24px;padding:11px 16px;color:var(--text);font-size:15px;font-family:var(--font);outline:none;transition:border-color .15s;}
-.ai-input:focus{border-color:rgba(232,96,122,.4);}
-.ai-send{width:44px;height:44px;border-radius:50%;background:var(--red);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s;}
-.ai-send:disabled{opacity:.4;cursor:default;}
-.ai-typing{display:flex;gap:5px;align-items:center;padding:10px 14px;}
-.ai-typing span{width:6px;height:6px;border-radius:50%;background:var(--red);opacity:.6;animation:aiBounce 1s infinite;}
-.ai-typing span:nth-child(2){animation-delay:.15s;}
-.ai-typing span:nth-child(3){animation-delay:.3s;}
-@keyframes aiBounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
-.ai-starter-grid{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
-.ai-starter-btn{background:var(--s2);border:1px solid var(--border);border-radius:var(--r12);padding:10px 14px;text-align:left;color:var(--muted2);font-size:13px;cursor:pointer;transition:all .15s;font-family:var(--font);}
-.ai-starter-btn:hover{border-color:rgba(232,96,122,.3);color:var(--text);}
-.ai-welcome{background:var(--s2);border:1px solid var(--border);border-radius:var(--r16);padding:16px 18px;margin-bottom:14px;}
 
 /* ===== HEARTS SYSTEM (Feature 8) ===== */
 .hearts-display{display:flex;gap:4px;align-items:center;}
@@ -1277,11 +1251,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div class="auth-field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="btn" onclick="doLogin()" style="margin-top:4px;">Log In →</button>
     <div class="auth-switch">No account? <span onclick="showSignup()" id="auth-create-link">Create one</span></div>
-    <div style="text-align:center;margin-top:14px;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.6;">
-      By using Hanzo you agree to our
-      <a href="https://hanzo-app.vercel.app/privacy" target="_blank" rel="noopener" style="color:var(--muted2);text-decoration:underline;">Privacy Policy</a>
-      and <a href="https://hanzo-app.vercel.app/terms" target="_blank" rel="noopener" style="color:var(--muted2);text-decoration:underline;">Terms of Use</a>
-    </div>
   </div>
 
   <!-- SIGNUP FORM -->
@@ -1302,11 +1271,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div class="auth-field"><label>Password</label><input type="password" id="signup-pass" placeholder="Min 6 characters" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSignup()"></div>
     <button class="btn" onclick="doSignup()" style="margin-top:4px;">Create Account →</button>
     <div class="auth-switch">Already have an account? <span onclick="showLogin()">Sign in</span></div>
-    <div style="text-align:center;margin-top:14px;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.6;">
-      By creating an account you agree to our
-      <a href="https://hanzo-app.vercel.app/privacy" target="_blank" rel="noopener" style="color:var(--muted2);text-decoration:underline;">Privacy Policy</a>
-      and <a href="https://hanzo-app.vercel.app/terms" target="_blank" rel="noopener" style="color:var(--muted2);text-decoration:underline;">Terms of Use</a>
-    </div>
   </div>
 </div>
 
@@ -1364,7 +1328,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <button id="pwa-install-btn" onclick="_pwaInstall()" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:12px;padding:9px 16px;border-radius:var(--r12);cursor:pointer;flex-shrink:0;white-space:nowrap;" data-i18n="pwa_install">Install</button>
   <button onclick="document.getElementById('pwa-install-banner').classList.remove('show');localStorage.setItem('hanzo_pwa_prompt_shown','1');" style="background:none;border:none;color:var(--muted2);font-size:18px;cursor:pointer;padding:4px;flex-shrink:0;">×</button>
 </div>
-
 
 <!-- HEARTS MODAL -->
 <div id="hearts-modal">
@@ -2297,7 +2260,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div id="feed-composer" style="display:none;background:var(--s2);border:1px solid var(--border);border-radius:var(--r16);padding:14px;margin-bottom:14px;">
       <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
         <div id="feed-composer-av" style="width:40px;height:40px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0;">A</div>
-        <textarea id="feed-composer-text" placeholder="Share your progress, a word you love, or how studying is going..." style="flex:1;background:var(--s3);border:1px solid var(--border);border-radius:var(--r12);padding:10px 12px;font-family:var(--font);font-size:16px;color:var(--text);resize:none;height:76px;outline:none;line-height:1.55;"></textarea>
+        <textarea id="feed-composer-text" placeholder="Share your progress, a word you love, or how studying is going..." style="flex:1;background:var(--s3);border:1px solid var(--border);border-radius:var(--r12);padding:10px 12px;font-family:var(--font);font-size:13px;color:var(--text);resize:none;height:76px;outline:none;line-height:1.55;"></textarea>
       </div>
       <!-- Image preview area -->
       <div id="feed-img-preview" style="display:none;margin-bottom:12px;position:relative;">
@@ -3536,8 +3499,7 @@ function getStudyDays(){
 }
 // Call this when the user EARNS their streak (lesson pass, word mastered in a game)
 function markStreakDay(){
-  S['streak_'+getLocalDate()]=true;
-  // Caller is responsible for save()
+  S['streak_'+getLocalDate()]=true;save();
 }
 function calcStreak(){
   var days=getStudyDays();
@@ -3561,7 +3523,7 @@ function calcStreak(){
     if(cur>best)best=cur;
     prev=ds;
   });
-  S.streak=streak;
+  S.streak=streak;save();
   return{current:streak,best:Math.max(streak,best),total:days.size};
 }
 // ============ STREAK SYSTEM ============
@@ -3871,12 +3833,12 @@ function _wodTap() {
 // ==================== CHARACTERS ====================
 var cnFilter='All';
 function addChar(){
-  var char=el('ch-char').value.trim();if(!char){showMsg('Enter a character','var(--red)');return;}
+  var char=el('ch-char').value.trim();if(!char){alert('Enter a character');return;}
   if(!S.chars_list)S.chars_list=[];
   S.chars_list.push({id:Date.now(),char:char,pinyin:el('ch-pinyin').value.trim(),meaning:el('ch-meaning').value.trim(),hsk:el('ch-hsk').value,status:el('ch-status').value,example:el('ch-example').value.trim(),date:getLocalDate()});
   save();
   ['ch-char','ch-pinyin','ch-meaning','ch-example'].forEach(function(id){el(id).value='';});
-  S['streak_'+getLocalDate()]=true;save();
+  S['streak_'+TODAY]=true;save();
   renderChars();updateCnStats();renderWeekProg();
   showMsg('+1 word added ✓','var(--green)');
   el('ch-char').focus();
@@ -3901,15 +3863,10 @@ function deleteChar(id,btn){
     },2500);
     return;
   }
-  // Delete from Supabase if we have a real UUID for this word
-  var _delWord = (S.chars_list||[]).find(function(c){return c.id===id;});
   S.chars_list=(S.chars_list||[]).filter(function(c){return c.id!==id;});
   save();renderChars();updateCnStats();
-  if(_delWord && _delWord.id && typeof _delWord.id==='string' && _delWord.id.includes('-') && currentUser && currentUser.id){
-    _db.from('user_words').delete().eq('id',_delWord.id).eq('user_id',currentUser.id).then(function(){});
-  }
 }
-function updateCharStatus(id,status){var c=(S.chars_list||[]).find(function(c){return c.id===id;});if(c){c.status=status;}}
+function updateCharStatus(id,status){var c=(S.chars_list||[]).find(function(c){return c.id===id;});if(c){c.status=status;save();}}
 function setCnFilter(f){cnFilter=f;renderCnFilter();renderChars();}
 function renderCnFilter(){
   var hskFilters=['All','HSK1','HSK2','HSK3','HSK4','HSK5','HSK6'];
@@ -4009,14 +3966,7 @@ function addSentence(){
   S.sentences.push({id:Date.now(),cn:cn,en:el('sent-en').value.trim(),date:TODAY});
   save();el('sent-cn').value='';el('sent-en').value='';renderSentences();
 }
-function deleteSentence(id){
-  var _delSent=(S.sentences||[]).find(function(s){return s.id===id;});
-  S.sentences=(S.sentences||[]).filter(function(s){return s.id!==id;});
-  save();renderSentences();
-  if(_delSent&&_delSent.id&&typeof _delSent.id==='string'&&_delSent.id.includes('-')&&currentUser&&currentUser.id){
-    _db.from('sentences').delete().eq('id',_delSent.id).eq('user_id',currentUser.id).then(function(){});
-  }
-}
+function deleteSentence(id){S.sentences=(S.sentences||[]).filter(function(s){return s.id!==id;});save();renderSentences();}
 function renderSentences(){
   var list=(S.sentences||[]).slice().reverse().slice(0,50);
   var container=el('sentences-list');
@@ -4187,7 +4137,6 @@ function flipCard(){
 }
 var XP_RATES={
   add_word:2,
-  add_phrase:5,
   master_word:10,
   learn_word:3,
   master_phrase:15,
@@ -4320,7 +4269,7 @@ function updateWordSRS(id, correct){
     word.srs_next=getLocalDate();
     word.status='learning';
   }
-  // save() intentionally omitted — callers batch-save after all state updates
+  save();
 }
 
 function sortByHSKPriority(words){
@@ -4347,39 +4296,39 @@ var _fcVerifyMode=false;
 function quizResult(r){
   var ch=quizCards[quizIdx];
   if(r==='mastered'){
-    // Instant button flash feedback
-    var _gb=el('fc-btn-got');if(_gb){_gb.style.background='#10b981';_gb.style.transform='scale(.93)';setTimeout(function(){_gb.style.background='';_gb.style.transform='';},160);}
     quizCorrect++;
     _fcGotItStreak++;
     updateCharStatus(ch.id,'mastered');
     updateWordSRS(ch.id,true);
+    awardXP(XP_RATES.master_word,'Mastered! ✓');
+    awardGems(GEM_RATES.word_mastered,'Word ✓');
+    markStreakDay();
+    onCorrectAnswer();
+    save();
     // Anti-cheat: after 3 consecutive Got it, trigger verification
     if(_fcGotItStreak>=3&&quizCards.length>3){
       _fcGotItStreak=0;
-      quizIdx++;quizFlipped=false;showFlashcard(); // advance FIRST — instant
       triggerFlashcardVerify(ch);
-      setTimeout(function(){awardXP(XP_RATES.master_word,'Mastered! ✓');awardGems(GEM_RATES.word_mastered,'Word ✓');markStreakDay();onCorrectAnswer();save();},0);
       return;
     }
-    quizIdx++;quizFlipped=false;showFlashcard(); // advance FIRST — instant
-    setTimeout(function(){awardXP(XP_RATES.master_word,'Mastered! ✓');awardGems(GEM_RATES.word_mastered,'Word ✓');markStreakDay();onCorrectAnswer();save();},0);
   } else if(r==='ok'){
-    var _go=document.querySelector('.qbo');if(_go){_go.style.background='#f59e0b';_go.style.transform='scale(.93)';setTimeout(function(){_go.style.background='';_go.style.transform='';},160);}
     quizCorrect++;
     _fcGotItStreak=0;
     updateCharStatus(ch.id,'learning');
     updateWordSRS(ch.id,true);
-    quizIdx++;quizFlipped=false;showFlashcard();
-    setTimeout(function(){awardXP(XP_RATES.learn_word,'Good job ~');onCorrectAnswer();save();},0);
+    awardXP(XP_RATES.learn_word,'Good job ~');
+    onCorrectAnswer();
+    save();
   } else {
-    var _gw=document.querySelector('.qbw');if(_gw){_gw.style.background='#ef4444';_gw.style.transform='scale(.93)';setTimeout(function(){_gw.style.background='';_gw.style.transform='';},160);}
     _fcGotItStreak=0;
     updateCharStatus(ch.id,'learning');
     updateWordSRS(ch.id,false);
-    var wbtn=document.querySelector('.qbw');if(wbtn)wbtn.style.animation='wrongShake .4s ease';
-    quizIdx++;quizFlipped=false;showFlashcard();
-    setTimeout(function(){onWrongAnswer();save();},0);
+    onWrongAnswer();
+    var wbtn=document.querySelector('.qbw');
+    if(wbtn)wbtn.style.animation='wrongShake .4s ease';
+    save();
   }
+  quizIdx++;quizFlipped=false;showFlashcard();
 }
 function triggerFlashcardVerify(word){
   var all=S.chars_list||[];
@@ -4451,8 +4400,8 @@ function showMCCard(){
     btn.onclick=function(){
       if(mcAnswered)return;mcAnswered=true;mcTotal++;
       var isC=ch.id===correct.id;
-      if(isC){mcCorrect++;btn.classList.add('correct');if(el('mc-result')){el('mc-result').textContent=t('g_correct');el('mc-result').style.color='var(--green)';}updateWordSRS(correct.id,true);updateCharStatus(correct.id,'mastered');setTimeout(function(){awardXP(XP_RATES.master_word,'Choice ✓');markStreakDay();onCorrectAnswer();save();},0);}
-      else{btn.classList.add('wrong');if(el('mc-result')){el('mc-result').textContent=t('g_was')+' '+getWordMeaning(correct);el('mc-result').style.color='var(--red)';}g.querySelectorAll('.mc-choice').forEach(function(b){if(b.textContent===getWordMeaning(correct)||b.textContent===correct.char)b.classList.add('reveal-correct');});updateWordSRS(correct.id,false);updateCharStatus(correct.id,'learning');setTimeout(function(){onWrongAnswer();save();},0);}
+      if(isC){mcCorrect++;btn.classList.add('correct');if(el('mc-result')){el('mc-result').textContent=t('g_correct');el('mc-result').style.color='var(--green)';}updateWordSRS(correct.id,true);updateCharStatus(correct.id,'mastered');awardXP(XP_RATES.master_word,'Choice ✓');markStreakDay();onCorrectAnswer();save();}
+      else{btn.classList.add('wrong');if(el('mc-result')){el('mc-result').textContent=t('g_was')+' '+getWordMeaning(correct);el('mc-result').style.color='var(--red)';}g.querySelectorAll('.mc-choice').forEach(function(b){if(b.textContent===getWordMeaning(correct)||b.textContent===correct.char)b.classList.add('reveal-correct');});updateWordSRS(correct.id,false);updateCharStatus(correct.id,'learning');onWrongAnswer();save();}
       g.querySelectorAll('.mc-choice').forEach(function(b){b.classList.add('disabled');});
       var next=el('mc-next');if(next)next.classList.add('show');
       if(el('mc-score-top'))el('mc-score-top').textContent=mcCorrect+'/'+(mcIdx+1)+' ✓';
@@ -4494,8 +4443,7 @@ function handleMatch(elem,type){
   if(matchSelected.el===elem){elem.classList.remove('selected');matchSelected=null;return;}
   if(matchSelected.type===type){matchSelected.el.classList.remove('selected');matchSelected={el:elem,type:type};document.querySelectorAll('.match-item.selected').forEach(function(e){e.classList.remove('selected');});elem.classList.add('selected');return;}
   if(matchSelected.el.dataset.id===elem.dataset.id){
-    matchSelected.el.classList.remove('selected');matchSelected.el.classList.add('matched');elem.classList.add('matched');matchSelected=null;matchCorrect++;
-    setTimeout(function(){awardXP(5,'Match ✓');onCorrectAnswer();save();},0);
+    matchSelected.el.classList.remove('selected');matchSelected.el.classList.add('matched');elem.classList.add('matched');matchSelected=null;matchCorrect++;awardXP(5,'Match ✓');onCorrectAnswer();
     if(el('match-score-top'))el('match-score-top').textContent=matchCorrect+'/'+matchPairs.length+' ✓';
     if(matchCorrect===matchPairs.length){if(el('match-score'))el('match-score').textContent='🎉 '+t('g_all_matched');if(el('match-next-btn'))el('match-next-btn').style.display='block';launchConfetti();awardXP(20,'All pairs! 🔗');setTimeout(function(){awardGems(GEM_RATES.game_all_match,'Match');},600);}
   }else{
@@ -7604,9 +7552,8 @@ function lsAnswer(choiceIdx,item,choicesDiv,fbDiv,contBtn){
     lsCorrect++;
     lsCombo=(lsCombo||0)+1;
     if(lsCombo===3||lsCombo===5||lsCombo===10){
-      setTimeout(function(){awardXP(lsCombo*5,'Combo!');save();},300);
+      setTimeout(function(){awardXP(lsCombo*5,'Combo!');},300);
     }
-    setTimeout(function(){save();},0);
   } else {
     lsCombo=0;
     onWrongAnswer();
@@ -7727,9 +7674,6 @@ function renderWordBank(){
   var items=filtered.slice(wbPage*WB_PER_PAGE,(wbPage+1)*WB_PER_PAGE);
   var hskCls={HSK1:'hsk1',HSK2:'hsk2',HSK3:'hsk3',HSK4:'hsk4',HSK5:'hsk5',HSK6:'hsk6'};
   if(el('wb-count'))el('wb-count').textContent=remaining+' '+t('bank_to_learn')+' · '+totalAdded+' '+t('bank_added_lbl');
-  var _wbPct=totalAll>0?Math.round(totalAdded/totalAll*100):0;
-  if(el('wb-pct'))el('wb-pct').textContent=_wbPct+'%';
-  if(el('wb-prog-bar'))el('wb-prog-bar').style.width=_wbPct+'%';
   if(el('wb-page-lbl'))el('wb-page-lbl').textContent=(wbPage+1)+' / '+totalPages;
   var ws=el('wb-search');if(ws)ws.placeholder=t('bank_search_ph');
   updateBankHideBtn();
@@ -8498,9 +8442,6 @@ save=function(){
         try{localStorage.setItem(getUserDataKey(currentUser.email),JSON.stringify(S));}catch(e2){}
       }
     }
-  } else {
-    // Not logged in — always persist to generic key so data isn't lost
-    _originalSave();
   }
 };
 
@@ -9463,6 +9404,7 @@ function getWeakWords(){
     .sort(function(a,b){return(a.srs_streak||0)-(b.srs_streak||0);})
     .slice(0,10);
 }
+
 // ==================== LESSON MEMORY TIPS ====================
 var MEMORY_TIPS={
   '你好':  '💡 你(nǐ) = you, 好(hǎo) = good. Literally: "You good!" Like saying "You alright?"',
@@ -10398,12 +10340,6 @@ function showEditProfile(){
   if(emailEl)emailEl.textContent=currentUser&&currentUser.email?currentUser.email:'';
   epSelectedColor=S.avatarColor||'#e8607a';
 
-  // Set ring color immediately to match selected color
-  setTimeout(function(){
-    var ring=document.querySelector('.ep-avatar-ring');
-    if(ring)ring.style.setProperty('--ring-color',epSelectedColor);
-  },20);
-
   // Avatar
   var disp=el('ep-avatar-display');
   var letter=el('ep-avatar-letter');
@@ -10437,9 +10373,7 @@ function showEditProfile(){
         row.querySelectorAll('.ep-color-btn').forEach(function(s){s.style.borderColor='transparent';});
         sw.style.borderColor='var(--text)';
         if(disp)disp.style.background=col;
-        // Update avatar ring color live
-        var ring=document.querySelector('.ep-avatar-ring');
-        if(ring)ring.style.setProperty('--ring-color',col);
+        // Update avatar ring color
         var letter2=el('ep-avatar-letter');if(letter2)letter2.style.color='#fff';
       };
       row.appendChild(sw);
@@ -10562,8 +10496,6 @@ function saveProfile(){
   // Update all UI
   updateNavUser(); // calls updateAllAvatars internally
   updateDsSidebar();
-  // Re-render profile page immediately so big avatar updates too
-  if (typeof _renderProfilePage === 'function') setTimeout(_renderProfilePage, 50);
 
   // Close overlay FIRST, then show message
   closeEditProfile();
@@ -10571,60 +10503,31 @@ function saveProfile(){
 }
 
 function updateAllAvatars(){
-  var _name = getUserName();
-  var _color = S.avatarColor || (typeof getAvatarColor === 'function' ? getAvatarColor(_name) : '#e8607a');
-  var _initials = _name.split(' ').filter(Boolean).map(function(n){return n[0];}).join('').toUpperCase().slice(0,2)||'?';
-
-  // ── Top nav avatar button ──
+  // Re-render home LB to show updated photo
+  renderHomeLB();
+  // Update top nav avatar
   var btn = el('user-avatar-btn');
   if(btn){
     if(S.avatarBase64){
       btn.innerHTML = '<img src="'+S.avatarBase64+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
     } else {
-      btn.textContent = _initials;
-      btn.style.background = _color;
+      var name = getUserName();
+      var initials = name.split(' ').filter(Boolean).map(function(n){return n[0];}).join('').toUpperCase().slice(0,2)||'?';
+      btn.textContent = initials;
+      btn.style.background = S.avatarColor||'var(--red)';
     }
   }
-
-  // ── Desktop sidebar avatar ──
+  // Update desktop sidebar avatar
   var dsAv = el('ds-avatar');
   if(dsAv){
     if(S.avatarBase64){
       dsAv.innerHTML='<img src="'+S.avatarBase64+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
     } else {
-      dsAv.textContent = _initials.charAt(0);
-      dsAv.style.background = _color;
+      var n2 = getUserName();
+      dsAv.textContent = n2?n2.charAt(0).toUpperCase():'?';
+      dsAv.style.background = S.avatarColor||'var(--red)';
     }
   }
-
-  // ── Big profile page avatar ──
-  var avLg = el('profile-av-lg');
-  if(avLg){
-    if(S.avatarBase64){
-      avLg.textContent = '';
-      avLg.style.background = 'none';
-      avLg.style.overflow = 'hidden';
-      var _lgImg = avLg.querySelector('img');
-      if(!_lgImg){ _lgImg = document.createElement('img'); _lgImg.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:50%;'; avLg.appendChild(_lgImg); }
-      _lgImg.src = S.avatarBase64;
-    } else {
-      var _lgOldImg = avLg.querySelector('img'); if(_lgOldImg) _lgOldImg.remove();
-      avLg.textContent = _initials.charAt(0);
-      avLg.style.background = _color;
-    }
-    // Update ring border to match color
-    avLg.style.borderColor = _color + '88';
-    avLg.style.boxShadow = '0 8px 24px ' + _color + '55';
-  }
-
-  // ── Edit profile ring (if open) ──
-  var epDisp = el('ep-avatar-display');
-  if(epDisp && !S.avatarBase64) epDisp.style.background = _color;
-  var epRing = document.querySelector('.ep-avatar-ring');
-  if(epRing) epRing.style.setProperty('--ring-color', _color);
-
-  // Re-render home LB to show updated photo
-  renderHomeLB();
 }
 
 // updateAllAvatars called inside loginUser directly
@@ -10688,7 +10591,7 @@ var _cropOrigFile = null;
 
 function openCrop(dataUrl){
   var ov = document.getElementById('img-crop-overlay');
-  if(!ov){ showMsg('Crop not available','var(--muted)'); return; }
+  if(!ov){ alert('Crop not available'); return; }
   ov.style.display = 'flex';
   ov.style.pointerEvents = 'all';
 
@@ -10950,7 +10853,7 @@ function showMQCard(){
       +'<div style="font-size:13px;color:var(--muted2);margin:6px 0 16px;">'+mqCorrect+' '+(LANG==='ru'?'из':LANG==='kz'?'ішінен':'of')+' '+mqCards.length+' '+(LANG==='ru'?'правильно':LANG==='kz'?'дұрыс':'correct')+'</div>'
       +'<button onclick="closeMorningQuiz()" class="btn" style="width:100%;">Start Learning! 🚀</button>'
       +'</div>';
-    if(pct>=80){awardXP(20,'Morning quiz aces!');save();launchConfetti();}
+    if(pct>=80){awardXP(20,'Morning quiz aces!');launchConfetti();}
     return;
   }
   var w=mqCards[mqIdx];
@@ -11034,7 +10937,7 @@ function renderWO(){
       +'</div>';
     awardXP(woScore*15,'Word order bonus');
     var woGems=pct>=75?GEM_RATES.game_all_match:GEM_RATES.game_complete;
-    setTimeout(function(){awardGems(woGems,'Word Order');save();},600);
+    setTimeout(function(){awardGems(woGems,'Word Order');},600);
     if(pct>=75)launchConfetti();
     return;
   }
@@ -11163,30 +11066,16 @@ function closeWordOrder(){
 
 // ==================== SOUND SYSTEM — 6-TIER DOPAMINE ENGINE ====================
 var _audioCtx=null;
-var _audioReady=false; // true once context confirmed running
 var _correctStreak=0;
 
 function _ctx(){
   if(!_audioCtx){try{_audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}
+  if(_audioCtx&&_audioCtx.state==='suspended'){_audioCtx.resume().catch(function(){});}
   return _audioCtx;
 }
-
-// Called on every user interaction until the context is confirmed running.
-// Mobile browsers (iOS Safari, Android Chrome) require a real user-gesture
-// to transition AudioContext from 'suspended' → 'running'.
-function _unlockAudio(){
-  if(_audioReady)return;
-  var ctx=_ctx();
-  if(!ctx)return;
-  if(ctx.state==='running'){_audioReady=true;return;}
-  ctx.resume().then(function(){
-    if(ctx.state==='running')_audioReady=true;
-  }).catch(function(){});
-}
-// Keep listeners persistent (not {once:true}) so every tap has a chance to unlock
-document.addEventListener('touchstart',_unlockAudio,{passive:true});
-document.addEventListener('touchend',  _unlockAudio,{passive:true});
-document.addEventListener('click',     _unlockAudio);
+function _unlockAudio(){var ctx=_ctx();if(ctx&&ctx.state!=='running'){ctx.resume().catch(function(){});}}
+document.addEventListener('touchstart',_unlockAudio,{once:true,passive:true});
+document.addEventListener('click',_unlockAudio,{once:true});
 
 function _osc(ctx,type,freq,gainVal,start,dur,freqEnd){
   var o=ctx.createOscillator();var g=ctx.createGain();
@@ -11213,11 +11102,6 @@ function _tick(ctx,t){_osc(ctx,'sine',900,0.05,t,0.04);}
 function playSound(type){
   if(S&&S.mute)return;
   var ctx=_ctx();if(!ctx)return;
-  // If context is still suspended (mobile autoplay policy), resume then retry once
-  if(ctx.state==='suspended'){
-    ctx.resume().then(function(){ playSound(type); }).catch(function(){});
-    return;
-  }
   var t=ctx.currentTime;
   if(type==='correct'){
     var s=_correctStreak;
@@ -11241,17 +11125,17 @@ var _gameCombo=0; // fires across ALL games, not just lessons
 function onCorrectAnswer(fromLesson){
   _gameCombo++;
   playSound('correct');
-  if(navigator.vibrate)navigator.vibrate(fromLesson?[30]:[15]);
   showComboFloat(_gameCombo);
-  // Big burst popup at milestone combos — BEFORE save() so it's instant
+  // Track study activity for daily goal
+  if(!S.study_activity)S.study_activity={};
+  var td=getLocalDate();
+  S.study_activity[td]=(S.study_activity[td]||0)+1;
+  save();
+  // Big burst popup at milestone combos
   if(_gameCombo===3||_gameCombo===5||_gameCombo===10||(_gameCombo>10&&_gameCombo%5===0)){
     playSound('combo');
     showComboPopup(_gameCombo);
   }
-  // Track study activity in memory (save() is called by the caller)
-  if(!S.study_activity)S.study_activity={};
-  var td=getLocalDate();
-  S.study_activity[td]=(S.study_activity[td]||0)+1;
   // Celebrate streak milestone
   var _str = typeof calcStreak === 'function' ? calcStreak() : null;
   if (_str && _str.current > 0) {
@@ -11279,7 +11163,7 @@ function showComboFloat(n){
   var floater=document.createElement('div');
   var _fr=_appRect();
   var _flx=Math.round(_fr.left+_fr.width/2);
-  var _fly=Math.round(_fr.top+_fr.height*0.38);
+  var _fly=Math.round(_fr.top+_fr.height-160);
   floater.style.cssText='position:fixed;left:'+_flx+'px;top:'+_fly+'px;transform:translateX(-50%) scale(0);'+
     'z-index:9999;pointer-events:none;font-family:"Plus Jakarta Sans",sans-serif;font-weight:900;'+
     'font-size:'+size+'px;color:'+color+';text-shadow:0 0 20px '+color+'88;'+
@@ -11825,6 +11709,49 @@ function inferTopic(scene){
 }
 
 
+function showRTCard(){
+  if(rtIdx>=rtQueue.length){
+    // Results
+    var pct=Math.round(rtCorrect/rtTotal*100);
+    el('rt-game').style.display='none';
+    el('rt-setup').style.display='none';
+    var scoreEl=el('rt-score');
+    scoreEl.innerHTML='<div style="text-align:center;padding:20px;"><div style="font-size:40px;margin-bottom:10px;">'+(pct===100?'🏆':pct>=70?'🎯':'📚')+'</div>'
+      +'<div style="font-size:22px;font-weight:900;color:'+(pct>=70?'var(--green)':'var(--red)')+';">'+rtCorrect+'/'+rtTotal+'</div>'
+      +'<div style="font-size:13px;color:var(--muted);margin-top:4px;">'+pct+'% correct</div>'
+      +'<div style="display:flex;gap:8px;margin-top:16px;">'
+      +'<button class="btn btn-outline" onclick="el(\'rt-score\').innerHTML=\'\';initRealTalk();" style="flex:1;">← Change</button>'
+      +'<button class="btn" onclick="el(\'rt-score\').innerHTML=\'\';startRealTalk();" style="flex:1;">▶ Replay</button>'
+      +'</div></div>';
+    awardXP(rtCorrect*8,'Real Talk session');
+    return;
+  }
+  var q=rtQueue[rtIdx];
+  el('rt-prog').textContent=(rtIdx+1)+'/'+rtQueue.length;
+  el('rt-score-top').textContent=rtCorrect+' ✓';
+  el('rt-scene-label').textContent=q.scene;
+  el('rt-cn').textContent=q.q.cn;
+  el('rt-py').textContent=q.q.py;
+  var qTrans=LANG==='ru'&&q.q.ru?q.q.ru:LANG==='kz'&&q.q.kz?q.q.kz:q.q.en;
+  el('rt-en').textContent=qTrans;
+  el('rt-feedback').style.display='none';
+  el('rt-next-btn').style.display='none';
+  // Build choices — shuffle correct + 3 wrong
+  var choices=[{cn:q.correct.cn,py:q.correct.py,en:q.correct.en,isCorrect:true}]
+    .concat(q.wrong.map(function(w){return{cn:w.cn,py:w.py,en:w.en,isCorrect:false};}))
+    .sort(function(){return Math.random()-.5;});
+  var choicesEl=el('rt-choices');
+  choicesEl.innerHTML='';
+  choices.forEach(function(c){
+    var btn=document.createElement('button');
+    btn.style.cssText='background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r12);padding:14px 16px;text-align:left;cursor:pointer;transition:all .15s;width:100%;';
+    btn.innerHTML='<div style="font-family:var(--cn);font-size:18px;font-weight:700;color:var(--text);margin-bottom:3px;">'+c.cn+'</div>'
+      +'<div style="font-family:var(--mono);font-size:10px;color:var(--muted2);">'+c.py+'</div>';
+    (function(choice,b){b.onclick=function(){rtAnswer(choice,b,choicesEl);};})(c,btn);
+    choicesEl.appendChild(btn);
+  });
+}
+
 var currentBankTab='words';
 function setBankTab(tab,btn){
   currentBankTab=tab;
@@ -11935,7 +11862,6 @@ function renderBpAllPhrases(){
 }
 
 function renderBankPhraseBrowse(){
-  updatePhraseStats();
   // Category pills
   var catsEl=el('bank-sb-cats');
   if(catsEl){
@@ -12002,25 +11928,14 @@ function renderBankPhraseBrowse(){
         // Update the My Phrases count label if visible without re-render
         var countEl=el('bp-count-label');
         if(countEl)countEl.textContent=(S.phrases_list||[]).length+' phrase'+((S.phrases_list||[]).length===1?'':'s');
-        updatePhraseStats();
       };})(s,addBtn);
     }
     listEl.appendChild(card);
   });
 }
 
-function updatePhraseStats(){
-  var totalAll=Object.values(SENTENCE_BANK).reduce(function(a,b){return a.concat(b);},[]).length;
-  var totalAdded=(S.phrases_list||[]).length;
-  var pct=totalAll>0?Math.round(totalAdded/totalAll*100):0;
-  if(el('phrase-count'))el('phrase-count').textContent=totalAdded+' phrase'+(totalAdded===1?'':'s')+' · '+(totalAll-totalAdded)+' to go';
-  if(el('phrase-pct'))el('phrase-pct').textContent=pct+'%';
-  if(el('phrase-prog-bar'))el('phrase-prog-bar').style.width=pct+'%';
-}
-
 function renderBankPhrases(){
   setBpTab(bpTab,el('bp-tab-'+bpTab));
-  updatePhraseStats();
 }
 function startQuickSession(){
   var list=getGameWords();
@@ -12299,16 +12214,13 @@ if(S.lang){setLang(S.lang);}else{setLang('en');}
 
 <!-- DAILY REVIEW OVERLAY -->
 <div id="daily-review-overlay" style="position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.9);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;padding:20px;flex-direction:column;pointer-events:none;">
-  <div style="background:var(--s1);border:1.5px solid var(--gold);border-radius:24px;padding:24px;width:100%;max-width:400px;pointer-events:auto;">
+  <div style="background:var(--s1);border:1.5px solid var(--gold);border-radius:24px;padding:24px;width:100%;max-width:400px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
       <div>
         <div style="font-family:var(--mono);font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:.6px;" data-i18n="dr_title">Daily Review ⚡</div>
         <div style="font-size:16px;font-weight:800;margin-top:2px;" data-i18n="dr_subtitle">Words from today</div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);" id="dr-prog">1 of 5</div>
-        <button onclick="closeDailyReview()" style="background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.5);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;">✕</button>
-      </div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);" id="dr-prog">1 of 5</div>
     </div>
     <div id="dr-body"></div>
   </div>
@@ -12365,7 +12277,7 @@ if(S.lang){setLang(S.lang);}else{setLang('en');}
 }
 .ep-avatar-ring::before{
   content:'';position:absolute;inset:-3px;border-radius:50%;
-  background:var(--ring-color, var(--red));
+  background:var(--red);
   animation:epSpin 4s linear infinite;
 }
 @keyframes epSpin{to{transform:rotate(360deg);}}
@@ -12396,7 +12308,7 @@ if(S.lang){setLang(S.lang);}else{setLang('en');}
 .ep-field-icon{font-size:20px;flex-shrink:0;}
 .ep-field-body{flex:1;min-width:0;}
 .ep-field-label{font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
-.ep-field input{border:none;background:transparent;color:var(--text);font-size:16px;font-weight:600;outline:none;width:100%;}
+.ep-field input{border:none;background:transparent;color:var(--text);font-size:15px;font-weight:600;outline:none;width:100%;}
 .ep-field-value{font-size:15px;color:var(--muted2);}
 .ep-color-btn{
   width:32px;height:32px;border-radius:50%;cursor:pointer;
@@ -12620,23 +12532,6 @@ const _SUPA_URL = 'https://renizlngdwamwqspxzso.supabase.co';
 const _SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlbml6bG5nZHdhbXdxc3B4enNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NjAwMTYsImV4cCI6MjA5MzQzNjAxNn0.3SNM5yY5fdzMJq9MelB1dkseWbyd9SLFmG_iGSYAQQE';
 const _db = supabase.createClient(_SUPA_URL, _SUPA_KEY);
 
-// ── Auth session expiry / sign-out listener ───────────────────
-// If the JWT expires or the user is signed out from another device,
-// quietly redirect to the login screen rather than silently failing.
-_db.auth.onAuthStateChange(function(event, session) {
-  if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
-    if (event === 'SIGNED_OUT' && currentUser) {
-      // Session expired — clean up and show login
-      currentUser = null; S = {};
-      if (typeof _feedPollInterval !== 'undefined') clearInterval(_feedPollInterval);
-      var as = el('auth-screen');
-      if (as) { as.style.display = 'flex'; as.style.pointerEvents = 'all'; }
-      if (typeof showLogin === 'function') showLogin();
-      showMsg('Session expired — please log in again', 'var(--muted2)');
-    }
-  }
-});
-
 // ── Helper: load all user data from Supabase into S ──────────
 async function _loadSupaData(uid) {
   var results = await Promise.all([
@@ -12682,11 +12577,10 @@ async function _loadSupaData(uid) {
     });
   }
   if (profile) {
-    if (profile.name)         { S.name = profile.name; if (currentUser) currentUser.name = profile.name; }
-    if (profile.username)     { S.username = profile.username; if (currentUser) currentUser.username = profile.username; }
-    if (profile.lang)         S.lang         = profile.lang;
-    if (profile.daily_goal)   S.daily_goal   = profile.daily_goal;
-    if (profile.avatar_color) S.avatarColor  = profile.avatar_color;
+    if (profile.name)       { S.name = profile.name; if (currentUser) currentUser.name = profile.name; }
+    if (profile.username)   { S.username = profile.username; if (currentUser) currentUser.username = profile.username; }
+    if (profile.lang)       S.lang       = profile.lang;
+    if (profile.daily_goal) S.daily_goal = profile.daily_goal;
   }
 }
 
@@ -12786,33 +12680,16 @@ function renderCharsV() {
   var STATUS_C = { new:'#60a5fa', learning:'#f59e0b', mastered:'#4ade80' };
   var HSK_C = { HSK1:'#4ade80',HSK2:'#60a5fa',HSK3:'#f59e0b',HSK4:'#c084fc',HSK5:'#f87171',HSK6:'#fb923c' };
   container.innerHTML = list.map(function(w) {
-    var sc = STATUS_C[w.status]||'var(--border)';
-    var hc = HSK_C[w.hsk]||'#888';
-    var statusLabel = w.status==='mastered'?'✓ Mastered':w.status==='learning'?'◎ Learning':'○ New';
-    return '<div style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);padding:14px;position:relative;overflow:hidden;">'
-      +'<div style="position:absolute;top:0;left:0;width:3px;height:100%;background:'+sc+';border-radius:3px 0 0 3px;"></div>'
-      +'<div style="padding-left:4px;">'
-      +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;">'
-      +'<div style="font-size:34px;font-weight:900;color:var(--red);font-family:var(--cn);line-height:1;">'+w.char+'</div>'
-      +'<button onclick="removeWord(\''+w.id+'\')" style="background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--muted2);font-size:12px;cursor:pointer;padding:4px 7px;border-radius:8px;line-height:1;transition:all .15s;" onmouseenter="this.style.borderColor=\'var(--redbrd)\';this.style.color=\'var(--red)\'" onmouseleave="this.style.borderColor=\'var(--border)\';this.style.color=\'var(--muted2)\'">✕</button>'
-      +'</div>'
-      +'<div style="font-family:var(--mono);font-size:11px;color:var(--gold);font-weight:700;margin-bottom:3px;">'+(w.pinyin||'')+'</div>'
-      +'<div style="font-size:13px;font-weight:700;margin-bottom:8px;">'+(w.meaning||'')+'</div>'
-      +(w.example?'<div style="font-family:var(--cn);font-size:10px;color:var(--muted2);margin-bottom:8px;">'+w.example+'</div>':'')
-      +'<div style="display:flex;align-items:center;gap:6px;">'
-      +'<span style="font-family:var(--mono);font-size:8px;padding:3px 7px;border-radius:8px;background:'+hc+'18;color:'+hc+';font-weight:700;">'+(w.hsk||'')+'</span>'
-      +'<span style="font-family:var(--mono);font-size:8px;color:'+sc+';font-weight:700;">'+statusLabel+'</span>'
-      +'</div>'
+    return '<div style="background:var(--s2);border:1px solid var(--border);border-left:3px solid '+(STATUS_C[w.status]||'var(--border)')+';border-radius:var(--r12);padding:10px 12px;">'
+      +'<div style="font-size:28px;font-weight:900;color:var(--red);font-family:var(--cn);margin-bottom:2px;">'+w.char+'</div>'
+      +'<div style="font-family:var(--mono);font-size:10px;color:var(--gold);margin-bottom:2px;">'+(w.pinyin||'')+'</div>'
+      +'<div style="font-size:12px;font-weight:600;margin-bottom:6px;">'+(w.meaning||'')+'</div>'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;">'
+      +'<span style="font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:8px;background:'+(HSK_C[w.hsk]||'#888')+'22;color:'+(HSK_C[w.hsk]||'#888')+';">'+(w.hsk||'')+'</span>'
+      +'<button onclick="removeWord(\''+w.id+'\')" style="background:none;border:none;color:var(--muted2);font-size:16px;cursor:pointer;padding:2px 4px;">×</button>'
       +'</div>'
       +'</div>';
   }).join('');
-}
-
-function removeWord(id) {
-  S.chars_list = (S.chars_list||[]).filter(function(c){ return c.id != id; });
-  save();
-  renderCharsV();
-  showMsg('Word removed', 'var(--red)');
 }
 
 function addCharV() {
@@ -12823,8 +12700,8 @@ function addCharV() {
   if (!S.chars_list) S.chars_list = [];
   var id = Date.now();
   S.chars_list.push({ id: id, char: char, pinyin: pinyin, meaning: meaning, hsk:'HSK1', cat:'General', status:'new', sm2_ef:2.5, sm2_rep:0, sm2_iv:1, srs_next: getLocalDate() });
-  awardXP(XP_RATES.add_word || 2, 'Added word ✏️');
   save();
+  awardXP(2, 'Added word');
   el('ch-char-v').value = ''; el('ch-pinyin-v').value = ''; el('ch-meaning-v').value = '';
   renderCharsV();
   friendsNotify(t('w_added_xp'));
@@ -12932,17 +12809,7 @@ doLogin = async function() {
   var profRes = await _db.from('profiles').select('name').eq('id', uid).single();
   var name = (profRes.data && profRes.data.name) || email.split('@')[0];
 
-  // Show syncing overlay while fetching user data from Supabase
-  var _syncOv = document.createElement('div');
-  _syncOv.id = 'login-sync-overlay';
-  _syncOv.style.cssText = 'position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
-  _syncOv.innerHTML = '<div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;"></div>'
-    + '<div style="font-family:var(--mono);font-size:12px;color:var(--muted2);letter-spacing:1px;">Syncing your data…</div>';
-  document.body.appendChild(_syncOv);
-
   await _loadSupaData(uid);
-  if (_syncOv.parentNode) _syncOv.parentNode.removeChild(_syncOv);
-
   // Snapshot Supabase data before loginUser wipes S via loadUserData()
   var _loginSnap = {
     chars_list:    S.chars_list,
@@ -12954,7 +12821,6 @@ doLogin = async function() {
     username:      S.username,
     daily_goal:    S.daily_goal,
     lang:          S.lang,
-    avatarColor:   S.avatarColor,
   };
   loginUser({ name: name, email: email, id: uid });
   // Re-apply Supabase data that loginUser's S=loadUserData() just wiped
@@ -12968,7 +12834,6 @@ doLogin = async function() {
   if (_loginSnap.username)   { S.username = _loginSnap.username; if (currentUser) currentUser.username = _loginSnap.username; }
   if (_loginSnap.daily_goal) S.daily_goal = _loginSnap.daily_goal;
   if (_loginSnap.lang)       { S.lang = _loginSnap.lang; setLang(_loginSnap.lang); }
-  if (_loginSnap.avatarColor) S.avatarColor = _loginSnap.avatarColor;
   save();
   renderHome();
   if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
@@ -13017,10 +12882,6 @@ doSignup = async function() {
 
 // ── Override doLogout ─────────────────────────────────────────
 doLogout = async function() {
-  // Stop all background intervals so they don't fire against a null user
-  if (typeof _feedPollInterval !== 'undefined') clearInterval(_feedPollInterval);
-  clearTimeout(_syncTimer);
-
   await _db.auth.signOut();
   currentUser = null; S = {};
   try { closeDropdown(); } catch(e) {}
@@ -13047,103 +12908,86 @@ async function _syncNow() {
   var uid = currentUser.id;
   var today = getLocalDate();
 
-  try {
-    // ── Words: single bulk upsert (was N+1 per word) ─────────────
-    var words = S.chars_list || [];
-    if (words.length > 0) {
-      var wordRows = words.map(function(w) {
-        var row = {
-          user_id: uid, char: w.char, pinyin: w.pinyin || '', meaning: w.meaning || '',
-          hsk: w.hsk || 'HSK1', cat: w.cat || 'General', status: w.status || 'new',
-          sm2_ef: w.sm2_ef || 2.5, sm2_rep: w.sm2_rep || 0, sm2_iv: w.sm2_iv || 1,
-          srs_next: w.srs_next || today,
-        };
-        if (w.id && typeof w.id === 'string' && w.id.includes('-')) row.id = w.id;
-        return row;
-      });
-      var wordRes = await _db.from('user_words').upsert(wordRows, { onConflict: 'id' }).select('id,char');
-      // Back-fill UUIDs for locally-created words that were just assigned server IDs
-      if (wordRes.data) {
-        wordRes.data.forEach(function(serverRow) {
-          var local = words.find(function(w) { return w.char === serverRow.char && (!w.id || !w.id.includes('-')); });
-          if (local && serverRow.id) local.id = serverRow.id;
-        });
-      }
+  // Sync words
+  var words = S.chars_list || [];
+  for (var i = 0; i < words.length; i++) {
+    var w = words[i];
+    var row = {
+      user_id: uid, char: w.char, pinyin: w.pinyin || '', meaning: w.meaning || '',
+      hsk: w.hsk || 'HSK1', cat: w.cat || 'General', status: w.status || 'new',
+      sm2_ef: w.sm2_ef || 2.5, sm2_rep: w.sm2_rep || 0, sm2_iv: w.sm2_iv || 1,
+      srs_next: w.srs_next || today,
+    };
+    if (w.id && typeof w.id === 'string' && w.id.includes('-')) row.id = w.id;
+    var upserted = await _db.from('user_words').upsert(row, { onConflict: 'id' }).select('id').single();
+    if (upserted.data && upserted.data.id && w.id !== upserted.data.id) {
+      w.id = upserted.data.id;
     }
+  }
 
-    // ── Study sessions: only sync today's entry (not all history) ─
-    var activity = S.study_activity || {};
-    if ((activity[today] || 0) > 0) {
+  // Sync study sessions
+  var activity = S.study_activity || {};
+  var dates = Object.keys(activity);
+  for (var j = 0; j < dates.length; j++) {
+    var d = dates[j];
+    if ((activity[d] || 0) > 0) {
       await _db.from('study_sessions').upsert(
-        { user_id: uid, date: today, correct_count: activity[today] },
+        { user_id: uid, date: d, correct_count: activity[d] },
         { onConflict: 'user_id,date' }
       );
     }
-
-    // ── XP snapshot ───────────────────────────────────────────────
-    if (S.xp_earned) {
-      await _db.from('xp_log').delete().eq('user_id', uid).eq('source', 'total_snapshot');
-      await _db.from('xp_log').insert({ user_id: uid, amount: S.xp_earned, source: 'total_snapshot' });
-    }
-
-    // ── Phrases: single bulk upsert ───────────────────────────────
-    var phrases = S.phrases_list || [];
-    if (phrases.length > 0) {
-      var phraseRows = phrases.map(function(p) {
-        var row = {
-          user_id: uid,
-          phrase_cn: p.cn || '', phrase_py: p.py || '', phrase_en: p.en || '',
-          status: p.status || 'new',
-        };
-        if (p.id && typeof p.id === 'string' && p.id.includes('-')) row.id = p.id;
-        return row;
-      });
-      var phRes = await _db.from('user_phrases').upsert(phraseRows, { onConflict: 'id' }).select('id,phrase_cn');
-      if (phRes.data) {
-        phRes.data.forEach(function(sr) {
-          var lp = phrases.find(function(p) { return p.cn === sr.phrase_cn && (!p.id || !p.id.includes('-')); });
-          if (lp && sr.id) lp.id = sr.id;
-        });
-      }
-    }
-
-    // ── Sentences: single bulk upsert ────────────────────────────
-    var sentences = (S.sentences || []).filter(function(s) { return s && s.cn; });
-    if (sentences.length > 0) {
-      var sentRows = sentences.map(function(sent) {
-        var row = { user_id: uid, sentence_cn: sent.cn, sentence_py: sent.py || '', sentence_en: sent.en || '' };
-        if (sent.id && typeof sent.id === 'string' && sent.id.includes('-')) row.id = sent.id;
-        return row;
-      });
-      var sRes = await _db.from('sentences').upsert(sentRows, { onConflict: 'id' }).select('id,sentence_cn');
-      if (sRes.data) {
-        sRes.data.forEach(function(sr) {
-          var ls = sentences.find(function(s) { return s.cn === sr.sentence_cn && (!s.id || !s.id.includes('-')); });
-          if (ls && sr.id) ls.id = sr.id;
-        });
-      }
-    }
-
-    // ── Profile ───────────────────────────────────────────────────
-    await _db.from('profiles').upsert({
-      id: uid,
-      name: (typeof S.name === 'string' ? S.name : (currentUser && currentUser.name) || ''),
-      username: (currentUser && currentUser.username) || S.username || null,
-      lang: S.lang || 'en',
-      daily_goal: S.daily_goal || 10,
-      invite_code: getMyInviteCode(),
-      xp_total: S.xp_earned || 0,
-      weekly_xp: getWeeklyXP ? getWeeklyXP() : 0,
-      weekly_xp_week: getWeekStart ? getWeekStart() : '',
-      streak: (calcStreak ? calcStreak().current : 0),
-      words_count: (S.chars_list || []).length,
-      avatar_color: S.avatarColor || null,
-    }, { onConflict: 'id' });
-
-  } catch(syncErr) {
-    // Non-fatal — local data is safe; retry next save()
-    console.warn('[Hanzo] Supabase sync error:', syncErr && syncErr.message);
   }
+
+  // Sync XP — delete old snapshot then insert fresh (avoids duplicate-sum bug)
+  if (S.xp_earned) {
+    await _db.from('xp_log').delete().eq('user_id', uid).eq('source', 'total_snapshot');
+    await _db.from('xp_log').insert({ user_id: uid, amount: S.xp_earned, source: 'total_snapshot' });
+  }
+
+  // Sync phrases
+  var phrases = S.phrases_list || [];
+  for (var k = 0; k < phrases.length; k++) {
+    var p = phrases[k];
+    var prow = {
+      user_id: uid,
+      phrase_cn: p.cn || '',
+      phrase_py: p.py || '',
+      phrase_en: p.en || '',
+      status: p.status || 'new',
+    };
+    if (p.id && typeof p.id === 'string' && p.id.includes('-')) prow.id = p.id;
+    var ups = await _db.from('user_phrases').upsert(prow, { onConflict: 'id' }).select('id').single();
+    if (ups.data && ups.data.id && p.id !== ups.data.id) {
+      p.id = ups.data.id;
+    }
+  }
+
+  // Sync sentences
+  var sentences = S.sentences || [];
+  for (var s = 0; s < sentences.length; s++) {
+    var sent = sentences[s];
+    if (!sent || !sent.cn) continue;
+    var srow = { user_id: uid, sentence_cn: sent.cn, sentence_py: sent.py || '', sentence_en: sent.en || '' };
+    if (sent.id && typeof sent.id === 'string' && sent.id.includes('-')) srow.id = sent.id;
+    var sups = await _db.from('sentences').upsert(srow, { onConflict: 'id' }).select('id').single();
+    if (sups.data && sups.data.id && sent.id !== sups.data.id) sent.id = sups.data.id;
+  }
+
+  // Sync profile (name, username, lang, daily_goal, invite code + leaderboard stats)
+  var profileUpdate = {
+    id: uid,
+    name: (typeof S.name === 'string' ? S.name : (currentUser && currentUser.name) || ''),
+    username: (currentUser && currentUser.username) || S.username || null,
+    lang: S.lang || 'en',
+    daily_goal: S.daily_goal || 10,
+    invite_code: getMyInviteCode(),
+    xp_total: S.xp_earned || 0,
+    weekly_xp: getWeeklyXP ? getWeeklyXP() : 0,
+    weekly_xp_week: getWeekStart ? getWeekStart() : '',
+    streak: (calcStreak ? calcStreak().current : 0),
+    words_count: (S.chars_list || []).length,
+  };
+  await _db.from('profiles').upsert(profileUpdate, { onConflict: 'id' });
 }
 
 // ── Real friends: load from Supabase ─────────────────────────
@@ -13334,9 +13178,9 @@ function _renderMyFriends() {
   });
 }
 
-// ── Patch showEditProfile to fill username field ──────────────
-var _origOpenEditProfile = showEditProfile;
-showEditProfile = function() {
+// ── Patch openEditProfile to fill username field ──────────────
+var _origOpenEditProfile = openEditProfile;
+openEditProfile = function() {
   _origOpenEditProfile();
   var uInp = el('ep-username-input');
   if (uInp) {
@@ -13484,13 +13328,7 @@ async function _searchFriend(val) {
   // _loadSupaData sets S.chars_list, S.name, S.xp_earned etc. but loginUser()
   // then resets S via S=loadUserData(email). Snapshot the Supabase data first,
   // then re-apply it after loginUser so stats are never blank on first load.
-  var _autoSyncOv = document.createElement('div');
-  _autoSyncOv.style.cssText = 'position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
-  _autoSyncOv.innerHTML = '<div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;"></div>'
-    + '<div style="font-family:var(--mono);font-size:12px;color:var(--muted2);letter-spacing:1px;">Syncing your data…</div>';
-  document.body.appendChild(_autoSyncOv);
   await _loadSupaData(uid);
-  if (_autoSyncOv.parentNode) _autoSyncOv.parentNode.removeChild(_autoSyncOv);
   var _snap = {
     chars_list:    S.chars_list,
     phrases_list:  S.phrases_list,
@@ -13501,7 +13339,6 @@ async function _searchFriend(val) {
     username:      S.username,
     daily_goal:    S.daily_goal,
     lang:          S.lang,
-    avatarColor:   S.avatarColor,
   };
 
   loginUser({ name: name, email: user.email, id: uid, username: username });
@@ -13511,20 +13348,13 @@ async function _searchFriend(val) {
   if (_snap.phrases_list  && _snap.phrases_list.length)  S.phrases_list  = _snap.phrases_list;
   if (_snap.study_activity && Object.keys(_snap.study_activity).length)
     S.study_activity = Object.assign(S.study_activity || {}, _snap.study_activity);
-  if (_snap.xp_earned)    S.xp_earned    = _snap.xp_earned;
-  if (_snap.sentences     && _snap.sentences.length)     S.sentences     = _snap.sentences;
-  if (_snap.name)         { S.name = _snap.name; if (currentUser) currentUser.name = _snap.name; }
-  if (_snap.username)     { S.username = _snap.username; if (currentUser) currentUser.username = _snap.username; }
-  if (_snap.daily_goal)   S.daily_goal   = _snap.daily_goal;
-  if (_snap.lang)         S.lang         = _snap.lang;
-  if (_snap.avatarColor)  S.avatarColor  = _snap.avatarColor;
+  if (_snap.xp_earned)   S.xp_earned   = _snap.xp_earned;
+  if (_snap.sentences    && _snap.sentences.length)      S.sentences     = _snap.sentences;
+  if (_snap.name)        { S.name = _snap.name; if (currentUser) currentUser.name = _snap.name; }
+  if (_snap.username)    { S.username = _snap.username; if (currentUser) currentUser.username = _snap.username; }
+  if (_snap.daily_goal)  S.daily_goal  = _snap.daily_goal;
+  if (_snap.lang)        S.lang        = _snap.lang;
   save(); // persist the merged local+Supabase data
-
-  // Re-check onboarding now that Supabase S.onboarding is correctly applied.
-  // loginUser() already called checkOnboarding() at 600ms but S was still blank then.
-  // For returning users, S.onboarding is now set so this is a no-op.
-  // For brand new users (no onboarding in Supabase), this triggers the flow.
-  if (typeof checkOnboarding === 'function') checkOnboarding();
 
   // Re-render home with complete data (loginUser already rendered it with blank S)
   renderHome();
@@ -13532,7 +13362,7 @@ async function _searchFriend(val) {
 
   await _loadFriendsData();
 
-  // Re-render whichever page is currently open with the freshly-loaded friends data
+  // Re-render profile or feed if user is already on those pages
   if (typeof currentPage !== 'undefined') {
     if (currentPage === 'profile' && typeof _renderProfilePage === 'function') {
       _renderProfilePage();
@@ -13541,12 +13371,7 @@ async function _searchFriend(val) {
       _feedCache = {};
       _loadFeed();
     }
-    if (currentPage === 'friends' && typeof renderFriendsPage === 'function') {
-      renderFriendsPage();
-    }
   }
-  // Always refresh home leaderboard after friends load — it uses S.friends
-  if (typeof renderHomeLB === 'function') renderHomeLB();
   // Always prime the feed cache in background so it's instant when user navigates there
   if (typeof _loadFeed === 'function' && currentPage !== 'feed') {
     setTimeout(function() {
@@ -13560,160 +13385,6 @@ async function _searchFriend(val) {
     }, 1500);
   }
 })();
-
-// ==================== AI TUTOR ====================
-
-var _aiMode = 'conversation';
-var _aiLevel = 'beginner';
-var _aiMessages = [];
-var _aiLoading = false;
-var _AI_API = 'https://hanzo-nextjs-2zsly2nco-hanzoapp.vercel.app/api/chat';
-
-var _AI_STARTERS = {
-  conversation: ['Start a conversation about food 🍜','Help me introduce myself in Chinese','Talk about daily life in China','How do I order at a restaurant?'],
-  pronunciation: ['Explain the 4 tones','Help me say 你好 correctly','What\'s the hardest sound in Chinese?','How do I say 谢谢?'],
-  quiz: ['Quiz me on basic greetings','Test my HSK 1 vocabulary','Ask me about numbers 1–10','Quiz me on colors'],
-};
-
-function _aiSetMode(mode, btn) {
-  _aiMode = mode;
-  _aiMessages = [];
-  document.querySelectorAll('.ai-mode-btn').forEach(function(b){b.classList.remove('on');});
-  if(btn) btn.classList.add('on');
-  var statusLine = el('ai-status-line');
-  var labels = {conversation:'💬 Conversation',pronunciation:'🎙️ Pronunciation',quiz:'⚡ Quiz'};
-  if(statusLine) statusLine.textContent = (labels[mode]||mode) + ' · ' + _aiLevel;
-  _aiRenderWelcome();
-}
-
-function _aiSetLevel(val) {
-  _aiLevel = val;
-  var statusLine = el('ai-status-line');
-  if(statusLine) {
-    var labels = {conversation:'💬 Conversation',pronunciation:'🎙️ Pronunciation',quiz:'⚡ Quiz'};
-    statusLine.textContent = (labels[_aiMode]||_aiMode) + ' · ' + val;
-  }
-}
-
-function _aiRenderWelcome() {
-  var msgs = el('ai-msgs');
-  if(!msgs) return;
-  msgs.innerHTML = '';
-  var titles = {
-    conversation:'Your AI Chinese conversation partner',
-    pronunciation:'Master Chinese tones & sounds',
-    quiz:'Test your Chinese knowledge',
-  };
-  var descs = {
-    conversation:'Chat naturally. Learn vocabulary in context. I adapt to your level.',
-    pronunciation:'Type any Chinese word or pinyin. I\'ll break down exactly how to say it.',
-    quiz:'I\'ll quiz you on vocabulary, phrases, and grammar. Let\'s see what you know!',
-  };
-  var starters = _AI_STARTERS[_aiMode] || [];
-  var welcomeHTML = '<div class="ai-welcome">'
-    + '<div style="font-size:28px;margin-bottom:8px;">' + ({conversation:'💬',pronunciation:'🎙️',quiz:'⚡'}[_aiMode]||'💬') + '</div>'
-    + '<div style="font-weight:800;font-size:15px;margin-bottom:4px;">' + (titles[_aiMode]||'') + '</div>'
-    + '<div style="font-size:12px;color:var(--muted2);line-height:1.5;">' + (descs[_aiMode]||'') + '</div>'
-    + '</div>'
-    + '<div style="font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Try asking</div>'
-    + '<div class="ai-starter-grid">';
-  starters.forEach(function(s) {
-    welcomeHTML += '<button class="ai-starter-btn" onclick="_aiSend(\'' + s.replace(/'/g,"\\'") + '\')">' + s + '</button>';
-  });
-  welcomeHTML += '</div>';
-  msgs.innerHTML = welcomeHTML;
-}
-
-function _aiAppendMsg(role, text) {
-  var msgs = el('ai-msgs');
-  if(!msgs) return;
-  // Clear welcome on first real message
-  if(msgs.querySelector('.ai-welcome')) msgs.innerHTML = '';
-
-  var div = document.createElement('div');
-  div.className = 'ai-msg ' + role;
-  if(role === 'ai') {
-    div.innerHTML = '<div class="ai-avatar">漢</div><div class="ai-bubble">' + text.replace(/\n/g,'<br>') + '</div>';
-  } else {
-    div.innerHTML = '<div class="ai-bubble">' + text.replace(/</g,'&lt;') + '</div>';
-  }
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function _aiShowTyping() {
-  var msgs = el('ai-msgs');
-  if(!msgs) return;
-  var div = document.createElement('div');
-  div.className = 'ai-msg ai';
-  div.id = 'ai-typing-indicator';
-  div.innerHTML = '<div class="ai-avatar">漢</div><div class="ai-bubble ai-typing"><span></span><span></span><span></span></div>';
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function _aiHideTyping() {
-  var t = el('ai-typing-indicator');
-  if(t) t.remove();
-}
-
-function _aiKeydown(e) {
-  if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); _aiSend(); }
-}
-
-async function _aiSend(text) {
-  if(_aiLoading) return;
-  var input = el('ai-input');
-  var content = text || (input ? input.value.trim() : '');
-  if(!content) return;
-  if(input) input.value = '';
-
-  // Update send button
-  var sendBtn = el('ai-send-btn');
-  if(sendBtn) { sendBtn.disabled = true; }
-
-  _aiMessages.push({role:'user', content:content});
-  _aiAppendMsg('user', content);
-  _aiLoading = true;
-  _aiShowTyping();
-
-  // Get Supabase access token
-  var token = '';
-  try {
-    var sess = await _db.auth.getSession();
-    token = sess && sess.data && sess.data.session && sess.data.session.access_token || '';
-  } catch(e) {}
-
-  try {
-    var res = await fetch(_AI_API, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json', 'Authorization':'Bearer '+token},
-      body: JSON.stringify({messages:_aiMessages, level:_aiLevel, mode:_aiMode}),
-    });
-    var data = await res.json();
-    var reply = data.reply || 'Sorry, something went wrong. Try again!';
-    _aiMessages.push({role:'assistant', content:reply});
-    _aiHideTyping();
-    _aiAppendMsg('ai', reply);
-  } catch(err) {
-    _aiHideTyping();
-    _aiAppendMsg('ai', 'Connection error — check your internet and try again.');
-  }
-
-  _aiLoading = false;
-  if(sendBtn) sendBtn.disabled = false;
-  if(input) input.focus();
-}
-
-// Init input → enable/disable send button live
-document.addEventListener('DOMContentLoaded', function() {
-  var inp = el('ai-input');
-  var btn = el('ai-send-btn');
-  if(inp && btn) {
-    inp.addEventListener('input', function() { btn.disabled = !inp.value.trim() || _aiLoading; });
-  }
-  _aiRenderWelcome();
-});
 
 // ==================== SOCIAL FEED ====================
 
@@ -13794,7 +13465,7 @@ async function _loadFeed() {
     cached.forEach(function(post) { _renderPost(post, postsEl); });
     // Silently refresh in background
     _buildFeedQuery().then(function(res) {
-      var fresh = res && res.data;
+      var fresh = res.data;
       if (!fresh) return;
       _feedCache[_feedTab] = fresh;
       _checkFeedForNew(fresh);
@@ -13806,7 +13477,7 @@ async function _loadFeed() {
         if (!fresh.length) { _renderFeedEmpty(postsEl); return; }
         fresh.forEach(function(post) { _renderPost(post, postsEl); });
       }
-    }).catch(function(){});
+    });
     return;
   }
 
@@ -13815,14 +13486,7 @@ async function _loadFeed() {
   if (loadingEl) loadingEl.style.display = 'none';
   _showFeedSkeletons(postsEl, 3);
 
-  var posts;
-  try {
-    var res = await _buildFeedQuery();
-    posts = res && res.data;
-  } catch(feedErr) {
-    posts = null;
-    console.warn('[Hanzo] feed load error:', feedErr && feedErr.message);
-  }
+  var { data: posts } = await _buildFeedQuery();
   postsEl.innerHTML = '';
   _feedCache[_feedTab] = posts || [];
   _renderStories(posts || []);
@@ -13852,7 +13516,7 @@ function _markFeedSeen() {
 }
 
 // Poll for new posts every 45s while app is open
-var _feedPollInterval = setInterval(function() {
+setInterval(function() {
   if (!currentUser || !currentUser.id) return;
   if (typeof _feedCache === 'undefined') return;
   _buildFeedQuery().then(function(res) {
@@ -14045,7 +13709,7 @@ function _buildCommentsSection(container, post) {
   var inputRow = document.createElement('div');
   inputRow.style.cssText = 'display:flex;gap:8px;align-items:center;padding:10px 14px;'+(comments.length?'border-top:1px solid var(--border);':'');
   inputRow.innerHTML = '<div style="width:28px;height:28px;border-radius:50%;background:'+mc+';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0;">'+nm.charAt(0).toUpperCase()+'</div>'
-    +'<input id="cmt-inp-'+post.id+'" placeholder="Add a comment…" style="flex:1;background:var(--s3);border:1px solid var(--border);border-radius:20px;padding:8px 12px;font-family:var(--font);font-size:16px;color:var(--text);outline:none;" onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();_addComment(\''+post.id+'\',this.closest(\'[data-post-id]\'));}">'
+    +'<input id="cmt-inp-'+post.id+'" placeholder="Add a comment…" style="flex:1;background:var(--s3);border:1px solid var(--border);border-radius:20px;padding:8px 12px;font-family:var(--font);font-size:13px;color:var(--text);outline:none;" onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();_addComment(\''+post.id+'\',this.closest(\'[data-post-id]\'));}">'
     +'<button onclick="_addComment(\''+post.id+'\',this.closest(\'[data-post-id]\'))" style="background:var(--red);border:none;color:#fff;font-weight:800;font-size:12px;padding:8px 14px;border-radius:20px;cursor:pointer;flex-shrink:0;">Send</button>';
   container.appendChild(inputRow);
 }
@@ -14169,7 +13833,7 @@ function _onComposerImageSelect(event) {
   var file = event.target.files && event.target.files[0];
   if (!file) return;
   if (file.size > 10 * 1024 * 1024) {
-    showMsg('Image too large — please choose a smaller photo','var(--red)');
+    alert('Image too large. Please choose a smaller photo.');
     event.target.value = '';
     return;
   }
@@ -14231,7 +13895,7 @@ async function _submitPost() {
     user_id: currentUser.id,
     username: (typeof S !== 'undefined' && S.username) || null,
     display_name: nm,
-    avatar_color: S.avatarColor || (typeof getAvatarColor === 'function' ? getAvatarColor(nm) : '#e8607a'),
+    avatar_color: typeof getAvatarColor === 'function' ? getAvatarColor(nm) : '#e8607a',
     type: 'manual',
     content: content,
     likes: [],
@@ -14283,7 +13947,7 @@ async function _autoPost(type, content) {
     user_id: currentUser.id,
     username: (currentUser.username || S.username || null),
     display_name: nm,
-    avatar_color: S.avatarColor || (getAvatarColor ? getAvatarColor(nm) : '#e8607a'),
+    avatar_color: getAvatarColor ? getAvatarColor(nm) : '#e8607a',
     type: type,
     content: content,
     likes: [],
@@ -14331,11 +13995,11 @@ if (_origGoPage) {
           if (currentUser || _feedRetries >= 6) {
             clearInterval(_feedRetryTimer);
             _feedCache = {};
-            if (_friendsCache === null) _loadFriendsData().then(_loadFeed).catch(function(){ _loadFeed(); }); else _loadFeed();
+            if (_friendsCache === null) _loadFriendsData().then(_loadFeed); else _loadFeed();
           }
         }, 500);
       } else if (_friendsCache === null) {
-        _loadFriendsData().then(_loadFeed).catch(function(){ _loadFeed(); });
+        _loadFriendsData().then(_loadFeed);
       } else {
         _feedCache = {};
         _loadFeed();
@@ -14771,7 +14435,6 @@ function _setLbTab(tab, btn) {
   if (btn) btn.classList.add('on');
 }
 
-
 // ============================================================
 // FEATURE 8: HEARTS / LIVES SYSTEM
 // ============================================================
@@ -14917,8 +14580,7 @@ function _renderProfilePage() {
       var _oldImg = avEl.querySelector('img');
       if (_oldImg) _oldImg.remove();
       avEl.textContent = (name || 'U').charAt(0).toUpperCase();
-      // Use user-selected color first, fall back to hash-based color
-      avEl.style.background = S.avatarColor || (typeof getAvatarColor === 'function' ? getAvatarColor(name) : 'var(--red)');
+      if (typeof getAvatarColor === 'function') avEl.style.background = getAvatarColor(name);
     }
   }
 
@@ -14934,8 +14596,9 @@ function _renderProfilePage() {
   var gems = S.gems || 0;
   if (el('prof-gems')) el('prof-gems').textContent = gems;
 
-  // Friends count from in-memory cache
-  var friendCount = (_friendsCache||[]).filter(function(f){return f.isReal;}).length;
+  // Friends count (rough estimate from friends data)
+  var friendCount = 0;
+  try { friendCount = (JSON.parse(localStorage.getItem('hanzo_friends_cache') || '[]')).length; } catch(e) {}
   if (el('prof-friends')) el('prof-friends').textContent = friendCount;
 
   // Sound toggle
@@ -15026,7 +14689,8 @@ function _renderAchievements() {
   var xp = (typeof getTotalXP === 'function' ? getTotalXP() : 0) || 0;
   var words = ((typeof S !== 'undefined' && S.chars_list && S.chars_list.length) || 0);
   var streak = (typeof calcStreak === 'function' ? (calcStreak().current || 0) : 0);
-  var friends = (_friendsCache||[]).filter(function(f){return f.isReal;}).length;
+  var friends = 0;
+  try { friends = (JSON.parse(localStorage.getItem('hanzo_friends_cache') || '[]')).length; } catch(e) {}
 
   var achievements = [
     { icon:'🔥', name:LANG==='ru'?'Огонёк':LANG==='kz'?'Алғашқы от':'First Flame', desc:LANG==='ru'?'3 дня подряд':LANG==='kz'?'3 күн серия':'3-day streak', done: streak >= 3 },
@@ -15167,6 +14831,8 @@ if (_origLoginUser) {
     _origLoginUser(user);
     // Init new features
     setTimeout(function() {
+      _checkHeartRefill();
+      _renderHeartsDisplay();
       _updateShieldCard();
       _updateSRSDueBadge();
       _updateNotifBadge();
@@ -15180,6 +14846,11 @@ if (_origLoginUser) {
         // We keep existing onboarding logic but also set our key post-onboarding
       }
     }, 800);
+    // Heart refill interval
+    setInterval(function() {
+      _checkHeartRefill();
+      _renderHeartsDisplay();
+    }, 60000);
   };
 }
 
@@ -15220,6 +14891,13 @@ goPage = function(p, btn) {
   if (avBtn) avBtn.style.borderColor = (p === 'profile') ? 'var(--red)' : '';
 };
 
+// Update hearts display on heartbeat
+setInterval(function() {
+  if (typeof currentPage !== 'undefined' && currentPage === 'games') {
+    _checkHeartRefill();
+    _renderHeartsDisplay();
+  }
+}, 30000);
 
 // ============================================================
 // 🎧  LISTENING GAME — hear the audio, pick the right character
@@ -15246,8 +14924,6 @@ function _lgShowCard(){
   var choicesEl=document.getElementById('ls-g-choices');
   var scoreEl=document.getElementById('ls-g-score');
 
-  var _lgNextBtn=document.getElementById('ls-g-next');if(_lgNextBtn)_lgNextBtn.style.display='none';
-
   if(_lgIdx>=_lgCards.length){
     var pct=_lgTotal?Math.round(_lgCorrect/_lgTotal*100):0;
     if(progEl)progEl.textContent='Done!';
@@ -15256,8 +14932,8 @@ function _lgShowCard(){
     if(hintEl)hintEl.textContent='';
     if(choicesEl)choicesEl.innerHTML='';
     if(scoreEl)scoreEl.textContent=pct+'% correct ('+_lgCorrect+'/'+_lgTotal+')';
-    if(pct>=80){launchConfetti();awardXP(XP_RATES.lesson_complete,'Listen game!');awardGems(GEM_RATES.game_all_match,'Listen 🎧');save();}
-    else{awardGems(GEM_RATES.game_complete,'Listen 🎧');save();}
+    if(pct>=80){launchConfetti();awardXP(XP_RATES.lesson_complete,'Listen game!');awardGems(GEM_RATES.game_all_match,'Listen 🎧');}
+    else{awardGems(GEM_RATES.game_complete,'Listen 🎧');}
     var playBtn=document.getElementById('ls-g-play-btn');
     if(playBtn)playBtn.style.display='none';
     return;
@@ -15326,18 +15002,15 @@ function _lgAnswer(char,choices,btnEl){
   if(resEl){
     if(correct){
       resEl.textContent='✓ '+(_lgCurrent.meaning||'');resEl.style.color='var(--green)';
+      awardXP(5,'Listen correct!');
       onCorrectAnswer();
-      setTimeout(function(){awardXP(5,'Listen correct!');save();},0);
     } else {
-      resEl.textContent='✗ It was: '+_lgCurrent.char+' ('+(_lgCurrent.meaning||'')+')';resEl.style.color='var(--red)';
-      onWrongAnswer();
+      resEl.textContent='✗ It was '+_lgCurrent.char+' ('+(_lgCurrent.meaning||'')+')';resEl.style.color='var(--red)';
     }
   }
 
   _lgIdx++;
-  // Show Next button — never auto-advance so user can read feedback
-  var _lgNextBtn=document.getElementById('ls-g-next');
-  if(_lgNextBtn){_lgNextBtn.style.display='block';setTimeout(function(){_lgNextBtn.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}
+  setTimeout(_lgShowCard,1400);
 }
 
 // ============================================================
@@ -15859,7 +15532,28 @@ function _haptic(type) {
 // 📊  PROGRESS EXPORT — shareable card (canvas-free, HTML→clip)
 // ============================================================
 (function(){
-  // Button is now in static HTML — no dynamic injection needed
+  // Inject "Share Progress" button into profile page
+  var _origRPP = typeof _renderProfilePage === 'function' ? _renderProfilePage : null;
+  if (_origRPP) {
+    _renderProfilePage = function() {
+      _origRPP.apply(this, arguments);
+      setTimeout(function() {
+        if (document.getElementById('share-progress-btn')) return;
+        // Find a good anchor: stats section in profile
+        var profStats = document.querySelector('#page-profile .stats-grid, #page-profile [id="prof-streak"]');
+        var anchor = profStats ? profStats.parentElement : document.querySelector('#page-profile');
+        if (!anchor) return;
+        var btn = document.createElement('button');
+        btn.id = 'share-progress-btn';
+        btn.style.cssText = 'width:100%;padding:13px;background:linear-gradient(135deg,var(--blue),#6366f1);'
+          +'color:#fff;border:none;border-radius:var(--r12);font-size:14px;font-weight:800;cursor:pointer;'
+          +'margin:14px 0 4px;box-shadow:0 4px 16px rgba(99,102,241,.35);display:flex;align-items:center;justify-content:center;gap:8px;';
+        btn.innerHTML = '<span>📤</span><span>Share My Progress</span>';
+        btn.onclick = _showProgressExport;
+        anchor.appendChild(btn);
+      }, 120);
+    };
+  }
 
   window._showProgressExport = function() {
     var xp = typeof getTotalXP === 'function' ? getTotalXP() : (S.xp_earned || 0);
