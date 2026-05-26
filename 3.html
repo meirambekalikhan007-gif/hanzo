@@ -13556,12 +13556,24 @@ async function _searchFriend(val) {
       avatarColor:   S.avatarColor,
     };
 
-    // Also persist uid to USERS_KEY so future page refreshes work without Supabase session
+    // Persist uid to USERS_KEY so future page refreshes work without a fresh Supabase session
     (function(){ var _ul=getUsers(),_ui=_ul.findIndex(function(u){return u.email===user.email;}); if(_ui>=0){_ul[_ui].id=uid;if(username)_ul[_ui].username=username;saveUsers(_ul);} else{_ul.push({name:name,email:user.email,id:uid,username:username||''});saveUsers(_ul);} })();
 
-    loginUser({ name: name, email: user.email, id: uid, username: username });
+    // ── KEY FIX: only call loginUser() if no session is active yet ──
+    // If currentUser is already set (restored from localStorage earlier), we must NOT
+    // call loginUser() again — it would reset S, re-schedule all timers, and disrupt
+    // any in-progress game on Learn/Bank pages.
+    // Instead, quietly patch currentUser.id + merge Supabase data into existing S.
+    var _alreadyLoggedIn = !!(currentUser && currentUser.email);
+    if (!_alreadyLoggedIn) {
+      loginUser({ name: name, email: user.email, id: uid, username: username });
+    } else {
+      currentUser.id = uid;
+      if (username) currentUser.username = username;
+      if (name && !currentUser.name) currentUser.name = name;
+    }
 
-    // Re-apply Supabase data that loginUser's S=loadUserData() just wiped
+    // Merge Supabase data into S (loginUser may or may not have reset S above)
     if (_snap.chars_list    && _snap.chars_list.length)    S.chars_list    = _snap.chars_list;
     if (_snap.phrases_list  && _snap.phrases_list.length)  S.phrases_list  = _snap.phrases_list;
     if (_snap.study_activity && Object.keys(_snap.study_activity).length)
@@ -13575,10 +13587,7 @@ async function _searchFriend(val) {
     if (_snap.avatarColor)  S.avatarColor  = _snap.avatarColor;
     save(); // persist the merged local+Supabase data
 
-    // Re-check onboarding now that Supabase S.onboarding is correctly applied.
-    if (typeof checkOnboarding === 'function') checkOnboarding();
-
-    // Re-render home with complete data (loginUser already rendered it with blank S)
+    // Lightweight UI refresh — does NOT reset game state or re-schedule timers
     renderHome();
     if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
     if (typeof updateAllAvatars === 'function') updateAllAvatars();
