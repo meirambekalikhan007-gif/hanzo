@@ -4347,7 +4347,7 @@ function updateWordSRS(id, correct){
     word.srs_next=getLocalDate();
     word.status='learning';
   }
-  save();
+  // save() intentionally omitted — callers batch-save after all state updates
 }
 
 function sortByHSKPriority(words){
@@ -4374,39 +4374,39 @@ var _fcVerifyMode=false;
 function quizResult(r){
   var ch=quizCards[quizIdx];
   if(r==='mastered'){
+    // Instant button flash feedback
+    var _gb=el('fc-btn-got');if(_gb){_gb.style.background='#10b981';_gb.style.transform='scale(.93)';setTimeout(function(){_gb.style.background='';_gb.style.transform='';},160);}
     quizCorrect++;
     _fcGotItStreak++;
     updateCharStatus(ch.id,'mastered');
     updateWordSRS(ch.id,true);
-    awardXP(XP_RATES.master_word,'Mastered! ✓');
-    awardGems(GEM_RATES.word_mastered,'Word ✓');
-    markStreakDay();
-    onCorrectAnswer();
-    save();
     // Anti-cheat: after 3 consecutive Got it, trigger verification
     if(_fcGotItStreak>=3&&quizCards.length>3){
       _fcGotItStreak=0;
+      quizIdx++;quizFlipped=false;showFlashcard(); // advance FIRST — instant
       triggerFlashcardVerify(ch);
+      setTimeout(function(){awardXP(XP_RATES.master_word,'Mastered! ✓');awardGems(GEM_RATES.word_mastered,'Word ✓');markStreakDay();onCorrectAnswer();save();},0);
       return;
     }
+    quizIdx++;quizFlipped=false;showFlashcard(); // advance FIRST — instant
+    setTimeout(function(){awardXP(XP_RATES.master_word,'Mastered! ✓');awardGems(GEM_RATES.word_mastered,'Word ✓');markStreakDay();onCorrectAnswer();save();},0);
   } else if(r==='ok'){
+    var _go=document.querySelector('.qbo');if(_go){_go.style.background='#f59e0b';_go.style.transform='scale(.93)';setTimeout(function(){_go.style.background='';_go.style.transform='';},160);}
     quizCorrect++;
     _fcGotItStreak=0;
     updateCharStatus(ch.id,'learning');
     updateWordSRS(ch.id,true);
-    awardXP(XP_RATES.learn_word,'Good job ~');
-    onCorrectAnswer();
-    save();
+    quizIdx++;quizFlipped=false;showFlashcard();
+    setTimeout(function(){awardXP(XP_RATES.learn_word,'Good job ~');onCorrectAnswer();save();},0);
   } else {
+    var _gw=document.querySelector('.qbw');if(_gw){_gw.style.background='#ef4444';_gw.style.transform='scale(.93)';setTimeout(function(){_gw.style.background='';_gw.style.transform='';},160);}
     _fcGotItStreak=0;
     updateCharStatus(ch.id,'learning');
     updateWordSRS(ch.id,false);
-    onWrongAnswer();
-    var wbtn=document.querySelector('.qbw');
-    if(wbtn)wbtn.style.animation='wrongShake .4s ease';
-    save();
+    var wbtn=document.querySelector('.qbw');if(wbtn)wbtn.style.animation='wrongShake .4s ease';
+    quizIdx++;quizFlipped=false;showFlashcard();
+    setTimeout(function(){onWrongAnswer();save();},0);
   }
-  quizIdx++;quizFlipped=false;showFlashcard();
 }
 function triggerFlashcardVerify(word){
   var all=S.chars_list||[];
@@ -4478,8 +4478,8 @@ function showMCCard(){
     btn.onclick=function(){
       if(mcAnswered)return;mcAnswered=true;mcTotal++;
       var isC=ch.id===correct.id;
-      if(isC){mcCorrect++;btn.classList.add('correct');if(el('mc-result')){el('mc-result').textContent=t('g_correct');el('mc-result').style.color='var(--green)';}updateWordSRS(correct.id,true);updateCharStatus(correct.id,'mastered');awardXP(XP_RATES.master_word,'Choice ✓');markStreakDay();onCorrectAnswer();save();}
-      else{btn.classList.add('wrong');if(el('mc-result')){el('mc-result').textContent=t('g_was')+' '+getWordMeaning(correct);el('mc-result').style.color='var(--red)';}g.querySelectorAll('.mc-choice').forEach(function(b){if(b.textContent===getWordMeaning(correct)||b.textContent===correct.char)b.classList.add('reveal-correct');});updateWordSRS(correct.id,false);updateCharStatus(correct.id,'learning');onWrongAnswer();save();}
+      if(isC){mcCorrect++;btn.classList.add('correct');if(el('mc-result')){el('mc-result').textContent=t('g_correct');el('mc-result').style.color='var(--green)';}updateWordSRS(correct.id,true);updateCharStatus(correct.id,'mastered');setTimeout(function(){awardXP(XP_RATES.master_word,'Choice ✓');markStreakDay();onCorrectAnswer();save();},0);}
+      else{btn.classList.add('wrong');if(el('mc-result')){el('mc-result').textContent=t('g_was')+' '+getWordMeaning(correct);el('mc-result').style.color='var(--red)';}g.querySelectorAll('.mc-choice').forEach(function(b){if(b.textContent===getWordMeaning(correct)||b.textContent===correct.char)b.classList.add('reveal-correct');});updateWordSRS(correct.id,false);updateCharStatus(correct.id,'learning');setTimeout(function(){onWrongAnswer();save();},0);}
       g.querySelectorAll('.mc-choice').forEach(function(b){b.classList.add('disabled');});
       var next=el('mc-next');if(next)next.classList.add('show');
       if(el('mc-score-top'))el('mc-score-top').textContent=mcCorrect+'/'+(mcIdx+1)+' ✓';
@@ -4521,7 +4521,8 @@ function handleMatch(elem,type){
   if(matchSelected.el===elem){elem.classList.remove('selected');matchSelected=null;return;}
   if(matchSelected.type===type){matchSelected.el.classList.remove('selected');matchSelected={el:elem,type:type};document.querySelectorAll('.match-item.selected').forEach(function(e){e.classList.remove('selected');});elem.classList.add('selected');return;}
   if(matchSelected.el.dataset.id===elem.dataset.id){
-    matchSelected.el.classList.remove('selected');matchSelected.el.classList.add('matched');elem.classList.add('matched');matchSelected=null;matchCorrect++;awardXP(5,'Match ✓');onCorrectAnswer();
+    matchSelected.el.classList.remove('selected');matchSelected.el.classList.add('matched');elem.classList.add('matched');matchSelected=null;matchCorrect++;
+    setTimeout(function(){awardXP(5,'Match ✓');onCorrectAnswer();save();},0);
     if(el('match-score-top'))el('match-score-top').textContent=matchCorrect+'/'+matchPairs.length+' ✓';
     if(matchCorrect===matchPairs.length){if(el('match-score'))el('match-score').textContent='🎉 '+t('g_all_matched');if(el('match-next-btn'))el('match-next-btn').style.display='block';launchConfetti();awardXP(20,'All pairs! 🔗');setTimeout(function(){awardGems(GEM_RATES.game_all_match,'Match');},600);}
   }else{
@@ -7630,8 +7631,9 @@ function lsAnswer(choiceIdx,item,choicesDiv,fbDiv,contBtn){
     lsCorrect++;
     lsCombo=(lsCombo||0)+1;
     if(lsCombo===3||lsCombo===5||lsCombo===10){
-      setTimeout(function(){awardXP(lsCombo*5,'Combo!');},300);
+      setTimeout(function(){awardXP(lsCombo*5,'Combo!');save();},300);
     }
+    setTimeout(function(){save();},0);
   } else {
     lsCombo=0;
     onWrongAnswer();
