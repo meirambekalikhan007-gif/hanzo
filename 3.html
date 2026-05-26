@@ -885,10 +885,10 @@ input:focus, textarea:focus{
   100%{box-shadow:0 0 0 0 rgba(26,184,122,0);}
 }
 @keyframes xpFloat{
-  0%{opacity:0;transform:translateY(0) scale(.8);}
-  20%{opacity:1;transform:translateY(-8px) scale(1.1);}
-  80%{opacity:1;transform:translateY(-30px) scale(1);}
-  100%{opacity:0;transform:translateY(-50px) scale(.9);}
+  0%{opacity:0;transform:translateY(0) scale(.6);}
+  15%{opacity:1;transform:translateY(-12px) scale(1.2);}
+  70%{opacity:1;transform:translateY(-40px) scale(1);}
+  100%{opacity:0;transform:translateY(-60px) scale(.85);}
 }
 .q-choice.correct{animation:correctBurst .4s ease,correctGlow .5s ease;}
 .q-choice.wrong{animation:wrongShake .4s ease;}
@@ -8349,21 +8349,23 @@ function awardXP(amount,source){
   if(!amount||amount<=0)return;
   // Amount is exact — no hidden multipliers that confuse the user
   // Bonus XP fires separately via showLuckyBonus() for transparency
-  var prevXP=getTotalXP();
-  var prevLevel=getLevelData(prevXP);
-  if(!S.xp_earned)S.xp_earned=0;
-  S.xp_earned+=amount;
-  save();
-  var newXP=getTotalXP();
-  var newLevel=getLevelData(newXP);
-  // Show XP popup
-  showXPPopup(amount,source);
-  // Check level up
-  if(newLevel.lvl>prevLevel.lvl){
-    setTimeout(function(){showLevelUp(newLevel,prevLevel);},800);
-  }
-  // Update XP bar
-  if(currentPage==='home')renderXPBar();
+  try{
+    var prevXP=getTotalXP();
+    var prevLevel=getLevelData(prevXP);
+    if(!S.xp_earned)S.xp_earned=0;
+    S.xp_earned+=amount;
+    save();
+    var newXP=getTotalXP();
+    var newLevel=getLevelData(newXP);
+    // Check level up
+    if(newLevel&&prevLevel&&newLevel.lvl>prevLevel.lvl){
+      setTimeout(function(){showLevelUp(newLevel,prevLevel);},800);
+    }
+    // Update XP bar
+    if(currentPage==='home')renderXPBar();
+  }catch(e){}
+  // Show XP popup — outside try so it ALWAYS fires regardless of any S/save error
+  try{showXPPopup(amount,source);}catch(e){}
 }
 
 
@@ -8690,7 +8692,10 @@ function showXPPopup(amount,source){
   var r=_appRect();
   var lx=r.left+r.width*(0.3+Math.random()*0.4);
   var ty=r.top+r.height*0.35;
-  popup.style.cssText='position:fixed;left:'+lx+'px;top:'+ty+'px;pointer-events:none;z-index:9999;font-family:var(--mono);font-weight:800;font-size:'+(amount>=50?'20':'15')+'px;color:'+(amount>=50?'var(--gold)':amount>=20?'var(--green)':'var(--muted3)')+';text-shadow:0 0 20px rgba(212,168,50,.6);animation:xpFloat 1.2s ease-out forwards;';
+  // Always use bright, highly-visible colors — muted3 was invisible against dark bg
+  var col=amount>=50?'#fbbf24':amount>=20?'#4ade80':'#f59e0b'; // gold / green / amber
+  var sz=amount>=50?'22px':amount>=20?'18px':'15px';
+  popup.style.cssText='position:fixed;left:'+lx+'px;top:'+ty+'px;pointer-events:none;z-index:9999;font-family:var(--mono);font-weight:900;font-size:'+sz+';color:'+col+';text-shadow:0 2px 8px rgba(0,0,0,.9),0 0 20px rgba(212,168,50,.5);animation:xpFloat 1.2s ease-out forwards;';
   document.body.appendChild(popup);
   setTimeout(function(){if(popup.parentNode)popup.parentNode.removeChild(popup);},1300);
 }
@@ -9055,6 +9060,8 @@ addChar=function(){
 var _origAddFromBank=addFromBank;
 addFromBank=function(w){
   _origAddFromBank(w);
+  // Instant sound feedback on word add
+  if(typeof playSound==='function'){try{playSound('tick');}catch(e){}}
   awardXP(XP_RATES.add_word,'Add word');
 };
 
@@ -13475,46 +13482,24 @@ async function _searchFriend(val) {
     var session = sessionRes.data && sessionRes.data.session;
 
     // ── Fallback: no Supabase session but local session email exists ──
-    // This happens when the Supabase JWT has expired but the user still has
-    // a local localStorage session. Try to re-authenticate silently via the
-    // stored user id from USERS_KEY (set there since the login/signup fix).
+    // User already logged in from localStorage — just ensure id is set and friends load.
+    // CRITICAL: do NOT call _loadSupaData here — it would overwrite the local S.chars_list
+    // and S.xp_earned with stale Supabase data, resetting the user's game progress.
     if (!session) {
       var _localEmail = getSession();
       if (_localEmail) {
         var _localUsers = getUsers();
         var _lu = _localUsers.find(function(u){ return u.email === _localEmail; });
         if (_lu && _lu.id) {
-          // We have a uid — load Supabase data directly without a session
-          // (public-readable tables: profiles, friendships, etc.)
           try {
-            await _loadSupaData(_lu.id);
-            var _fbSnap = {
-              chars_list: S.chars_list, phrases_list: S.phrases_list,
-              study_activity: S.study_activity, xp_earned: S.xp_earned,
-              sentences: S.sentences, name: S.name, username: S.username,
-              daily_goal: S.daily_goal, lang: S.lang, avatarColor: S.avatarColor,
-            };
-            // Merge into current S (loginUser may have already run from the IIFE at 12084)
-            if (_fbSnap.chars_list    && _fbSnap.chars_list.length)    S.chars_list    = _fbSnap.chars_list;
-            if (_fbSnap.phrases_list  && _fbSnap.phrases_list.length)  S.phrases_list  = _fbSnap.phrases_list;
-            if (_fbSnap.study_activity && Object.keys(_fbSnap.study_activity).length)
-              S.study_activity = Object.assign(S.study_activity || {}, _fbSnap.study_activity);
-            if (_fbSnap.xp_earned)   S.xp_earned   = _fbSnap.xp_earned;
-            if (_fbSnap.sentences    && _fbSnap.sentences.length)    S.sentences    = _fbSnap.sentences;
-            if (_fbSnap.name)        { S.name = _fbSnap.name; if (currentUser) currentUser.name = _fbSnap.name; }
-            if (_fbSnap.username)    { S.username = _fbSnap.username; if (currentUser) currentUser.username = _fbSnap.username; }
-            if (_fbSnap.daily_goal)  S.daily_goal  = _fbSnap.daily_goal;
-            if (_fbSnap.lang)        S.lang        = _fbSnap.lang;
-            if (_fbSnap.avatarColor) S.avatarColor = _fbSnap.avatarColor;
-            if (currentUser) currentUser.id = _lu.id; // ensure id is set
-            save();
-            renderHome();
-            if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
+            if (currentUser) currentUser.id = _lu.id; // ensure Supabase uid is set
             await _loadFriendsData();
-            if (currentPage === 'profile' && typeof _renderProfilePage === 'function') _renderProfilePage();
-            if (currentPage === 'feed'    && typeof _loadFeed === 'function') { _feedCache = {}; _loadFeed(); }
             if (typeof renderHomeLB === 'function') renderHomeLB();
-          } catch(e2) { /* fallback failed silently — user stays on localStorage data */ }
+            if (typeof currentPage !== 'undefined') {
+              if (currentPage === 'feed' && typeof _loadFeed === 'function') { _feedCache = {}; _loadFeed(); }
+              if (currentPage === 'profile' && typeof _renderProfilePage === 'function') _renderProfilePage();
+            }
+          } catch(e2) { /* silently ignore */ }
         }
       }
       return;
@@ -13526,87 +13511,80 @@ async function _searchFriend(val) {
     var name = (profRes.data && profRes.data.name) || user.email.split('@')[0];
     var username = (profRes.data && profRes.data.username) || null;
 
-    // ── IMPORTANT ORDER ──────────────────────────────────────────────────────
-    // _loadSupaData sets S.chars_list, S.name, S.xp_earned etc. but loginUser()
-    // then resets S via S=loadUserData(email). Snapshot the Supabase data first,
-    // then re-apply it after loginUser so stats are never blank on first load.
-    // Only show the blocking overlay when the user is NOT yet logged in.
-    // If they're already in a game/bank we must NOT block the UI.
+    // ── KEY DECISION ─────────────────────────────────────────────────────────
+    // If user is already logged in (session restored from localStorage), we must NOT
+    // call _loadSupaData — it directly mutates S.chars_list and S.xp_earned with
+    // potentially stale Supabase data, wiping any XP earned or words added locally.
+    // Instead: patch the Supabase uid onto currentUser (needed for _syncNow writes),
+    // then just load friends so the leaderboard works. Local S stays authoritative.
     var _alreadyIn = !!(currentUser && currentUser.email);
+
+    // Persist uid to USERS_KEY so future page refreshes work without a fresh Supabase session
+    (function(){ var _ul=getUsers(),_ui=_ul.findIndex(function(u){return u.email===user.email;}); if(_ui>=0){_ul[_ui].id=uid;if(username)_ul[_ui].username=username;saveUsers(_ul);} else{_ul.push({name:name,email:user.email,id:uid,username:username||''});saveUsers(_ul);} })();
+
     if (!_alreadyIn) {
+      // ── FRESH LOGIN PATH: Full Supabase load with blocking overlay ──────────
       _autoSyncOv = document.createElement('div');
       _autoSyncOv.style.cssText = 'position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
       _autoSyncOv.innerHTML = '<div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;"></div>'
         + '<div style="font-family:var(--mono);font-size:12px;color:var(--muted2);letter-spacing:1px;">Syncing your data…</div>';
       document.body.appendChild(_autoSyncOv);
-    }
-    await _loadSupaData(uid);
-    if (_autoSyncOv && _autoSyncOv.parentNode) { _autoSyncOv.parentNode.removeChild(_autoSyncOv); _autoSyncOv = null; }
-    var _snap = {
-      chars_list:    S.chars_list,
-      phrases_list:  S.phrases_list,
-      study_activity:S.study_activity,
-      xp_earned:     S.xp_earned,
-      sentences:     S.sentences,
-      name:          S.name,
-      username:      S.username,
-      daily_goal:    S.daily_goal,
-      lang:          S.lang,
-      avatarColor:   S.avatarColor,
-    };
-
-    // Persist uid to USERS_KEY so future page refreshes work without a fresh Supabase session
-    (function(){ var _ul=getUsers(),_ui=_ul.findIndex(function(u){return u.email===user.email;}); if(_ui>=0){_ul[_ui].id=uid;if(username)_ul[_ui].username=username;saveUsers(_ul);} else{_ul.push({name:name,email:user.email,id:uid,username:username||''});saveUsers(_ul);} })();
-
-    // Only call loginUser() if not already logged in.
-    // If already logged in (e.g. session restored from localStorage), just patch the id
-    // so Learn/Bank/Games are never interrupted by a second full re-init.
-    if (!_alreadyIn) {
+      await _loadSupaData(uid);
+      if (_autoSyncOv && _autoSyncOv.parentNode) { _autoSyncOv.parentNode.removeChild(_autoSyncOv); _autoSyncOv = null; }
+      var _snap = {
+        chars_list:    S.chars_list,
+        phrases_list:  S.phrases_list,
+        study_activity:S.study_activity,
+        xp_earned:     S.xp_earned,
+        sentences:     S.sentences,
+        name:          S.name,
+        username:      S.username,
+        daily_goal:    S.daily_goal,
+        lang:          S.lang,
+        avatarColor:   S.avatarColor,
+      };
       loginUser({ name: name, email: user.email, id: uid, username: username });
+      // Re-apply Supabase data that loginUser's S=loadUserData() just wiped
+      if (_snap.chars_list    && _snap.chars_list.length)    S.chars_list    = _snap.chars_list;
+      if (_snap.phrases_list  && _snap.phrases_list.length)  S.phrases_list  = _snap.phrases_list;
+      if (_snap.study_activity && Object.keys(_snap.study_activity).length)
+        S.study_activity = Object.assign(S.study_activity || {}, _snap.study_activity);
+      if (_snap.xp_earned)    S.xp_earned    = _snap.xp_earned;
+      if (_snap.sentences     && _snap.sentences.length)     S.sentences     = _snap.sentences;
+      if (_snap.name)         { S.name = _snap.name; if (currentUser) currentUser.name = _snap.name; }
+      if (_snap.username)     { S.username = _snap.username; if (currentUser) currentUser.username = _snap.username; }
+      if (_snap.daily_goal)   S.daily_goal   = _snap.daily_goal;
+      if (_snap.lang)         S.lang         = _snap.lang;
+      if (_snap.avatarColor)  S.avatarColor  = _snap.avatarColor;
+      save();
+      renderHome();
+      if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
+      if (typeof updateAllAvatars === 'function') updateAllAvatars();
+      if (typeof updateNavUser === 'function') updateNavUser();
+      await _loadFriendsData();
+      if (typeof currentPage !== 'undefined') {
+        if (currentPage === 'profile' && typeof _renderProfilePage === 'function') _renderProfilePage();
+        if (currentPage === 'feed' && typeof _loadFeed === 'function') { _feedCache = {}; _loadFeed(); }
+        if (currentPage === 'friends' && typeof renderFriendsPage === 'function') renderFriendsPage();
+      }
+      if (typeof renderHomeLB === 'function') renderHomeLB();
     } else {
+      // ── ALREADY LOGGED IN PATH: Minimal update — never touch game data ─────
+      // Local S.chars_list, S.xp_earned etc. are authoritative.
+      // Just patch the Supabase uid and update profile metadata.
       currentUser.id = uid;
-      if (username) currentUser.username = username;
-      if (name && !currentUser.name) currentUser.name = name;
-    }
-
-    // Merge Supabase data into S (loginUser may or may not have reset S above)
-    if (_snap.chars_list    && _snap.chars_list.length)    S.chars_list    = _snap.chars_list;
-    if (_snap.phrases_list  && _snap.phrases_list.length)  S.phrases_list  = _snap.phrases_list;
-    if (_snap.study_activity && Object.keys(_snap.study_activity).length)
-      S.study_activity = Object.assign(S.study_activity || {}, _snap.study_activity);
-    if (_snap.xp_earned)    S.xp_earned    = _snap.xp_earned;
-    if (_snap.sentences     && _snap.sentences.length)     S.sentences     = _snap.sentences;
-    if (_snap.name)         { S.name = _snap.name; if (currentUser) currentUser.name = _snap.name; }
-    if (_snap.username)     { S.username = _snap.username; if (currentUser) currentUser.username = _snap.username; }
-    if (_snap.daily_goal)   S.daily_goal   = _snap.daily_goal;
-    if (_snap.lang)         S.lang         = _snap.lang;
-    if (_snap.avatarColor)  S.avatarColor  = _snap.avatarColor;
-    save(); // persist the merged local+Supabase data
-
-    // Lightweight UI refresh — does NOT reset game state or re-schedule timers
-    renderHome();
-    if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
-    if (typeof updateAllAvatars === 'function') updateAllAvatars();
-    if (typeof updateNavUser === 'function') updateNavUser();
-
-    await _loadFriendsData();
-
-    // Re-render whichever page is currently open with the freshly-loaded friends data
-    if (typeof currentPage !== 'undefined') {
-      if (currentPage === 'profile' && typeof _renderProfilePage === 'function') {
-        _renderProfilePage();
-      }
-      if (currentPage === 'feed' && typeof _loadFeed === 'function') {
-        _feedCache = {};
-        _loadFeed();
-      }
-      if (currentPage === 'friends' && typeof renderFriendsPage === 'function') {
-        renderFriendsPage();
+      if (username) { currentUser.username = username; S.username = username; }
+      if (name)     { if (!currentUser.name) currentUser.name = name; S.name = S.name || name; }
+      // Load friends for leaderboard — this is safe (doesn't touch game data)
+      await _loadFriendsData();
+      if (typeof renderHomeLB === 'function') renderHomeLB();
+      if (typeof currentPage !== 'undefined') {
+        if (currentPage === 'profile' && typeof _renderProfilePage === 'function') _renderProfilePage();
+        if (currentPage === 'feed' && typeof _loadFeed === 'function') { _feedCache = {}; _loadFeed(); }
+        if (currentPage === 'friends' && typeof renderFriendsPage === 'function') renderFriendsPage();
       }
     }
-    // Always refresh home leaderboard after friends load — it uses S.friends
-    if (typeof renderHomeLB === 'function') renderHomeLB();
-    // Always prime the feed cache in background so it's instant when user navigates there
+    // Prime feed cache in background
     if (typeof _loadFeed === 'function' && currentPage !== 'feed') {
       setTimeout(function() {
         if (typeof _buildFeedQuery === 'function') {
