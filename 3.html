@@ -13536,11 +13536,16 @@ async function _searchFriend(val) {
     // _loadSupaData sets S.chars_list, S.name, S.xp_earned etc. but loginUser()
     // then resets S via S=loadUserData(email). Snapshot the Supabase data first,
     // then re-apply it after loginUser so stats are never blank on first load.
-    _autoSyncOv = document.createElement('div');
-    _autoSyncOv.style.cssText = 'position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
-    _autoSyncOv.innerHTML = '<div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;"></div>'
-      + '<div style="font-family:var(--mono);font-size:12px;color:var(--muted2);letter-spacing:1px;">Syncing your data…</div>';
-    document.body.appendChild(_autoSyncOv);
+    // Only show the blocking overlay when the user is NOT yet logged in.
+    // If they're already in a game/bank we must NOT block the UI.
+    var _alreadyIn = !!(currentUser && currentUser.email);
+    if (!_alreadyIn) {
+      _autoSyncOv = document.createElement('div');
+      _autoSyncOv.style.cssText = 'position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
+      _autoSyncOv.innerHTML = '<div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;"></div>'
+        + '<div style="font-family:var(--mono);font-size:12px;color:var(--muted2);letter-spacing:1px;">Syncing your data…</div>';
+      document.body.appendChild(_autoSyncOv);
+    }
     await _loadSupaData(uid);
     if (_autoSyncOv && _autoSyncOv.parentNode) { _autoSyncOv.parentNode.removeChild(_autoSyncOv); _autoSyncOv = null; }
     var _snap = {
@@ -13559,13 +13564,10 @@ async function _searchFriend(val) {
     // Persist uid to USERS_KEY so future page refreshes work without a fresh Supabase session
     (function(){ var _ul=getUsers(),_ui=_ul.findIndex(function(u){return u.email===user.email;}); if(_ui>=0){_ul[_ui].id=uid;if(username)_ul[_ui].username=username;saveUsers(_ul);} else{_ul.push({name:name,email:user.email,id:uid,username:username||''});saveUsers(_ul);} })();
 
-    // ── KEY FIX: only call loginUser() if no session is active yet ──
-    // If currentUser is already set (restored from localStorage earlier), we must NOT
-    // call loginUser() again — it would reset S, re-schedule all timers, and disrupt
-    // any in-progress game on Learn/Bank pages.
-    // Instead, quietly patch currentUser.id + merge Supabase data into existing S.
-    var _alreadyLoggedIn = !!(currentUser && currentUser.email);
-    if (!_alreadyLoggedIn) {
+    // Only call loginUser() if not already logged in.
+    // If already logged in (e.g. session restored from localStorage), just patch the id
+    // so Learn/Bank/Games are never interrupted by a second full re-init.
+    if (!_alreadyIn) {
       loginUser({ name: name, email: user.email, id: uid, username: username });
     } else {
       currentUser.id = uid;
