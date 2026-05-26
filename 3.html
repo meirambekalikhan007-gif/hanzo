@@ -12,8 +12,10 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23e8607a'/><text y='.9em' font-size='80' x='10'>漢</text></svg>">
 <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiSGFuem8iLCJzaG9ydF9uYW1lIjoiSGFuem8iLCJzdGFydF91cmwiOiIuLzMuaHRtbCIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwZDBkMGQiLCJ0aGVtZV9jb2xvciI6IiNlNjM5NDYifQ==">
 <title>Hanzo v3 — Learn Chinese</title>
-<!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- Preconnect to all external origins so TCP/TLS handshakes happen in parallel -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://renizlngdwamwqspxzso.supabase.co">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -12616,6 +12618,8 @@ if(S.lang){setLang(S.lang);}else{setLang('en');}
   </div>
 </div>
 
+<!-- Supabase SDK — loaded here (after all HTML + core game engine) so it doesn't block initial render -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ==================== SUPABASE INTEGRATION ====================
 const _SUPA_URL = 'https://renizlngdwamwqspxzso.supabase.co';
