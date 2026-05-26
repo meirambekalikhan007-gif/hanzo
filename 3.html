@@ -2316,22 +2316,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
 
 <!-- ========== WORD BANK PAGE ========== -->
 <div class="page" id="page-bank">
-
-  <!-- BANK STATS HEADER -->
-  <div id="bank-stats-header" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);padding:14px 16px;margin-bottom:14px;margin-top:4px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-      <div>
-        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px;">Word Bank</div>
-        <div style="font-size:17px;font-weight:900;" id="wb-count">Loading…</div>
-      </div>
-      <div style="text-align:right;">
-        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px;">Progress</div>
-        <div style="font-size:17px;font-weight:900;color:var(--green);" id="wb-pct">0%</div>
-      </div>
-    </div>
-    <div style="background:var(--s3);border-radius:6px;height:6px;overflow:hidden;">
-      <div id="wb-prog-bar" style="height:100%;background:linear-gradient(90deg,var(--green),#22d3a5);border-radius:6px;width:0%;transition:width .6s cubic-bezier(.2,.8,.2,1);"></div>
-    </div>
+  <div class="sh" style="margin-top:4px;">
+    <span class="sh-title" data-i18n="nav_bank">Bank</span>
+    <span class="sh-sub" id="wb-count">Loading…</span>
   </div>
 
   <!-- BANK / MY WORDS / PHRASES TOGGLE -->
@@ -2414,24 +2401,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   <div id="bank-section-phrases" style="display:none;">
   <div id="bank-phrases-section">
 
-
-    <!-- PHRASE STATS HEADER -->
-    <div id="phrase-stats-header" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r16);padding:14px 16px;margin-bottom:14px;margin-top:4px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div>
-          <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px;">Phrase Bank</div>
-          <div style="font-size:17px;font-weight:900;" id="phrase-count">0 phrases</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px;">Progress</div>
-          <div style="font-size:17px;font-weight:900;color:var(--blue);" id="phrase-pct">0%</div>
-        </div>
-      </div>
-      <div style="background:var(--s3);border-radius:6px;height:6px;overflow:hidden;">
-        <div id="phrase-prog-bar" style="height:100%;background:linear-gradient(90deg,var(--blue),#60a5fa);border-radius:6px;width:0%;transition:width .6s cubic-bezier(.2,.8,.2,1);"></div>
-      </div>
-    </div>
-
     <!-- Sub-tabs: All Added / Browse -->
     <div style="display:flex;background:var(--s2);border-radius:var(--r12);padding:3px;gap:3px;margin-bottom:14px;">
       <button id="bp-tab-browse" onclick="setBpTab('browse',this)" style="flex:1;padding:8px;background:var(--s1);border:none;color:var(--text);font-family:var(--font);font-size:12px;font-weight:700;border-radius:var(--r8);cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.4);transition:all .15s;">🔍 <span id="bp-browse-label">Browse</span></button>
@@ -2457,6 +2426,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
   </div><!-- end bank-phrases-section -->
   </div><!-- end bank-section-phrases -->
 </div><!-- end page-bank -->
+
 <!-- ========== PROFILE PAGE (Feature 11) ========== -->
 <div id="page-profile" class="page">
   <!-- Back button row -->
@@ -2482,9 +2452,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     <div class="profile-stat"><div class="profile-stat-n" id="prof-streak" style="color:var(--red);">0</div><div class="profile-stat-l" data-i18n="prof_streak">🔥 Streak</div></div>
     <div class="profile-stat"><div class="profile-stat-n" id="prof-friends" style="color:var(--green);">0</div><div class="profile-stat-l" data-i18n="prof_friends">Friends</div></div>
   </div>
-
-  <!-- SHARE MY PROGRESS BUTTON -->
-  <button id="share-progress-btn" onclick="showProgressCard()" style="width:100%;padding:14px;background:linear-gradient(135deg,#e8607a,#d4a832);border:none;color:#fff;font-family:var(--font);font-size:14px;font-weight:800;border-radius:var(--r12);cursor:pointer;margin-bottom:14px;box-shadow:0 4px 20px rgba(232,96,122,.35);display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:.3px;transition:transform .1s;" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">📤 Share My Progress</button>
 
   <!-- INVITE CODE CARD -->
   <div style="background:linear-gradient(135deg,rgba(232,96,122,.1),rgba(154,107,196,.08));border:1.5px solid rgba(232,96,122,.25);border-radius:var(--r16);padding:14px 16px;margin-bottom:14px;">
