@@ -13364,10 +13364,12 @@ async function _searchFriend(val) {
     var name     = (profRes.data && profRes.data.name)     || user.email.split('@')[0];
     var username = (profRes.data && profRes.data.username) || null;
 
-    // If user is already logged in locally, just patch the uid and load friends —
+    // If user is already logged in locally AND has local game data, just patch the uid and load friends —
     // don't call _loadSupaData (it would overwrite active game data with stale DB values).
+    // But if local game data is empty (cleared/new device), fall through to full Supabase sync.
     var _alreadyIn = !!(currentUser && currentUser.email);
-    if (_alreadyIn) {
+    var _hasLocalData = (S.chars_list && S.chars_list.length > 0) || (S.xp_earned && S.xp_earned > 0);
+    if (_alreadyIn && _hasLocalData) {
       currentUser.id = uid;
       if (username) { currentUser.username = username; S.username = username; }
       // Restore name from Supabase if missing from localStorage (e.g. after page refresh)
