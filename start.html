@@ -14658,9 +14658,8 @@ function _renderProfilePage() {
   var gems = S.gems || 0;
   if (el('prof-gems')) el('prof-gems').textContent = gems;
 
-  // Friends count (rough estimate from friends data)
-  var friendCount = 0;
-  try { friendCount = (JSON.parse(localStorage.getItem('hanzo_friends_cache') || '[]')).length; } catch(e) {}
+  // Friends count — read from in-memory cache (populated by _loadFriendsData)
+  var friendCount = (_friendsCache||[]).filter(function(f){return f.isReal;}).length;
   if (el('prof-friends')) el('prof-friends').textContent = friendCount;
 
   // Sound toggle
