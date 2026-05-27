@@ -12822,6 +12822,8 @@ doLogin = async function() {
     daily_goal:    S.daily_goal,
     lang:          S.lang,
   };
+  // Persist uid into USERS_KEY so page refresh finds the user with id intact
+  (function(){ var _ul=getUsers(),_ui=_ul.findIndex(function(u){return u.email===email;}); if(_ui>=0){_ul[_ui].id=uid;saveUsers(_ul);} else{_ul.push({name:name,email:email,id:uid});saveUsers(_ul);} })();
   loginUser({ name: name, email: email, id: uid });
   // Re-apply Supabase data that loginUser's S=loadUserData() just wiped
   if (_loginSnap.chars_list    && _loginSnap.chars_list.length)    S.chars_list    = _loginSnap.chars_list;
