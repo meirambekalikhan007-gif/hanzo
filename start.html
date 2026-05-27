@@ -13041,6 +13041,8 @@ async function _loadFriendsData() {
     };
   });
   S.friends = _friendsCache;
+  // Update home leaderboard widget now that friends are populated
+  if (typeof renderHomeLB === 'function') renderHomeLB();
 }
 
 // ── Override addFriendByCode → real Supabase lookup ──────────
