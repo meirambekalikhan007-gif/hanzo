@@ -13319,74 +13319,125 @@ async function _searchFriend(val) {
 
 // ── On page load: check for existing Supabase session ────────
 (async function() {
-  var sessionRes = await _db.auth.getSession();
-  var session = sessionRes.data && sessionRes.data.session;
-  if (!session) return;
-  var user = session.user;
-  var uid  = user.id;
-  var profRes = await _db.from('profiles').select('name,username').eq('id', uid).single();
-  var name = (profRes.data && profRes.data.name) || user.email.split('@')[0];
-  var username = (profRes.data && profRes.data.username) || null;
+  var _syncOv = null;
+  try {
+    var sessionRes = await _db.auth.getSession();
+    var session = sessionRes.data && sessionRes.data.session;
 
-  // ── IMPORTANT ORDER ──────────────────────────────────────────────────────
-  // _loadSupaData sets S.chars_list, S.name, S.xp_earned etc. but loginUser()
-  // then resets S via S=loadUserData(email). Snapshot the Supabase data first,
-  // then re-apply it after loginUser so stats are never blank on first load.
-  await _loadSupaData(uid);
-  var _snap = {
-    chars_list:    S.chars_list,
-    phrases_list:  S.phrases_list,
-    study_activity:S.study_activity,
-    xp_earned:     S.xp_earned,
-    sentences:     S.sentences,
-    name:          S.name,
-    username:      S.username,
-    daily_goal:    S.daily_goal,
-    lang:          S.lang,
-  };
-
-  loginUser({ name: name, email: user.email, id: uid, username: username });
-
-  // Re-apply Supabase data that loginUser's S=loadUserData() just wiped
-  if (_snap.chars_list    && _snap.chars_list.length)    S.chars_list    = _snap.chars_list;
-  if (_snap.phrases_list  && _snap.phrases_list.length)  S.phrases_list  = _snap.phrases_list;
-  if (_snap.study_activity && Object.keys(_snap.study_activity).length)
-    S.study_activity = Object.assign(S.study_activity || {}, _snap.study_activity);
-  if (_snap.xp_earned)   S.xp_earned   = _snap.xp_earned;
-  if (_snap.sentences    && _snap.sentences.length)      S.sentences     = _snap.sentences;
-  if (_snap.name)        { S.name = _snap.name; if (currentUser) currentUser.name = _snap.name; }
-  if (_snap.username)    { S.username = _snap.username; if (currentUser) currentUser.username = _snap.username; }
-  if (_snap.daily_goal)  S.daily_goal  = _snap.daily_goal;
-  if (_snap.lang)        S.lang        = _snap.lang;
-  save(); // persist the merged local+Supabase data
-
-  // Re-render home with complete data (loginUser already rendered it with blank S)
-  renderHome();
-  if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
-
-  await _loadFriendsData();
-
-  // Re-render profile or feed if user is already on those pages
-  if (typeof currentPage !== 'undefined') {
-    if (currentPage === 'profile' && typeof _renderProfilePage === 'function') {
-      _renderProfilePage();
-    }
-    if (currentPage === 'feed' && typeof _loadFeed === 'function') {
-      _feedCache = {};
-      _loadFeed();
-    }
-  }
-  // Always prime the feed cache in background so it's instant when user navigates there
-  if (typeof _loadFeed === 'function' && currentPage !== 'feed') {
-    setTimeout(function() {
-      if (typeof _buildFeedQuery === 'function') {
-        _buildFeedQuery().then(function(res) {
-          if (res && res.data) {
-            _feedCache['explore'] = res.data;
-          }
-        }).catch(function(){});
+    // ── Fallback: Supabase session gone but local session has a uid ──
+    // JWT expired or user cleared cookies — try restoring from USERS_KEY.
+    // NEVER call _loadSupaData here if the user is already active (_alreadyIn)
+    // because it would overwrite local game data with stale Supabase data.
+    if (!session) {
+      var _localEmail = getSession();
+      if (_localEmail) {
+        var _localUser = getUsers().find(function(u) { return u.email === _localEmail; });
+        if (_localUser && _localUser.id) {
+          try {
+            if (currentUser) currentUser.id = _localUser.id;
+            await _loadFriendsData();
+            if (typeof renderHomeLB === 'function') renderHomeLB();
+            if (typeof currentPage !== 'undefined') {
+              if (currentPage === 'feed'    && typeof _loadFeed          === 'function') { _feedCache = {}; _loadFeed(); }
+              if (currentPage === 'profile' && typeof _renderProfilePage === 'function') _renderProfilePage();
+            }
+          } catch(e) { /* silently ignore — local session is still usable */ }
+        }
       }
-    }, 1500);
+      return;
+    }
+
+    var user = session.user;
+    var uid  = user.id;
+
+    // Patch uid into USERS_KEY so future refreshes find it even if JWT expires again
+    (function(){ var _ul=getUsers(),_ui=_ul.findIndex(function(u){return u.email===user.email;}); if(_ui>=0){_ul[_ui].id=uid;saveUsers(_ul);}else{_ul.push({name:user.email.split('@')[0],email:user.email,id:uid});saveUsers(_ul);} })();
+
+    var profRes = await _db.from('profiles').select('name,username').eq('id', uid).single();
+    var name     = (profRes.data && profRes.data.name)     || user.email.split('@')[0];
+    var username = (profRes.data && profRes.data.username) || null;
+
+    // If user is already logged in locally, just patch the uid and load friends —
+    // don't call _loadSupaData (it would overwrite active game data with stale DB values).
+    var _alreadyIn = !!(currentUser && currentUser.email);
+    if (_alreadyIn) {
+      currentUser.id = uid;
+      if (username) { currentUser.username = username; S.username = username; }
+      await _loadFriendsData();
+      if (typeof renderHomeLB === 'function') renderHomeLB();
+      if (typeof currentPage !== 'undefined') {
+        if (currentPage === 'feed'    && typeof _loadFeed          === 'function') { _feedCache = {}; _loadFeed(); }
+        if (currentPage === 'profile' && typeof _renderProfilePage === 'function') _renderProfilePage();
+      }
+      return;
+    }
+
+    // Fresh login path — show syncing overlay, load all data from Supabase
+    _syncOv = document.createElement('div');
+    _syncOv.style.cssText = 'position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
+    _syncOv.innerHTML = '<div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;"></div>'
+      + '<div style="font-family:var(--mono);font-size:12px;color:var(--muted2);letter-spacing:1px;">Syncing your data…</div>';
+    document.body.appendChild(_syncOv);
+
+    await _loadSupaData(uid);
+    if (_syncOv && _syncOv.parentNode) { _syncOv.parentNode.removeChild(_syncOv); _syncOv = null; }
+
+    var _snap = {
+      chars_list:    S.chars_list,
+      phrases_list:  S.phrases_list,
+      study_activity:S.study_activity,
+      xp_earned:     S.xp_earned,
+      sentences:     S.sentences,
+      name:          S.name,
+      username:      S.username,
+      daily_goal:    S.daily_goal,
+      lang:          S.lang,
+    };
+
+    loginUser({ name: name, email: user.email, id: uid, username: username });
+
+    // Re-apply Supabase data that loginUser's S=loadUserData() just wiped
+    if (_snap.chars_list    && _snap.chars_list.length)    S.chars_list    = _snap.chars_list;
+    if (_snap.phrases_list  && _snap.phrases_list.length)  S.phrases_list  = _snap.phrases_list;
+    if (_snap.study_activity && Object.keys(_snap.study_activity).length)
+      S.study_activity = Object.assign(S.study_activity || {}, _snap.study_activity);
+    if (_snap.xp_earned)   S.xp_earned   = _snap.xp_earned;
+    if (_snap.sentences    && _snap.sentences.length)   S.sentences   = _snap.sentences;
+    if (_snap.name)        { S.name = _snap.name; if (currentUser) currentUser.name = _snap.name; }
+    if (_snap.username)    { S.username = _snap.username; if (currentUser) currentUser.username = _snap.username; }
+    if (_snap.daily_goal)  S.daily_goal  = _snap.daily_goal;
+    if (_snap.lang)        S.lang        = _snap.lang;
+    save();
+
+    renderHome();
+    if (typeof _updateGemsDisplay === 'function') _updateGemsDisplay();
+    if (typeof updateAllAvatars   === 'function') updateAllAvatars();
+    if (typeof updateNavUser      === 'function') updateNavUser();
+
+    await _loadFriendsData();
+    if (typeof renderHomeLB === 'function') renderHomeLB();
+
+    if (typeof currentPage !== 'undefined') {
+      if (currentPage === 'feed'    && typeof _loadFeed          === 'function') { _feedCache = {}; _loadFeed(); }
+      if (currentPage === 'profile' && typeof _renderProfilePage === 'function') _renderProfilePage();
+      if (currentPage === 'friends' && typeof renderFriendsPage  === 'function') renderFriendsPage();
+    }
+
+    // Prime feed cache in background
+    if (typeof _loadFeed === 'function' && currentPage !== 'feed') {
+      setTimeout(function() {
+        if (typeof _buildFeedQuery === 'function') {
+          _buildFeedQuery().then(function(res) {
+            if (res && res.data) { _feedCache['explore'] = res.data; }
+          }).catch(function(){});
+        }
+      }, 1500);
+    }
+
+  } catch(e) {
+    // Make sure the overlay never freezes the UI on any network error
+    if (_syncOv && _syncOv.parentNode) _syncOv.parentNode.removeChild(_syncOv);
+    console.warn('[Hanzo] session restore error:', e);
   }
 })();
 
