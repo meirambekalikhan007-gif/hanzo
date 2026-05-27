@@ -8556,13 +8556,13 @@ if(S.phrases_list&&S.phrases_list.length){
   if(S.lang){setLang(S.lang);}else{setLang('en');}
   // Re-render home after data is ready to fix streak display
   setTimeout(function(){if(currentPage==='home'){renderStreak();renderXPBar();renderStreakBanner();}},500);
-  // Re-render profile/feed after Supabase data merge completes
+  // Pre-populate profile page DOM even if not on profile — safe to call on hidden elements
   setTimeout(function(){
-    if(currentPage==='profile'&&typeof _renderProfilePage==='function')_renderProfilePage();
+    if(typeof _renderProfilePage==='function')_renderProfilePage();
     if(currentPage==='feed'&&typeof _loadFeed==='function'){_feedCache={};_loadFeed();}
   },900);
   setTimeout(function(){
-    if(currentPage==='profile'&&typeof _renderProfilePage==='function')_renderProfilePage();
+    if(typeof _renderProfilePage==='function')_renderProfilePage();
   },2200);
 }
 
@@ -13428,8 +13428,9 @@ async function _searchFriend(val) {
       // Load friends for leaderboard — this is safe (doesn't touch game data)
       await _loadFriendsData();
       if (typeof renderHomeLB === 'function') renderHomeLB();
+      // Always pre-populate profile DOM (safe on hidden elements) + page-specific updates
+      if (typeof _renderProfilePage === 'function') _renderProfilePage();
       if (typeof currentPage !== 'undefined') {
-        if (currentPage === 'profile' && typeof _renderProfilePage === 'function') _renderProfilePage();
         if (currentPage === 'feed' && typeof _loadFeed === 'function') { _feedCache = {}; _loadFeed(); }
         if (currentPage === 'friends' && typeof renderFriendsPage === 'function') renderFriendsPage();
       }
