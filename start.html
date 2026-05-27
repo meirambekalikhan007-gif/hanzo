@@ -12879,6 +12879,8 @@ doSignup = async function() {
     xp_total: 0, weekly_xp: 0, streak: 0, words_count: 0,
   }, { onConflict: 'id' });
 
+  // Persist uid into USERS_KEY so page refresh finds the user with id intact
+  (function(){ var _ul=getUsers(),_ui=_ul.findIndex(function(u){return u.email===email;}); if(_ui>=0){_ul[_ui].id=uid;_ul[_ui].username=username;saveUsers(_ul);} else{_ul.push({name:name,email:email,id:uid,username:username});saveUsers(_ul);} })();
   loginUser({ name: name, email: email, id: uid, username: username });
 };
 
