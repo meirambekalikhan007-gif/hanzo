@@ -2433,6 +2433,11 @@ button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focu
     </div>
   </div>
 
+  <!-- SHARE MY PROGRESS -->
+  <button id="share-progress-btn" onclick="_showProgressExport()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--blue),#6366f1);color:#fff;border:none;border-radius:var(--r12);font-size:14px;font-weight:800;cursor:pointer;margin-bottom:14px;box-shadow:0 4px 16px rgba(99,102,241,.35);display:flex;align-items:center;justify-content:center;gap:8px;">
+    <span>📤</span><span>Share My Progress</span>
+  </button>
+
   <!-- ACHIEVEMENTS -->
   <div class="sh"><span class="sh-title" data-i18n="prof_achievements">🏆 Achievements</span></div>
   <div class="profile-achievements" id="profile-achievements"></div>
@@ -15586,28 +15591,7 @@ function _haptic(type) {
 // 📊  PROGRESS EXPORT — shareable card (canvas-free, HTML→clip)
 // ============================================================
 (function(){
-  // Inject "Share Progress" button into profile page
-  var _origRPP = typeof _renderProfilePage === 'function' ? _renderProfilePage : null;
-  if (_origRPP) {
-    _renderProfilePage = function() {
-      _origRPP.apply(this, arguments);
-      setTimeout(function() {
-        if (document.getElementById('share-progress-btn')) return;
-        // Find a good anchor: stats section in profile
-        var profStats = document.querySelector('#page-profile .stats-grid, #page-profile [id="prof-streak"]');
-        var anchor = profStats ? profStats.parentElement : document.querySelector('#page-profile');
-        if (!anchor) return;
-        var btn = document.createElement('button');
-        btn.id = 'share-progress-btn';
-        btn.style.cssText = 'width:100%;padding:13px;background:linear-gradient(135deg,var(--blue),#6366f1);'
-          +'color:#fff;border:none;border-radius:var(--r12);font-size:14px;font-weight:800;cursor:pointer;'
-          +'margin:14px 0 4px;box-shadow:0 4px 16px rgba(99,102,241,.35);display:flex;align-items:center;justify-content:center;gap:8px;';
-        btn.innerHTML = '<span>📤</span><span>Share My Progress</span>';
-        btn.onclick = _showProgressExport;
-        anchor.appendChild(btn);
-      }, 120);
-    };
-  }
+  // Button is now in static HTML — no dynamic injection needed
 
   window._showProgressExport = function() {
     var xp = typeof getTotalXP === 'function' ? getTotalXP() : (S.xp_earned || 0);
