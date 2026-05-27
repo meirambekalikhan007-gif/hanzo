@@ -13379,6 +13379,7 @@ async function _searchFriend(val) {
       if (typeof currentPage !== 'undefined') {
         if (currentPage === 'feed'    && typeof _loadFeed          === 'function') { _feedCache = {}; _loadFeed(); }
         if (currentPage === 'profile' && typeof _renderProfilePage === 'function') _renderProfilePage();
+        if (currentPage === 'friends' && typeof renderFriendsPage  === 'function') renderFriendsPage();
       }
       return;
     }
