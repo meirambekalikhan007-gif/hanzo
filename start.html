@@ -14744,8 +14744,7 @@ function _renderAchievements() {
   var xp = (typeof getTotalXP === 'function' ? getTotalXP() : 0) || 0;
   var words = ((typeof S !== 'undefined' && S.chars_list && S.chars_list.length) || 0);
   var streak = (typeof calcStreak === 'function' ? (calcStreak().current || 0) : 0);
-  var friends = 0;
-  try { friends = (JSON.parse(localStorage.getItem('hanzo_friends_cache') || '[]')).length; } catch(e) {}
+  var friends = (_friendsCache||[]).filter(function(f){return f.isReal;}).length;
 
   var achievements = [
     { icon:'🔥', name:LANG==='ru'?'Огонёк':LANG==='kz'?'Алғашқы от':'First Flame', desc:LANG==='ru'?'3 дня подряд':LANG==='kz'?'3 күн серия':'3-day streak', done: streak >= 3 },
