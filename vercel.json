@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "3.html",
+      "src": "start.html",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/",
-      "dest": "/3.html"
+      "dest": "/start.html"
     },
     {
       "src": "/(.*)",
@@ -18,7 +18,7 @@
   ],
   "headers": [
     {
-      "source": "/3.html",
+      "source": "/start.html",
       "headers": [
         {
           "key": "Cache-Control",
