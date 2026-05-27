@@ -13370,6 +13370,10 @@ async function _searchFriend(val) {
     if (_alreadyIn) {
       currentUser.id = uid;
       if (username) { currentUser.username = username; S.username = username; }
+      // Restore name from Supabase if missing from localStorage (e.g. after page refresh)
+      if (!S.name && name) { S.name = name; currentUser.name = name; }
+      if (!S.username && username) { S.username = username; }
+      if (typeof updateNavUser === 'function') updateNavUser();
       await _loadFriendsData();
       if (typeof renderHomeLB === 'function') renderHomeLB();
       if (typeof currentPage !== 'undefined') {
