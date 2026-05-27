@@ -13189,9 +13189,9 @@ function _renderMyFriends() {
   });
 }
 
-// ── Patch openEditProfile to fill username field ──────────────
-var _origOpenEditProfile = openEditProfile;
-openEditProfile = function() {
+// ── Patch showEditProfile to fill username field ──────────────
+var _origOpenEditProfile = showEditProfile;
+showEditProfile = function() {
   _origOpenEditProfile();
   var uInp = el('ep-username-input');
   if (uInp) {
