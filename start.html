@@ -12998,7 +12998,7 @@ async function _syncNow() {
 var _friendsCache = null;
 
 async function _loadFriendsData() {
-  if (!currentUser || !currentUser.id) return;
+  if (!currentUser || !currentUser.id) { _friendsCache = _friendsCache || []; S.friends = S.friends || []; return; }
   var uid = currentUser.id;
 
   var fsRes = await _db.from('friendships').select('friend_user_id').eq('user_id', uid);
