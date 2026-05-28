@@ -14042,9 +14042,9 @@ function _timeAgo(iso) {
 }
 
 // Hook: auto-post when streak milestone hit
-var _origAwardXP = awardXP;
+var _origAwardXP_streak = awardXP;
 awardXP = function(amount, reason) {
-  _origAwardXP(amount, reason);
+  _origAwardXP_streak(amount, reason);
   if (reason && reason.toLowerCase().includes('streak')) {
     var streak = calcStreak ? calcStreak().current : 0;
     if ([3,7,14,30,60,100].includes(streak)) {
