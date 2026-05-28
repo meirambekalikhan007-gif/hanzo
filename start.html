@@ -13189,9 +13189,9 @@ function _renderMyFriends() {
   });
 }
 
-// ── Patch openEditProfile to fill username field ──────────────
-var _origOpenEditProfile = openEditProfile;
-openEditProfile = function() {
+// ── Patch showEditProfile to fill username field ──────────────
+var _origOpenEditProfile = showEditProfile;
+showEditProfile = function() {
   _origOpenEditProfile();
   var uInp = el('ep-username-input');
   if (uInp) {
@@ -14045,7 +14045,6 @@ function _timeAgo(iso) {
 var _origAwardXP = awardXP;
 awardXP = function(amount, reason) {
   _origAwardXP(amount, reason);
-  addWeeklyXP(amount);
   if (reason && reason.toLowerCase().includes('streak')) {
     var streak = calcStreak ? calcStreak().current : 0;
     if ([3,7,14,30,60,100].includes(streak)) {
@@ -14396,7 +14395,6 @@ function addWeeklyXP(amount) {
   _getWeeklyXP(); // reset if new week
   var cur = parseInt(localStorage.getItem('hanzo_weekly_xp') || '0');
   localStorage.setItem('hanzo_weekly_xp', cur + amount);
-  _renderLeagueCard();
 }
 
 function _getLeague(xp) {
@@ -14882,17 +14880,12 @@ if (_origAwardXP2) {
     try { dailyXP = JSON.parse(localStorage.getItem('hanzo_daily_xp') || '{}'); } catch(e) { dailyXP = {}; }
     dailyXP[today] = (dailyXP[today] || 0) + amount;
     try { localStorage.setItem('hanzo_daily_xp', JSON.stringify(dailyXP)); } catch(e) {}
-    // Update weekly XP tracking
-    var curWeeklyXP = parseInt(localStorage.getItem('hanzo_weekly_xp') || '0');
-    localStorage.setItem('hanzo_weekly_xp', String(curWeeklyXP + amount));
     // Level-up sound at 100 XP milestones
     var newXP = getTotalXP ? getTotalXP() : 0;
     if (Math.floor(newXP / 100) > Math.floor(_prevXPTotal / 100)) {
       _playSound('levelup');
     }
     _prevXPTotal = newXP;
-    // Update SRS due badge
-    _updateSRSDueBadge();
   };
 }
 
@@ -15597,7 +15590,6 @@ function _haptic(type) {
   if (_origLoginUser) {
     loginUser = function(data) {
       _origLoginUser.apply(this, arguments);
-      setTimeout(_maybeShowUsernameNudge, 3500);
     };
   }
 })();
